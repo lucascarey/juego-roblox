@@ -3,6 +3,7 @@
 -- Convención: la criatura mira hacia -Z; la Root está a nivel del suelo.
 
 local CreatureBuilder = require(script.Parent.CreatureBuilder)
+local Textures = require(script.Parent.Parent.Textures)
 
 type PartDef = CreatureBuilder.PartDef
 type SpeciesDef = CreatureBuilder.SpeciesDef
@@ -23,121 +24,36 @@ local function mirrored(base: PartDef, out: { PartDef })
 	end
 end
 
-local function cuadrupedo(): SpeciesDef
-	local parts: { PartDef } = {
-		{ name = "Torso", parent = "Root", size = V(3.2, 2.6, 5), joint = V(0, 3.6, 0), color = "body" },
-		{ name = "Belly", parent = "Torso", size = V(2.6, 0.4, 4.2), joint = V(0, -1.45, 0), color = "dark" },
-		{ name = "Back", parent = "Torso", size = V(2.4, 0.4, 3.6), joint = V(0, 1.45, 0.2), color = "light" },
-		{
-			name = "Head",
-			parent = "Torso",
-			size = V(2.4, 2.2, 2.4),
-			joint = V(0, 0.7, -2.5),
-			pivot = V(0, -0.3, 1),
-			color = "body",
-		},
-		{
-			name = "Snout",
-			parent = "Head",
-			size = V(1.5, 1, 1.1),
-			joint = V(0, -0.5, -1.2),
-			pivot = V(0, 0, 0.45),
-			color = "light",
-		},
-		{ name = "Nose", parent = "Snout", size = V(0.7, 0.35, 0.15), joint = V(0, 0.2, -0.6), color = "dark" },
-		{
-			name = "Tail",
-			parent = "Torso",
-			size = V(0.7, 0.7, 2.4),
-			joint = V(0, 0.7, 2.5),
-			pivot = V(0, 0, -1.1),
-			rot = V(-20, 0, 0),
-			color = "body",
-		},
-	}
-	mirrored({
-		name = "Socket",
-		parent = "Head",
-		size = V(0.7, 0.62, 0.1),
-		joint = V(0.6, 0.35, -1.21),
-		color = "socket",
-		flat = true,
-	}, parts)
-	table.insert(parts, {
-		name = "Mouth",
-		parent = "Snout",
-		size = V(1.2, 0.12, 0.1),
-		joint = V(0, -0.22, -0.56),
-		color = "socket",
-		flat = true,
-	})
-	mirrored({
-		name = "Tooth",
-		parent = "Snout",
-		size = V(0.18, 0.26, 0.1),
-		joint = V(0.35, -0.36, -0.57),
-		color = "tooth",
-		flat = true,
-	}, parts)
-	mirrored({
-		name = "Eye",
-		parent = "Head",
-		size = V(0.4, 0.4, 0.12),
-		joint = V(0.6, 0.35, -1.27),
-		color = "eye",
-		neon = true,
-	}, parts)
-	mirrored({
-		name = "Ear",
-		parent = "Head",
-		size = V(0.5, 0.7, 0.3),
-		joint = V(0.8, 1.35, 0.3),
-		rot = V(0, 0, 0),
-		color = "dark",
-	}, parts)
-	mirrored({
-		name = "LegFront",
-		parent = "Torso",
-		size = V(1.1, 2.3, 1.1),
-		joint = V(1, -1.3, -1.7),
-		pivot = V(0, 1.15, 0),
-		color = "body",
-	}, parts)
-	mirrored({
-		name = "LegBack",
-		parent = "Torso",
-		size = V(1.2, 2.3, 1.2),
-		joint = V(1, -1.3, 1.7),
-		pivot = V(0, 1.15, 0),
-		color = "body",
-	}, parts)
-	mirrored({
-		name = "PawFront",
-		parent = "LegFront*",
-		size = V(1.3, 0.4, 1.4),
-		joint = V(0, -1.15, -0.1),
-		pivot = V(0, -0.2, 0),
-		color = "dark",
-	}, parts)
-	mirrored({
-		name = "PawBack",
-		parent = "LegBack*",
-		size = V(1.4, 0.4, 1.5),
-		joint = V(0, -1.15, -0.1),
-		pivot = V(0, -0.2, 0),
-		color = "dark",
-	}, parts)
+-- Convierte una especie exportada por tools/creatures.py (JSON) al formato del builder.
+local function fromData(data: any, atlas: string): SpeciesDef
+	local function v3(t: { number }?): Vector3?
+		return if t then Vector3.new(t[1], t[2], t[3]) else nil
+	end
+	local palette = {}
+	for k, c in data.palette do
+		palette[k] = Color3.fromRGB(c[1], c[2], c[3])
+	end
+	local parts: { PartDef } = {}
+	for _, p in data.parts do
+		table.insert(parts, {
+			name = p.name,
+			parent = p.parent,
+			size = v3(p.size) :: Vector3,
+			joint = v3(p.joint) :: Vector3,
+			pivot = v3(p.pivot),
+			rot = v3(p.rot),
+			color = p.ramp,
+			neon = p.neon,
+			flat = p.flat,
+			faces = p.faces,
+		})
+	end
 	return {
-		name = "Cuadrupedo",
-		palette = {
-			body = Color3.fromRGB(181, 120, 78),
-			light = Color3.fromRGB(214, 160, 112),
-			dark = Color3.fromRGB(112, 70, 48),
-			eye = Color3.fromRGB(255, 190, 60),
-			socket = Color3.fromRGB(58, 34, 26),
-			tooth = Color3.fromRGB(244, 238, 220),
-		},
+		name = data.name,
+		palette = palette,
 		parts = parts,
+		atlas = atlas,
+		atlasStuds = Vector2.new(data.atlasStuds[1], data.atlasStuds[2]),
 	}
 end
 
@@ -341,7 +257,7 @@ local function serpentino(): SpeciesDef
 end
 
 return {
-	Cuadrupedo = cuadrupedo(),
+	Cuadrupedo = fromData(require(script.Parent.Data.Cuadrupedo) :: any, Textures.Atlas.Cuadrupedo),
 	Bipedo = bipedo(),
 	Serpentino = serpentino(),
 }

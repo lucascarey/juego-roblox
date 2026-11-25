@@ -1,0 +1,826 @@
+{
+ "name": "Cuadrupedo",
+ "atlasStuds": [
+  32.0,
+  16.0
+ ],
+ "palette": {
+  "body": [
+   86,
+   116,
+   196
+  ],
+  "light": [
+   124,
+   170,
+   230
+  ],
+  "leg": [
+   72,
+   98,
+   176
+  ],
+  "dark": [
+   44,
+   50,
+   112
+  ],
+  "eye": [
+   120,
+   240,
+   255
+  ]
+ },
+ "parts": [
+  {
+   "name": "Rear",
+   "parent": "Root",
+   "size": [
+    3.5,
+    3,
+    3
+   ],
+   "joint": [
+    0,
+    3.25,
+    1.5
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     14.5,
+     0.0,
+     3.5,
+     3.0
+    ],
+    "Back": [
+     18.25,
+     0.0,
+     3.5,
+     3.0
+    ],
+    "Left": [
+     22.0,
+     0.0,
+     3.0,
+     3.0
+    ],
+    "Right": [
+     25.25,
+     0.0,
+     3.0,
+     3.0
+    ],
+    "Top": [
+     0.0,
+     3.5,
+     3.5,
+     3.0
+    ],
+    "Bottom": [
+     3.75,
+     3.5,
+     3.5,
+     3.0
+    ]
+   }
+  },
+  {
+   "name": "Chest",
+   "parent": "Rear",
+   "size": [
+    3.75,
+    3.25,
+    3
+   ],
+   "joint": [
+    0,
+    0.125,
+    -3
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     0.0,
+     0.0,
+     3.75,
+     3.25
+    ],
+    "Back": [
+     4.0,
+     0.0,
+     3.75,
+     3.25
+    ],
+    "Left": [
+     8.0,
+     0.0,
+     3.0,
+     3.25
+    ],
+    "Right": [
+     11.25,
+     0.0,
+     3.0,
+     3.25
+    ],
+    "Top": [
+     7.5,
+     3.5,
+     3.75,
+     3.0
+    ],
+    "Bottom": [
+     11.5,
+     3.5,
+     3.75,
+     3.0
+    ]
+   }
+  },
+  {
+   "name": "Head",
+   "parent": "Chest",
+   "size": [
+    3,
+    2.5,
+    2.5
+   ],
+   "joint": [
+    0,
+    -0.25,
+    -1.5
+   ],
+   "pivot": [
+    0,
+    0,
+    1.25
+   ],
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     15.5,
+     3.5,
+     3.0,
+     2.5
+    ],
+    "Back": [
+     18.75,
+     3.5,
+     3.0,
+     2.5
+    ],
+    "Left": [
+     22.0,
+     3.5,
+     2.5,
+     2.5
+    ],
+    "Right": [
+     24.75,
+     3.5,
+     2.5,
+     2.5
+    ],
+    "Top": [
+     27.5,
+     3.5,
+     3.0,
+     2.5
+    ],
+    "Bottom": [
+     0.0,
+     6.75,
+     3.0,
+     2.5
+    ]
+   }
+  },
+  {
+   "name": "Snout",
+   "parent": "Head",
+   "size": [
+    2,
+    1.5,
+    1
+   ],
+   "joint": [
+    0,
+    -0.5,
+    -1.25
+   ],
+   "pivot": [
+    0,
+    0,
+    0.5
+   ],
+   "rot": null,
+   "ramp": "light",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     27.25,
+     6.75,
+     2.0,
+     1.5
+    ],
+    "Back": [
+     29.5,
+     6.75,
+     2.0,
+     1.5
+    ],
+    "Left": [
+     0.0,
+     9.5,
+     1.0,
+     1.5
+    ],
+    "Right": [
+     1.25,
+     9.5,
+     1.0,
+     1.5
+    ],
+    "Top": [
+     17.0,
+     9.5,
+     2.0,
+     1.0
+    ],
+    "Bottom": [
+     19.25,
+     9.5,
+     2.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Tail",
+   "parent": "Rear",
+   "size": [
+    1,
+    1,
+    1.25
+   ],
+   "joint": [
+    0,
+    0.75,
+    1.5
+   ],
+   "pivot": [
+    0,
+    0,
+    -0.625
+   ],
+   "rot": [
+    -15,
+    0,
+    0
+   ],
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Top": [
+     2.5,
+     9.5,
+     1.0,
+     1.25
+    ],
+    "Bottom": [
+     3.75,
+     9.5,
+     1.0,
+     1.25
+    ],
+    "Front": [
+     21.5,
+     9.5,
+     1.0,
+     1.0
+    ],
+    "Back": [
+     22.75,
+     9.5,
+     1.0,
+     1.0
+    ],
+    "Left": [
+     24.0,
+     9.5,
+     1.25,
+     1.0
+    ],
+    "Right": [
+     25.5,
+     9.5,
+     1.25,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "NostrilL",
+   "parent": "Snout",
+   "size": [
+    0.25,
+    0.25,
+    0.1
+   ],
+   "joint": [
+    -0.5,
+    0.25,
+    -0.55
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled"
+  },
+  {
+   "name": "NostrilR",
+   "parent": "Snout",
+   "size": [
+    0.25,
+    0.25,
+    0.1
+   ],
+   "joint": [
+    0.5,
+    0.25,
+    -0.55
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled"
+  },
+  {
+   "name": "SocketL",
+   "parent": "Head",
+   "size": [
+    0.75,
+    0.5,
+    0.1
+   ],
+   "joint": [
+    -0.875,
+    0.375,
+    -1.3
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled"
+  },
+  {
+   "name": "SocketR",
+   "parent": "Head",
+   "size": [
+    0.75,
+    0.5,
+    0.1
+   ],
+   "joint": [
+    0.875,
+    0.375,
+    -1.3
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled"
+  },
+  {
+   "name": "EyeL",
+   "parent": "Head",
+   "size": [
+    0.25,
+    0.25,
+    0.1
+   ],
+   "joint": [
+    -0.875,
+    0.375,
+    -1.36
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "eye",
+   "neon": true,
+   "flat": false,
+   "pattern": "mottled"
+  },
+  {
+   "name": "EyeR",
+   "parent": "Head",
+   "size": [
+    0.25,
+    0.25,
+    0.1
+   ],
+   "joint": [
+    0.875,
+    0.375,
+    -1.36
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "eye",
+   "neon": true,
+   "flat": false,
+   "pattern": "mottled"
+  },
+  {
+   "name": "EarL",
+   "parent": "Head",
+   "size": [
+    0.5,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    -1.125,
+    1.5,
+    0.75
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     27.0,
+     9.5,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     27.75,
+     9.5,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     28.5,
+     9.5,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     29.0,
+     9.5,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     0.0,
+     11.25,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     0.75,
+     11.25,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "EarR",
+   "parent": "Head",
+   "size": [
+    0.5,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    1.125,
+    1.5,
+    0.75
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     29.5,
+     9.5,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     30.25,
+     9.5,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     31.0,
+     9.5,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     31.5,
+     9.5,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     1.5,
+     11.25,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     2.25,
+     11.25,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "LegFrontL",
+   "parent": "Chest",
+   "size": [
+    1.25,
+    1.75,
+    1.25
+   ],
+   "joint": [
+    -1.125,
+    -1.375,
+    -0.375
+   ],
+   "pivot": [
+    0,
+    1.125,
+    0
+   ],
+   "rot": null,
+   "ramp": "leg",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     3.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Back": [
+     4.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Left": [
+     6.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Right": [
+     7.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Top": [
+     5.0,
+     9.5,
+     1.25,
+     1.25
+    ],
+    "Bottom": [
+     6.5,
+     9.5,
+     1.25,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "LegFrontR",
+   "parent": "Chest",
+   "size": [
+    1.25,
+    1.75,
+    1.25
+   ],
+   "joint": [
+    1.125,
+    -1.375,
+    -0.375
+   ],
+   "pivot": [
+    0,
+    1.125,
+    0
+   ],
+   "rot": null,
+   "ramp": "leg",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     9.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Back": [
+     10.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Left": [
+     12.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Right": [
+     13.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Top": [
+     8.0,
+     9.5,
+     1.25,
+     1.25
+    ],
+    "Bottom": [
+     9.5,
+     9.5,
+     1.25,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "LegBackL",
+   "parent": "Rear",
+   "size": [
+    1.25,
+    1.75,
+    1.25
+   ],
+   "joint": [
+    -1.0,
+    -1.25,
+    0.5
+   ],
+   "pivot": [
+    0,
+    1.125,
+    0
+   ],
+   "rot": null,
+   "ramp": "leg",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     15.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Back": [
+     16.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Left": [
+     18.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Right": [
+     19.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Top": [
+     11.0,
+     9.5,
+     1.25,
+     1.25
+    ],
+    "Bottom": [
+     12.5,
+     9.5,
+     1.25,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "LegBackR",
+   "parent": "Rear",
+   "size": [
+    1.25,
+    1.75,
+    1.25
+   ],
+   "joint": [
+    1.0,
+    -1.25,
+    0.5
+   ],
+   "pivot": [
+    0,
+    1.125,
+    0
+   ],
+   "rot": null,
+   "ramp": "leg",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "faces": {
+    "Front": [
+     21.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Back": [
+     22.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Left": [
+     24.25,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Right": [
+     25.75,
+     6.75,
+     1.25,
+     1.75
+    ],
+    "Top": [
+     14.0,
+     9.5,
+     1.25,
+     1.25
+    ],
+    "Bottom": [
+     15.5,
+     9.5,
+     1.25,
+     1.25
+    ]
+   }
+  }
+ ]
+}

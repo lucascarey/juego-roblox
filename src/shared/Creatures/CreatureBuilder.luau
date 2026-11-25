@@ -11,12 +11,15 @@ export type PartDef = {
 	color: string, -- clave de la paleta
 	neon: boolean?,
 	flat: boolean?, -- sin textura (dientes, ojos, detalles chicos)
+	faces: { [string]: { number } }?, -- recorte del atlas por cara: {u, v, ancho, alto} en studs
 }
 
 export type SpeciesDef = {
 	name: string,
 	palette: { [string]: Color3 },
 	parts: { PartDef },
+	atlas: string?,
+	atlasStuds: Vector2?,
 }
 
 local Textures = require(script.Parent.Parent.Textures)
@@ -37,6 +40,21 @@ local function applySkin(part: BasePart, color: Color3, index: number)
 		t.StudsPerTileV = Textures.STUDS_PER_TILE
 		t.OffsetStudsU = (index * 1.25) % Textures.STUDS_PER_TILE
 		t.OffsetStudsV = (index * 2.5) % Textures.STUDS_PER_TILE
+		t.Parent = part
+	end
+end
+
+-- Cada cara muestra su recorte del atlas de la especie: el tile ocupa todo el atlas
+-- y el desfase lleva la esquina del recorte a la esquina de la cara.
+local function applyAtlas(part: BasePart, faces: { [string]: { number } }, atlas: string, atlasStuds: Vector2)
+	for faceName, r in faces do
+		local t = Instance.new("Texture")
+		t.Texture = atlas
+		t.Face = (Enum.NormalId :: any)[faceName]
+		t.StudsPerTileU = atlasStuds.X
+		t.StudsPerTileV = atlasStuds.Y
+		t.OffsetStudsU = r[1]
+		t.OffsetStudsV = r[2]
 		t.Parent = part
 	end
 end
@@ -76,7 +94,9 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 		part.CanCollide = false
 		part.Massless = true
 		part.CastShadow = not p.neon
-		if not p.neon and not p.flat then
+		if p.faces and def.atlas and def.atlasStuds then
+			applyAtlas(part, p.faces, def.atlas, def.atlasStuds)
+		elseif not p.neon and not p.flat then
 			applySkin(part, color, i)
 		end
 
