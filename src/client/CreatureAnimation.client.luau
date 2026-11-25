@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local CreatureAnimator = require(ReplicatedStorage.Shared.Creatures.CreatureAnimator)
+local CreatureFX = require(script.Parent:WaitForChild("CreatureFX"))
 
 local MAX_DIST = 300 -- más lejos no se nota y ahorra CPU
 
@@ -24,7 +25,9 @@ local function add(inst: Instance)
 		end)
 		return
 	end
-	animators[inst] = CreatureAnimator.new(inst)
+	local anim = CreatureAnimator.new(inst)
+	anim.onEvent = CreatureFX.play -- sonidos y partículas
+	animators[inst] = anim
 end
 
 CollectionService:GetInstanceAddedSignal("Creature"):Connect(function(inst)

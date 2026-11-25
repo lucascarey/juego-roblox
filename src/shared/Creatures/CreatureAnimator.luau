@@ -14,6 +14,8 @@
 --   - Postura (atributo "Postura"): "Acostado" y "Durmiendo" (cabeza al suelo). Se acuesta de adelante
 --     hacia atrás y se levanta al revés, sin saltos; dormido tarda más en levantarse.
 --   - En el aire (salto o caída) recoge las patas y al caer amortigua.
+--   - Eventos para sonido y partículas (onEvent): Pisada, Caida, Salto, Rascada, Latigazo, ColaGolpe,
+--     Embestida, CabezaGolpe, Frenada, Resoplido, RespiraDormida.
 -- Funciona con cualquier especie que use los nombres de piezas de tools/creatures.py.
 
 local Players = game:GetService("Players")
@@ -53,6 +55,7 @@ type Leg = {
 	shorten: Spring, -- cuánto tiene que acortarse para apoyar en el suelo real
 	swing: number, -- ángulo de paso del último cuadro (para buscar el suelo donde está el pie)
 	plant: Vector3?, -- quieta: dónde quedó apoyado el pie (en el mundo)
+	wasStance: boolean,
 	plantW: Spring,
 }
 
@@ -197,6 +200,7 @@ function CreatureAnimator.new(model: Model)
 					shorten = newSpring(),
 					swing = 0,
 					plantW = newSpring(),
+					wasStance = true,
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -272,12 +276,35 @@ function CreatureAnimator.new(model: Model)
 	}
 	self.breathPhase = 0
 	self.jumpCrouch = 0
+	self.onEvent = nil :: ((string, any) -> ())?
+	self.nextSnort = self.rng:NextNumber(5, 12)
+	self.prevSpeed = 0
+	self.skidAt = 0
 	self.vy = 0
 	self.airPitch = newSpring()
 	-- Acostado: el cuerpo baja hasta que las patas plegadas quedan apoyadas.
 	local thick = if #legs > 0 then (legs[1].upper.Part1 :: BasePart).Size.Z else 1
 	self.lieDrop = math.max(0, self.legLen - thick * 0.5)
 	return self
+end
+
+-- Avisa un momento de la animación (sonidos y partículas los pone el cliente).
+function CreatureAnimator:_emit(name: string, pos: Vector3, extra: { [string]: any }?)
+	local cb = self.onEvent
+	if cb then
+		local ev = { pos = pos, size = self.legLen }
+		if extra then
+			for k, v in extra do
+				ev[k] = v
+			end
+		end
+		cb(name, ev)
+	end
+end
+
+local function footOf(leg: Leg): Vector3?
+	local p = leg.lower and leg.lower.Part1 :: BasePart
+	return if p then (p.CFrame * CFrame.new(0, -p.Size.Y / 2, 0)).Position else nil
 end
 
 -- Pose de una pata para su fase u (0..1): apoyo (barre hacia atrás) y vuelo (sube la caña y vuelve).
@@ -427,6 +454,14 @@ function CreatureAnimator:_locomotion(dt: number)
 		if leg.lower then
 			leg.lower.Transform = CFrame.Angles(kneeA, 0, 0)
 		end
+		local stance = u < duty
+		if stance and not leg.wasStance and move > 0.4 and self.pose.air.x < 0.3 then
+			local fp = footOf(leg)
+			if fp then
+				self:_emit("Pisada", fp, { speed = s })
+			end
+		end
+		leg.wasStance = stance
 		if u < duty then
 			-- La pata de apoyo más vertical sostiene el cuerpo.
 			local key = if leg.front then "front" else "back"
@@ -438,6 +473,14 @@ function CreatureAnimator:_locomotion(dt: number)
 	end
 	step(self.drop.front, dropOf(drops.front), 6, 0.8, dt)
 	step(self.drop.back, dropOf(drops.back), 6, 0.8, dt)
+	-- Frenada fuerte después de correr: polvo hacia adelante.
+	local decel = (self.prevSpeed - s) / dt
+	self.prevSpeed = s
+	if self.gallop + trot > 0.6 and decel > 3 * L and self.t - self.skidAt > 1.2 then
+		self.skidAt = self.t
+		local fwd = (self.vis2 :: CFrame).LookVector
+		self:_emit("Frenada", (self.vis2 :: CFrame).Position + fwd * L * 0.8, { dir = fwd })
+	end
 	return move, trot
 end
 
@@ -501,6 +544,7 @@ function CreatureAnimator:_ground(dt: number)
 		-- Aterrizaje: el cuerpo amortigua.
 		self.drop.back.v += 0.5 * L
 		self.drop.front.v += 0.6 * L
+		self:_emit("Caida", Vector3.new(cf.X, highest, cf.Z))
 	end
 	p.wasAir = air > 0.5
 	local onGround = (1 - air) * (1 - math.max(p.front, p.back))
@@ -669,7 +713,29 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 	if name ~= a.name or id ~= a.id then
 		a.name, a.id, a.t = name, id, 0
 	end
+	local before = a.t
 	a.t += dt
+	local function crossed(at: number): boolean
+		return before < at and a.t >= at
+	end
+	local m = self.m
+	if name == "Coletazo" then
+		local tipMotor = m.Tail4 or m.Tail3 or m.Tail2 or m.Tail1
+		local tip = tipMotor and (tipMotor.Part1 :: BasePart).Position
+		if tip and crossed(0.45) then
+			self:_emit("Latigazo", tip)
+		elseif tip and crossed(0.6) then
+			local fwd = (self.vis2 :: CFrame).LookVector
+			self:_emit("ColaGolpe", tip, { dir = -fwd })
+		end
+	elseif name == "Cabezazo" and m.Head then
+		local head = (m.Head.Part1 :: BasePart).Position
+		if crossed(0.3) then
+			self:_emit("Embestida", head)
+		elseif crossed(0.42) then
+			self:_emit("CabezaGolpe", head)
+		end
+	end
 	step(a.eat, if name == "Comer" then 1 else 0, 0.9, 1, dt)
 	-- Carga del salto: el jugador local usa su propio reloj (SaltoEn) para no esperar al servidor.
 	local jumpT: number? = nil
@@ -678,6 +744,9 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 		jumpT = os.clock() - localJump
 	elseif name == "Saltar" then
 		jumpT = a.t
+	end
+	if jumpT and jumpT >= 0.3 and jumpT - dt < 0.3 then
+		self:_emit("Salto", (self.vis2 :: CFrame).Position)
 	end
 	self.jumpCrouch = if not jumpT
 		then 0
@@ -786,7 +855,20 @@ function CreatureAnimator:update(dt: number)
 	local pose = self.pose
 	local rest, sleep = pose.rest.x, pose.sleep.x
 	-- Respiración: más lenta y profunda acostada y dormida (fase acumulada: sin saltos al cambiar).
+	local prevBreath = self.breathPhase
 	self.breathPhase += dt * TAU * lerp(0.28, 0.17, sleep)
+	local headPos = if self.m.Head then (self.m.Head.Part1 :: BasePart).Position else root.Position
+	if sleep > 0.7 and math.floor(prevBreath / TAU) ~= math.floor(self.breathPhase / TAU) then
+		self:_emit("RespiraDormida", headPos)
+	end
+	-- Quieta y despierta, cada tanto resopla.
+	self.nextSnort -= dt
+	if self.nextSnort <= 0 then
+		self.nextSnort = self.rng:NextNumber(8, 18)
+		if still > 0.8 and sleep < 0.1 then
+			self:_emit("Resoplido", headPos)
+		end
+	end
 	local breath = math.sin(self.breathPhase)
 	local dig = pose.dig.x
 	local dg = t * 7
@@ -815,6 +897,19 @@ function CreatureAnimator:update(dt: number)
 			* CFrame.new(-pivot)
 		-- Excavando, el cuerpo acompaña cada rascada (atrás-adelante y de costado).
 		local digRock = math.sin(dg) * dig
+		-- Cada rascada (la pata va hacia atrás) tira tierra.
+		local digSin = math.sin(dg)
+		if dig > 0.6 and (self.lastDigSin or 0) > 0 and digSin <= 0 then
+			for _, leg in self.legs :: { Leg } do
+				if leg.front and not leg.left then
+					local fp = footOf(leg)
+					if fp then
+						self:_emit("Rascada", fp, { dir = -(self.vis2 :: CFrame).LookVector })
+					end
+				end
+			end
+		end
+		self.lastDigSin = digSin
 		self.body.Transform = visual
 			* CFrame.new(0, bodyY + self.ground.dy.x, -act.lunge + 0.06 * L * digRock)
 			* slope
