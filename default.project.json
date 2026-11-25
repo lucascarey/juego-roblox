@@ -1,57 +1,107 @@
 {
-	"name": "juego-roblox",
-	"tree": {
-		"$className": "DataModel",
-		"ReplicatedStorage": {
-			"Shared": { "$path": "src/shared" },
-			"Packages": { "$path": { "optional": "Packages" } },
-			"DevPackages": { "$path": { "optional": "DevPackages" } }
-		},
-		"ServerScriptService": {
-			"Server": { "$path": "src/server" },
-			"ServerPackages": { "$path": { "optional": "ServerPackages" } }
-		},
-		"Lighting": {
-			"$properties": {
-				"Technology": "Future",
-				"ClockTime": 15.3,
-				"GeographicLatitude": 30,
-				"Brightness": 3.2,
-				"Ambient": [0.36, 0.38, 0.42],
-				"OutdoorAmbient": [0.58, 0.62, 0.64],
-				"EnvironmentDiffuseScale": 1,
-				"EnvironmentSpecularScale": 0.25,
-				"GlobalShadows": true,
-				"ShadowSoftness": 0.35
-			},
-			"Atmosphere": {
-				"$className": "Atmosphere",
-				"$properties": {
-					"Density": 0.4,
-					"Offset": 0.2,
-					"Color": [0.86, 0.9, 0.86],
-					"Decay": [0.5, 0.64, 0.68],
-					"Glare": 0.35,
-					"Haze": 1.9
-				}
-			},
-			"Bloom": {
-				"$className": "BloomEffect",
-				"$properties": { "Intensity": 0.55, "Size": 28, "Threshold": 1.4 }
-			},
-			"SunRays": {
-				"$className": "SunRaysEffect",
-				"$properties": { "Intensity": 0.07, "Spread": 0.75 }
-			},
-			"ColorCorrection": {
-				"$className": "ColorCorrectionEffect",
-				"$properties": { "Saturation": 0.1, "Contrast": 0.08, "Brightness": 0.02, "TintColor": [1, 0.97, 0.92] }
-			}
-		},
-		"StarterPlayer": {
-			"StarterPlayerScripts": {
-				"Client": { "$path": "src/client" }
-			}
-		}
-	}
+    "name":  "juego-roblox",
+    "tree":  {
+                 "$className":  "DataModel",
+                 "ReplicatedStorage":  {
+                                           "Shared":  {
+                                                          "$path":  "src/shared"
+                                                      },
+                                           "Packages":  {
+                                                            "$path":  {
+                                                                          "optional":  "Packages"
+                                                                      }
+                                                        },
+                                           "DevPackages":  {
+                                                               "$path":  {
+                                                                             "optional":  "DevPackages"
+                                                                         }
+                                                           }
+                                       },
+                 "ServerScriptService":  {
+                                             "Server":  {
+                                                            "$path":  "src/server"
+                                                        },
+                                             "ServerPackages":  {
+                                                                    "$path":  {
+                                                                                  "optional":  "ServerPackages"
+                                                                              }
+                                                                }
+                                         },
+                 "Lighting":  {
+                                  "$properties":  {
+                                                      "Technology":  "Future",
+                                                      "ClockTime":  14.6,
+                                                      "GeographicLatitude":  40,
+                                                      "Brightness":  3,
+                                                      "Ambient":  [
+                                                                      0.32,
+                                                                      0.36,
+                                                                      0.42
+                                                                  ],
+                                                      "OutdoorAmbient":  [
+                                                                             0.5,
+                                                                             0.58,
+                                                                             0.68
+                                                                         ],
+                                                      "EnvironmentDiffuseScale":  1,
+                                                      "EnvironmentSpecularScale":  0.25,
+                                                      "GlobalShadows":  true,
+                                                      "ShadowSoftness":  0.35
+                                                  },
+                                  "Atmosphere":  {
+                                                     "$className":  "Atmosphere",
+                                                     "$properties":  {
+                                                                         "Density":  0.4,
+                                                                         "Offset":  0.3,
+                                                                         "Color":  [
+                                                                                       0.74,
+                                                                                       0.84,
+                                                                                       0.92
+                                                                                   ],
+                                                                         "Decay":  [
+                                                                                       0.58,
+                                                                                       0.68,
+                                                                                       0.78
+                                                                                   ],
+                                                                         "Glare":  0.5,
+                                                                         "Haze":  2
+                                                                     }
+                                                 },
+                                  "Bloom":  {
+                                                "$className":  "BloomEffect",
+                                                "$properties":  {
+                                                                    "Intensity":  0.3,
+                                                                    "Size":  28,
+                                                                    "Threshold":  2
+                                                                }
+                                            },
+                                  "SunRays":  {
+                                                  "$className":  "SunRaysEffect",
+                                                  "$properties":  {
+                                                                      "Intensity":  0.12,
+                                                                      "Spread":  0.6
+                                                                  }
+                                              },
+                                  "ColorCorrection":  {
+                                                          "$className":  "ColorCorrectionEffect",
+                                                          "$properties":  {
+                                                                              "Saturation":  0.12,
+                                                                              "Contrast":  0.08,
+                                                                              "Brightness":  0.02,
+                                                                              "TintColor":  [
+                                                                                                1,
+                                                                                                0.97,
+                                                                                                0.9
+                                                                                            ]
+                                                                          }
+                                                      }
+                              },
+                 "StarterPlayer":  {
+                                       "StarterPlayerScripts":  {
+                                                                    "Client":  {
+                                                                                   "$path":  "src/client"
+                                                                               }
+                                                                }
+                                   }
+             }
 }
