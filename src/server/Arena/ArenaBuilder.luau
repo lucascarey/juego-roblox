@@ -139,7 +139,7 @@ function ArenaBuilder.terrain()
 	terrain:SetMaterialColor(Enum.Material.Ground, Color3.fromRGB(128, 96, 66))
 	terrain:SetMaterialColor(Enum.Material.Mud, Color3.fromRGB(78, 62, 48))
 	terrain:SetMaterialColor(Enum.Material.Rock, Color3.fromRGB(112, 116, 104))
-	terrain.GrassLength = 0.45
+	terrain.GrassLength = 0.3
 	terrain.WaterColor = Color3.fromRGB(64, 130, 120)
 	terrain.WaterTransparency = 0.5
 	terrain.WaterWaveSize = 0.06

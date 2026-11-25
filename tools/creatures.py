@@ -74,7 +74,7 @@ def paint_face(rng, w, h, face, ramp_len, pattern):
     else:
         # Manchas grandes claras y medias, con bordes irregulares.
         area = w * h
-        for tone, count, rmax in ((base + 1, max(1, area // 22), 3 if area > 80 else 2), (base - 1, max(1, area // 26), 1)):
+        for tone, count, rmax in ((base + 1, max(1, area // 26), 3 if area > 80 else 2), (base - 1, max(1, area // 40), 2)):
             for _ in range(count):
                 cx, cy = rng.randrange(w), rng.randrange(h)
                 r = rng.randint(1, rmax)
@@ -82,9 +82,9 @@ def paint_face(rng, w, h, face, ramp_len, pattern):
                     for x in range(cx - r, cx + r + 1):
                         if 0 <= x < w and 0 <= y < h and (x - cx) ** 2 + (y - cy) ** 2 <= r * r + rng.randint(-1, 1):
                             g[y][x] = tone
-        for _ in range(max(1, area // 20)):
+        for _ in range(max(1, area // 55)):
             g[rng.randrange(h)][rng.randrange(w)] = max(0, base - 2 + rng.randint(0, 1))
-        for _ in range(max(1, area // 30)):
+        for _ in range(max(1, area // 70)):
             g[rng.randrange(h)][rng.randrange(w)] = min(ramp_len - 1, base + 2)
 
     # Luz: arriba más claro, abajo más oscuro.
@@ -162,19 +162,36 @@ def export(species):
 
 
 def cuadrupedo():
-    """Cuerpo bajo en dos bloques, cabeza grande y baja, patas cortas y gruesas."""
+    """Cuerpo en tres bloques (anca, vientre, pecho con joroba), cuello y cabeza bajos,
+    mandíbula aparte, patas de tres segmentos, cola de tres y mechones en el lomo."""
     P = []
-    P.append(part("Rear", "Root", (3.5, 3, 3), (0, 3.25, 1.5)))
-    P.append(part("Chest", "Rear", (3.75, 3.25, 3), (0, 0.125, -3)))
-    P.append(part("Head", "Chest", (3, 2.5, 2.5), (0, -0.25, -1.5), pivot=(0, 0, 1.25)))
-    P.append(part("Snout", "Head", (2, 1.5, 1), (0, -0.5, -1.25), pivot=(0, 0, 0.5), ramp="light"))
-    P.append(part("Tail", "Rear", (1, 1, 1.25), (0, 0.75, 1.5), pivot=(0, 0, -0.625), rot=(-15, 0, 0)))
-    mirrored(part("Nostril", "Snout", (0.25, 0.25, 0.1), (0.5, 0.25, -0.55), ramp="dark", flat=True), P)
-    mirrored(part("Socket", "Head", (0.75, 0.5, 0.1), (0.875, 0.375, -1.3), ramp="dark", flat=True), P)
-    mirrored(part("Eye", "Head", (0.25, 0.25, 0.1), (0.875, 0.375, -1.36), ramp="eye", neon=True), P)
-    mirrored(part("Ear", "Head", (0.5, 0.5, 0.25), (1.125, 1.5, 0.75), ramp="dark"), P)
-    mirrored(part("LegFront", "Chest", (1.25, 1.75, 1.25), (1.125, -1.375, -0.375), pivot=(0, 1.125, 0), ramp="leg"), P)
-    mirrored(part("LegBack", "Rear", (1.25, 1.75, 1.25), (1.0, -1.25, 0.5), pivot=(0, 1.125, 0), ramp="leg"), P)
+    # Cuerpo: el vientre es la raíz; el pecho adelante es el bloque más grande.
+    P.append(part("Mid", "Root", (3.5, 3, 2.25), (0, 3.9, 0.5)))
+    P.append(part("Rear", "Mid", (3.25, 2.75, 2.5), (0, -0.1, 1.125), pivot=(0, 0, -1.25), rot=(4, 0, 0)))
+    P.append(part("Chest", "Mid", (3.75, 3.25, 2.5), (0, 0.15, -1.125), pivot=(0, 0, 1.25)))
+    P.append(part("Hump", "Chest", (2.75, 0.75, 2), (0, 1.75, 0.25), ramp="light"))
+    for name, parent, y in (("TuftA", "Mid", 1.6), ("TuftB", "Rear", 1.45), ("TuftC", "Chest", 2.2)):
+        P.append(part(name, parent, (0.75, 0.5, 1), (0, y, 0), ramp="dark"))
+    # Cabeza
+    P.append(part("Neck", "Chest", (2.25, 2, 1.5), (0, 0.25, -1.25), pivot=(0, 0.25, 0.6), rot=(-14, 0, 0)))
+    P.append(part("Head", "Neck", (3, 2.25, 2.5), (0, -0.1, -0.75), pivot=(0, 0.1, 1.1), rot=(8, 0, 0)))
+    P.append(part("Snout", "Head", (2, 1.25, 1.25), (0, -0.35, -1.25), pivot=(0, 0, 0.6), ramp="light"))
+    P.append(part("Jaw", "Head", (2.5, 0.75, 2), (0, -1.125, -0.4), pivot=(0, 0.375, 0.1), ramp="light"))
+    mirrored(part("Nostril", "Snout", (0.25, 0.25, 0.1), (0.5, 0.2, -0.68), ramp="dark", flat=True), P)
+    mirrored(part("Socket", "Head", (0.75, 0.5, 0.1), (0.95, 0.55, -1.3), ramp="dark", flat=True), P)
+    mirrored(part("Eye", "Head", (0.25, 0.25, 0.1), (0.95, 0.55, -1.36), ramp="eye", neon=True), P)
+    mirrored(part("Ear", "Head", (0.5, 0.75, 0.5), (1.1, 1.4, 0.7), ramp="dark"), P)
+    # Patas: muslo, caña y pata; las de adelante un poco más gruesas.
+    mirrored(part("LegFU", "Chest", (1.5, 1.5, 1.5), (1.25, -1.3, -0.25), pivot=(0, 0.5, 0), rot=(-4, 0, 0), ramp="leg"), P)
+    mirrored(part("LegFL", "LegFU*", (1.25, 1.25, 1.25), (0, -0.75, 0), pivot=(0, 0.5, 0), rot=(4, 0, 0), ramp="leg"), P)
+    mirrored(part("PawF", "LegFL*", (1.5, 0.5, 1.75), (0, -0.625, -0.1), pivot=(0, 0.125, 0), ramp="dark"), P)
+    mirrored(part("LegBU", "Rear", (1.5, 1.5, 1.5), (1.05, -1.2, 0.3), pivot=(0, 0.35, 0), rot=(6, 0, 0), ramp="leg"), P)
+    mirrored(part("LegBL", "LegBU*", (1.25, 1.25, 1.25), (0, -0.75, 0), pivot=(0, 0.5, 0), rot=(-6, 0, 0), ramp="leg"), P)
+    mirrored(part("PawB", "LegBL*", (1.5, 0.5, 1.75), (0, -0.625, -0.1), pivot=(0, 0.125, 0), ramp="dark"), P)
+    # Cola en tres segmentos que se achican y se curvan hacia arriba.
+    P.append(part("Tail1", "Rear", (1.25, 1.25, 1.25), (0, 0.6, 1.25), pivot=(0, 0, -0.5), rot=(-20, 0, 0)))
+    P.append(part("Tail2", "Tail1", (1, 1, 1.25), (0, 0, 0.6), pivot=(0, 0, -0.5), rot=(-15, 0, 0)))
+    P.append(part("Tail3", "Tail2", (0.75, 0.75, 1), (0, 0, 0.6), pivot=(0, 0, -0.4), rot=(-10, 0, 0), ramp="dark"))
     return {
         "name": "Cuadrupedo",
         "seed": 3,

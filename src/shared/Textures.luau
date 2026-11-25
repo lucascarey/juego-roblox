@@ -6,7 +6,7 @@ return {
 	Piedra = "rbxassetid://81596402758680",
 	-- Atlas de cada especie (tools/creatures.py).
 	Atlas = {
-		Cuadrupedo = "rbxassetid://117077249635968",
+		Cuadrupedo = "rbxassetid://100673216757102",
 	},
 	-- 16 px por tile; 4 studs por tile = 4 px por stud, la misma escala en todas las piezas.
 	STUDS_PER_TILE = 4,
