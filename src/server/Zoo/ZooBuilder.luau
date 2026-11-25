@@ -148,22 +148,77 @@ local function groundAt(x: number, z: number): number
 	return if hit then hit.Position.Y else 0
 end
 
--- Las cuatro etapas de la especie, repartidas en el corral.
+-- Las cuatro etapas de la especie: una familia (madre adulta con su joven y su cría) junto al huevo.
+-- La IA (server/Creatures/CreatureAI) maneja a las que tienen IA = true.
 local function creatures(parent: Instance)
 	local c = PEN_CENTER
 	local list = {
-		{ Species.HuevoMusgo, V(-12, 0, -8), 30, 1, false },
-		{ Species.Musgo, V(-4, 0, -12), 200, 0, true }, -- cría
-		{ Species.Musgo, V(10, 0, 0), 160, 0.5, true }, -- joven
-		{ Species.Musgo, V(-20, 0, 14), 120, 1, true }, -- adulta
+		{ Species.HuevoMusgo, V(-12, 0, -8), 30, 1, nil },
+		{ Species.Musgo, V(-4, 0, -12), 200, 0, "Cria" },
+		{ Species.Musgo, V(10, 0, 0), 160, 0.5, "Joven" },
+		{ Species.Musgo, V(-20, 0, 14), 120, 1, "Madre" },
 	}
 	for _, s in list do
-		local def, off, yaw, age, wander = s[1], s[2], s[3], s[4], s[5]
+		local def, off, yaw, age, role = s[1], s[2], s[3], s[4], s[5]
 		local x, z = c.X + off.X, c.Z + off.Z
 		local cf = CFrame.new(x, groundAt(x, z), z) * CFrame.Angles(0, math.rad(yaw), 0)
 		local model = CreatureBuilder.build(def, cf, { age = age })
-		model:SetAttribute("Wander", wander)
+		if role then
+			model:SetAttribute("IA", true)
+			model:SetAttribute("Grupo", "Familia1")
+			model:SetAttribute("Rol", role)
+		end
 		model.Parent = parent
+	end
+end
+
+-- Carteles junto al cerco sur (del lado del spawn): cada uno convierte al jugador en una etapa y lo
+-- deja adentro del corral. Los maneja server/Creatures/PlayAsCreature.
+local function stagePads(parent: Instance)
+	local c = PEN_CENTER
+	local fenceZ = c.Z - PEN_SIZE.Z / 2
+	local stages = {
+		{ "Cría", 0, Color3.fromRGB(250, 196, 214) },
+		{ "Joven", 0.5, Color3.fromRGB(240, 150, 180) },
+		{ "Adulta", 1, Color3.fromRGB(214, 112, 150) },
+	}
+	for i, s in stages do
+		local name, age, color = s[1], s[2], s[3]
+		local x = c.X + (i - 2) * 8
+		local pad = block(
+			parent,
+			"Etapa" .. name,
+			V(5, 1, 5),
+			CFrame.new(x, 0.5, fenceZ - 7),
+			color,
+			Enum.Material.SmoothPlastic
+		)
+		pad:SetAttribute("Especie", "Musgo")
+		pad:SetAttribute("Edad", age)
+		-- Aparece adentro del corral, mirando hacia el centro (+Z).
+		pad:SetAttribute("Aparece", CFrame.new(x, 0, fenceZ + 10) * CFrame.Angles(0, math.pi, 0))
+		local prompt = Instance.new("ProximityPrompt")
+		prompt.ActionText = "Jugar como " .. string.lower(name)
+		prompt.ObjectText = "Musgo"
+		prompt.KeyboardKeyCode = Enum.KeyCode.F
+		prompt.MaxActivationDistance = 8
+		prompt.RequiresLineOfSight = false
+		prompt.Parent = pad
+		local bb = Instance.new("BillboardGui")
+		bb.Size = UDim2.fromOffset(160, 40)
+		bb.StudsOffset = Vector3.new(0, 3, 0)
+		bb.AlwaysOnTop = true
+		bb.MaxDistance = 60
+		bb.Parent = pad
+		local text = Instance.new("TextLabel")
+		text.Size = UDim2.fromScale(1, 1)
+		text.BackgroundTransparency = 1
+		text.Font = Enum.Font.GothamBold
+		text.TextSize = 20
+		text.TextColor3 = Color3.new(1, 1, 1)
+		text.TextStrokeTransparency = 0.4
+		text.Text = name
+		text.Parent = bb
 	end
 end
 
@@ -180,6 +235,7 @@ function ZooBuilder.build()
 	task.wait() -- los rayos no ven el terreno nuevo hasta el próximo cuadro
 	baseplate(root)
 	fence(root)
+	stagePads(root)
 	local crit = Instance.new("Folder")
 	crit.Name = "Criaturas"
 	crit.Parent = root
