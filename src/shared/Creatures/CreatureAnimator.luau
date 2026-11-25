@@ -6,6 +6,8 @@
 --   - Cuerpo: baja cuando las patas de apoyo se inclinan, rola y flexiona la columna al girar.
 --   - Cuello y cabeza: compensan el cabeceo del cuerpo, adelantan los giros y miran alrededor en reposo.
 --   - Cola, antenas y barba: resortes con inercia (se quedan atrás y rebotan cuando el cuerpo acelera).
+--   - Terreno: rayos bajo cada cadera; el cuerpo se inclina con la pendiente y cada pata dobla la
+--     rodilla (IK de dos huesos) para apoyar en el suelo real, manteniéndose vertical.
 --   - Reposo: respiración y cambio de peso.
 -- Funciona con cualquier especie que use los nombres de piezas de tools/creatures.py.
 
@@ -26,7 +28,22 @@ type Chain = {
 	damp: number,
 	prev: CFrame,
 }
-type Leg = { upper: Motor6D, lower: Motor6D?, front: boolean, left: boolean }
+type Leg = {
+	upper: Motor6D,
+	lower: Motor6D?,
+	front: boolean,
+	left: boolean,
+	hip: Vector3, -- cadera en el espacio de la Root, en reposo
+	a: number, -- cadera a rodilla
+	b: number, -- rodilla al piso
+	shorten: Spring, -- cuánto tiene que acortarse para apoyar en el suelo real
+	swing: number, -- ángulo de paso del último cuadro (para buscar el suelo donde está el pie)
+}
+
+-- Los rayos al suelo ignoran a todas las criaturas.
+local groundParams = RaycastParams.new()
+groundParams.FilterType = Enum.RaycastFilterType.Exclude
+local ignored: { Instance } = {}
 
 local function newSpring(): Spring
 	return { x = 0, v = 0 }
@@ -35,8 +52,13 @@ end
 -- Resorte amortiguado (Euler semi-implícito), definido por frecuencia (Hz) y amortiguación (1 = crítico).
 local function step(s: Spring, target: number, freq: number, damp: number, dt: number)
 	local w = TAU * freq
-	s.v += (w * w * (target - s.x) - 2 * damp * w * s.v) * dt
-	s.x += s.v * dt
+	-- Subpasos para que sea estable aunque el cuadro sea lento (Euler diverge con w*dt > ~2).
+	local n = math.ceil(w * dt / 0.5)
+	local h = dt / n
+	for _ = 1, n do
+		s.v += (w * w * (target - s.x) - 2 * damp * w * s.v) * h
+		s.x += s.v * h
+	end
 end
 
 local function smooth(k: number): number
@@ -144,21 +166,36 @@ function CreatureAnimator.new(model: Model)
 		for _, side in { "L", "R" } do
 			local upper = m["Leg" .. fb .. "U" .. side]
 			if upper then
+				local lower = m["Leg" .. fb .. "L" .. side]
+				local p0 = rest[upper.Part0 :: BasePart] or CFrame.identity
+				local hip = (p0 * upper.C0).Position
+				local knee = if lower then (rest[upper.Part1 :: BasePart] * lower.C0).Position else hip
 				table.insert(legs, {
 					upper = upper,
-					lower = m["Leg" .. fb .. "L" .. side],
+					lower = lower,
 					front = fb == "F",
 					left = side == "L",
+					hip = hip,
+					a = (hip - knee).Magnitude,
+					b = knee.Y - lowest,
+					shorten = newSpring(),
+					swing = 0,
 				})
-				local p0 = rest[upper.Part0 :: BasePart]
-				if p0 then
-					hipY = math.max(hipY, (p0 * upper.C0).Position.Y)
-				end
+				hipY = math.max(hipY, hip.Y)
 			end
 		end
 	end
 	self.legs = legs
 	self.legLen = math.max(0.5, hipY - lowest)
+	self.groundOffset = -lowest -- altura de la Root sobre el piso en reposo
+	local hipCenter = Vector3.zero
+	for _, leg in legs do
+		hipCenter += leg.hip / #legs
+	end
+	self.hipCenter = Vector3.new(hipCenter.X, lowest, hipCenter.Z) -- punto de giro al inclinarse
+	self.ground = { dy = newSpring(), pitch = newSpring(), roll = newSpring() }
+	table.insert(ignored, model)
+	groundParams.FilterDescendantsInstances = ignored
 	self.bodyLen = if self.spine then (self.spine.Part1 :: BasePart).Size.Z else 3
 
 	-- Cuello y cabeza, de la base a la punta.
@@ -248,12 +285,26 @@ function CreatureAnimator:_locomotion(dt: number)
 		local trotOff = if leg.front == leg.left then 0.5 else 0
 		local u = (self.phase + lerp(walkOff, trotOff, trot)) % 1
 		local hip, knee = legPose(u, duty, amp)
+		leg.swing = hip * self.move.x
 		hip *= move
 		knee *= move
-		leg.upper.Transform = CFrame.Angles(hip, 0, 0)
+		-- IK: acortar la pata doblando la rodilla y girar la cadera para que el pie quede bajo ella;
+		-- además se descuenta la inclinación del cuerpo para que la pata quede vertical.
+		local ikHip, ikKnee = 0, 0
+		local e = leg.shorten.x
+		if leg.lower and e > 0.01 then
+			local a, b = leg.a, leg.b
+			local d = math.max(a + b - e, math.abs(a - b) + 0.05)
+			local interior = math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
+			local bend = math.pi - interior
+			ikKnee = -bend
+			ikHip = math.atan2(b * math.sin(bend), a + b * math.cos(bend))
+		end
+		local tilt = self.ground.pitch.x + (if leg.front then self.lastChestPitch or 0 else 0)
+		leg.upper.Transform = CFrame.Angles(hip + ikHip - tilt, 0, -self.ground.roll.x)
 		if leg.lower then
 			-- La rodilla dobla hacia atrás en el vuelo; un poco más en las traseras.
-			leg.lower.Transform = CFrame.Angles(knee * (if leg.front then 1 else 1.2), 0, 0)
+			leg.lower.Transform = CFrame.Angles(knee * (if leg.front then 1 else 1.2) + ikKnee, 0, 0)
 		end
 		if u < duty then
 			-- La pata de apoyo más vertical sostiene el cuerpo.
@@ -267,6 +318,59 @@ function CreatureAnimator:_locomotion(dt: number)
 	step(self.drop.front, dropOf(drops.front), 6, 0.8, dt)
 	step(self.drop.back, dropOf(drops.back), 6, 0.8, dt)
 	return move, trot
+end
+
+-- Ajuste al terreno: altura del suelo bajo cada cadera, plano del cuerpo y cuánto acortar cada pata.
+function CreatureAnimator:_ground(dt: number)
+	local legs = self.legs :: { Leg }
+	if #legs < 4 then
+		return
+	end
+	local cf = self.vis2 :: CFrame
+	local L = self.legLen
+	local nominal = cf.Y - self.groundOffset
+	local g = {}
+	for i, leg in legs do
+		-- El suelo se busca donde está el pie (adelante o atrás de la cadera según el paso).
+		local wp = cf:PointToWorldSpace(leg.hip + Vector3.new(0, 0, -L * math.sin(leg.swing)))
+		local hit = workspace:Raycast(wp + Vector3.new(0, L, 0), Vector3.new(0, -3 * L, 0), groundParams)
+		g[i] = if hit then hit.Position.Y else nominal
+	end
+	-- Promedios adelante/atrás e izquierda/derecha -> inclinación del cuerpo.
+	local F, B, Lf, R, nF, nB, nL, nR = 0, 0, 0, 0, 0, 0, 0, 0
+	local zF, zB, xL, xR = 0, 0, 0, 0
+	for i, leg in legs do
+		if leg.front then
+			F, nF, zF = F + g[i], nF + 1, zF + leg.hip.Z
+		else
+			B, nB, zB = B + g[i], nB + 1, zB + leg.hip.Z
+		end
+		if leg.left then
+			Lf, nL, xL = Lf + g[i], nL + 1, xL + leg.hip.X
+		else
+			R, nR, xR = R + g[i], nR + 1, xR + leg.hip.X
+		end
+	end
+	F, B, Lf, R = F / nF, B / nB, Lf / nL, R / nR
+	zF, zB, xL, xR = zF / nF, zB / nB, xL / nL, xR / nR
+	local slopeF = (F - B) / math.max(0.5, zB - zF) -- sube hacia adelante (-Z)
+	local slopeL = (Lf - R) / math.max(0.5, xR - xL) -- sube hacia la izquierda (-X)
+	local gc = (F + B) / 2
+	local zc, xc = (zF + zB) / 2, (xL + xR) / 2
+	-- Lo que el plano no explica lo absorben las patas: el cuerpo baja hasta que la pata con el
+	-- suelo más bajo llegue estirada, y las demás doblan la rodilla.
+	local lower = 0
+	local resid = {}
+	for i, leg in legs do
+		resid[i] = g[i] - (gc + slopeF * (zc - leg.hip.Z) + slopeL * (xc - leg.hip.X))
+		lower = math.max(lower, -resid[i])
+	end
+	for i, leg in legs do
+		step(leg.shorten, math.min(resid[i] + lower, 0.6 * (leg.a + leg.b)), 8, 1, dt)
+	end
+	step(self.ground.dy, gc - nominal - lower, 8, 1, dt)
+	step(self.ground.pitch, math.clamp(math.atan(slopeF), -0.5, 0.5), 6, 1, dt)
+	step(self.ground.roll, math.clamp(-math.atan(slopeL), -0.35, 0.35), 6, 1, dt)
 end
 
 function CreatureAnimator:_lookAround(dt: number, move: number)
@@ -359,6 +463,7 @@ function CreatureAnimator:update(dt: number)
 		self:_egg(dt)
 		return
 	end
+	self:_ground(dt)
 	local move, trot = self:_locomotion(dt)
 	self:_lookAround(dt, move)
 	local L = self.legLen
@@ -377,8 +482,12 @@ function CreatureAnimator:update(dt: number)
 	if self.body then
 		local c0 = self.body.C0
 		local visual = c0:Inverse() * root.CFrame:ToObjectSpace(self.vis2 :: CFrame) * c0
+		-- Inclinación del terreno, girando alrededor del centro de las caderas a nivel del piso.
+		local pivot = c0:PointToObjectSpace(self.hipCenter)
+		local slope = CFrame.new(pivot) * CFrame.Angles(self.ground.pitch.x, 0, self.ground.roll.x) * CFrame.new(-pivot)
 		self.body.Transform = visual
-			* CFrame.new(0, bodyY, 0)
+			* CFrame.new(0, bodyY + self.ground.dy.x, 0)
+			* slope
 			* CFrame.Angles(bodyPitch, 0, stepRoll + shift - yawRate * 0.04)
 	end
 	local chestPitch = 0
@@ -388,6 +497,7 @@ function CreatureAnimator:update(dt: number)
 		local spineYaw = yawRate * 0.12 + math.sin(self.phase * TAU) * 0.03 * move * (1 - trot)
 		self.spine.Transform = CFrame.Angles(chestPitch, spineYaw, 0)
 	end
+	self.lastChestPitch = chestPitch
 
 	-- Cuello y cabeza: compensan el cuerpo para que la cabeza quede estable, adelantan el giro,
 	-- cabecean con el paso y miran alrededor.
@@ -395,7 +505,7 @@ function CreatureAnimator:update(dt: number)
 	if n > 0 then
 		local nod = math.sin(self.phase * TAU * 2) * 0.05 * move * (1 - trot * 0.5)
 		local yaw = self.look.yaw.x + yawRate * 0.22
-		local pitch = self.look.pitch.x + nod - (bodyPitch + chestPitch)
+		local pitch = self.look.pitch.x + nod - (bodyPitch + chestPitch) - self.ground.pitch.x * 0.5
 		local weights = if n >= 3 then { 0.35, 0.25, 0.4 } elseif n == 2 then { 0.5, 0.5 } else { 1 }
 		for i, motor in self.neck do
 			local w = weights[i] or 0

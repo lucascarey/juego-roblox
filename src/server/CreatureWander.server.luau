@@ -65,7 +65,10 @@ RunService.Heartbeat:Connect(function(dt)
 				local r = s.rng:NextNumber(6, RADIUS)
 				s.target = s.home + Vector3.new(math.cos(a) * r, 0, math.sin(a) * r)
 				-- La mayoría camina; a veces trota.
-				s.speed = if s.rng:NextNumber() < 0.3 then s.rng:NextNumber(9, 12) else s.rng:NextNumber(3, 5)
+				-- Las crías tienen patas cortas: van más lento.
+				local age = model:GetAttribute("Age") :: number? or 1
+				local scale = 0.4 + 0.6 * age
+				s.speed = scale * (if s.rng:NextNumber() < 0.3 then s.rng:NextNumber(9, 12) else s.rng:NextNumber(3, 5))
 			end
 		end
 		local target = s.target
