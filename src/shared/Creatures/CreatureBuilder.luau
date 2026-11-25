@@ -14,7 +14,7 @@ export type PartDef = {
 	neon: boolean?,
 	flat: boolean?, -- sin textura (dientes, ojos, detalles chicos)
 	faces: { [string]: { number } }?, -- recorte del atlas por cara: {u, v, ancho, alto} en studs
-	babyScale: number?, -- tamaño relativo de la pieza en la cría (cabeza > 1, patas < 1); default 1
+	babyScale: (number | Vector3)?, -- tamaño relativo de la pieza en la cría (cabeza > 1, patas < 1); default 1
 }
 
 export type SpeciesDef = {
@@ -31,6 +31,7 @@ export type BuildOptions = {
 	size: number?, -- tamaño individual, ej. 0.9 a 1.12 (default 1)
 }
 
+local CollectionService = game:GetService("CollectionService")
 local Textures = require(script.Parent.Parent.Textures)
 
 local CreatureBuilder = {}
@@ -60,16 +61,19 @@ local function applyAtlas(
 	faces: { [string]: { number } },
 	atlas: string,
 	atlasStuds: Vector2,
-	scale: number
+	scale: Vector3
 )
 	for faceName, r in faces do
+		-- Ejes de la pieza que recorren U y V en cada cara, para estirar el recorte igual que la caja.
+		local su = if faceName == "Left" or faceName == "Right" then scale.Z else scale.X
+		local sv = if faceName == "Top" or faceName == "Bottom" then scale.Z else scale.Y
 		local t = Instance.new("Texture")
 		t.Texture = atlas
 		t.Face = (Enum.NormalId :: any)[faceName]
-		t.StudsPerTileU = atlasStuds.X * scale
-		t.StudsPerTileV = atlasStuds.Y * scale
-		t.OffsetStudsU = r[1] * scale
-		t.OffsetStudsV = r[2] * scale
+		t.StudsPerTileU = atlasStuds.X * su
+		t.StudsPerTileV = atlasStuds.Y * sv
+		t.OffsetStudsU = r[1] * su
+		t.OffsetStudsV = r[2] * sv
 		t.Parent = part
 	end
 end
@@ -83,9 +87,11 @@ local function lerp(a: number, b: number, t: number): number
 end
 
 -- Escala de una pieza para una edad: tamaño general de la etapa por su proporción de cría.
-function CreatureBuilder.partScale(def: SpeciesDef, p: PartDef?, age: number, size: number): number
+function CreatureBuilder.partScale(def: SpeciesDef, p: PartDef?, age: number, size: number): Vector3
 	local overall = lerp(def.babySize or 0.4, 1, age) * size
-	return overall * lerp(if p then p.babyScale or 1 else 1, 1, age)
+	local b = if p and p.babyScale then p.babyScale else 1
+	local bv = if typeof(b) == "Vector3" then b else Vector3.one * (b :: number)
+	return overall * bv:Lerp(Vector3.one, age)
 end
 
 function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?): Model
@@ -94,8 +100,11 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?)
 
 	local model = Instance.new("Model")
 	model.Name = def.name
+	model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic -- el animador necesita todas las piezas a la vez
 	model:SetAttribute("Age", age)
 	model:SetAttribute("Size", size)
+	model:SetAttribute("Species", def.name)
+	CollectionService:AddTag(model, "Creature") -- el animador del cliente anima todo lo que tenga este tag
 
 	local root = Instance.new("Part")
 	root.Name = "Root"
@@ -108,7 +117,7 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?)
 	model.PrimaryPart = root
 
 	local byName: { [string]: BasePart } = { Root = root }
-	local scaleOf: { [string]: number } = { Root = CreatureBuilder.partScale(def, nil, age, size) }
+	local scaleOf: { [string]: Vector3 } = { Root = CreatureBuilder.partScale(def, nil, age, size) }
 	for i, p in def.parts do
 		local parentPart = byName[p.parent]
 		assert(parentPart, `{def.name}: la pieza "{p.name}" usa un padre inexistente "{p.parent}"`)
@@ -130,7 +139,8 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?)
 		if p.faces and def.atlas and def.atlasStuds then
 			applyAtlas(part, p.faces, def.atlas, def.atlasStuds, s)
 		elseif not p.neon and not p.flat then
-			applySkin(part, color, i, s)
+			-- shortcut: la textura teñida asume escala uniforme; las especies con babyScale x,y,z usan atlas
+			applySkin(part, color, i, s.X)
 		end
 
 		-- La articulación se escala con el padre (está en su espacio) y el pivote con la pieza.

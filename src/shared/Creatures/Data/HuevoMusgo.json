@@ -1,0 +1,677 @@
+{
+ "name": "HuevoMusgo",
+ "atlasStuds": [
+  32.0,
+  16.0
+ ],
+ "babySize": 0.4,
+ "palette": {
+  "body": [
+   244,
+   146,
+   170
+  ],
+  "belly": [
+   234,
+   216,
+   218
+  ],
+  "moss": [
+   112,
+   150,
+   40
+  ],
+  "horn": [
+   214,
+   118,
+   146
+  ],
+  "dark": [
+   176,
+   102,
+   138
+  ]
+ },
+ "parts": [
+  {
+   "name": "Capa1",
+   "parent": "Root",
+   "size": [
+    2.5,
+    0.75,
+    1.75
+   ],
+   "joint": [
+    0,
+    0.375,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 1,
+    "moss": 0,
+    "mossTop": false
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     3.5,
+     2.5,
+     1.75
+    ],
+    "Bottom": [
+     2.75,
+     3.5,
+     2.5,
+     1.75
+    ],
+    "Front": [
+     2.0,
+     7.25,
+     2.5,
+     0.75
+    ],
+    "Back": [
+     4.75,
+     7.25,
+     2.5,
+     0.75
+    ],
+    "Left": [
+     7.5,
+     7.25,
+     1.75,
+     0.75
+    ],
+    "Right": [
+     9.5,
+     7.25,
+     1.75,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Cruz1",
+   "parent": "Capa1",
+   "size": [
+    1.75,
+    0.75,
+    2.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 1,
+    "moss": 0,
+    "mossTop": false
+   },
+   "faces": {
+    "Top": [
+     10.5,
+     0.0,
+     1.75,
+     2.5
+    ],
+    "Bottom": [
+     12.5,
+     0.0,
+     1.75,
+     2.5
+    ],
+    "Front": [
+     11.5,
+     7.25,
+     1.75,
+     0.75
+    ],
+    "Back": [
+     13.5,
+     7.25,
+     1.75,
+     0.75
+    ],
+    "Left": [
+     15.5,
+     7.25,
+     2.5,
+     0.75
+    ],
+    "Right": [
+     18.25,
+     7.25,
+     2.5,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Capa2",
+   "parent": "Capa1",
+   "size": [
+    3.25,
+    1.5,
+    2.5
+   ],
+   "joint": [
+    0,
+    1.125,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.6,
+    "moss": 0.15,
+    "mossTop": false
+   },
+   "faces": {
+    "Top": [
+     14.5,
+     0.0,
+     3.25,
+     2.5
+    ],
+    "Bottom": [
+     18.0,
+     0.0,
+     3.25,
+     2.5
+    ],
+    "Front": [
+     13.5,
+     3.5,
+     3.25,
+     1.5
+    ],
+    "Back": [
+     17.0,
+     3.5,
+     3.25,
+     1.5
+    ],
+    "Left": [
+     20.5,
+     3.5,
+     2.5,
+     1.5
+    ],
+    "Right": [
+     23.25,
+     3.5,
+     2.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Cruz2",
+   "parent": "Capa2",
+   "size": [
+    2.5,
+    1.5,
+    3.25
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.6,
+    "moss": 0.15,
+    "mossTop": false
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     0.0,
+     2.5,
+     3.25
+    ],
+    "Bottom": [
+     2.75,
+     0.0,
+     2.5,
+     3.25
+    ],
+    "Front": [
+     26.0,
+     3.5,
+     2.5,
+     1.5
+    ],
+    "Back": [
+     28.75,
+     3.5,
+     2.5,
+     1.5
+    ],
+    "Left": [
+     0.0,
+     5.5,
+     3.25,
+     1.5
+    ],
+    "Right": [
+     3.5,
+     5.5,
+     3.25,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Capa3",
+   "parent": "Capa2",
+   "size": [
+    3,
+    1.25,
+    2.25
+   ],
+   "joint": [
+    0,
+    1.375,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 0.45,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     25.5,
+     0.0,
+     3.0,
+     2.25
+    ],
+    "Bottom": [
+     28.75,
+     0.0,
+     3.0,
+     2.25
+    ],
+    "Front": [
+     7.0,
+     5.5,
+     3.0,
+     1.25
+    ],
+    "Back": [
+     10.25,
+     5.5,
+     3.0,
+     1.25
+    ],
+    "Left": [
+     13.5,
+     5.5,
+     2.25,
+     1.25
+    ],
+    "Right": [
+     16.0,
+     5.5,
+     2.25,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "Cruz3",
+   "parent": "Capa3",
+   "size": [
+    2.25,
+    1.25,
+    3
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 0.45,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     5.5,
+     0.0,
+     2.25,
+     3.0
+    ],
+    "Bottom": [
+     8.0,
+     0.0,
+     2.25,
+     3.0
+    ],
+    "Front": [
+     18.5,
+     5.5,
+     2.25,
+     1.25
+    ],
+    "Back": [
+     21.0,
+     5.5,
+     2.25,
+     1.25
+    ],
+    "Left": [
+     23.5,
+     5.5,
+     3.0,
+     1.25
+    ],
+    "Right": [
+     26.75,
+     5.5,
+     3.0,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "Capa4",
+   "parent": "Capa3",
+   "size": [
+    2.5,
+    0.75,
+    1.75
+   ],
+   "joint": [
+    0,
+    1.0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     5.5,
+     3.5,
+     2.5,
+     1.75
+    ],
+    "Bottom": [
+     8.25,
+     3.5,
+     2.5,
+     1.75
+    ],
+    "Front": [
+     21.0,
+     7.25,
+     2.5,
+     0.75
+    ],
+    "Back": [
+     23.75,
+     7.25,
+     2.5,
+     0.75
+    ],
+    "Left": [
+     26.5,
+     7.25,
+     1.75,
+     0.75
+    ],
+    "Right": [
+     28.5,
+     7.25,
+     1.75,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Cruz4",
+   "parent": "Capa4",
+   "size": [
+    1.75,
+    0.75,
+    2.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     21.5,
+     0.0,
+     1.75,
+     2.5
+    ],
+    "Bottom": [
+     23.5,
+     0.0,
+     1.75,
+     2.5
+    ],
+    "Front": [
+     0.0,
+     8.5,
+     1.75,
+     0.75
+    ],
+    "Back": [
+     2.0,
+     8.5,
+     1.75,
+     0.75
+    ],
+    "Left": [
+     4.0,
+     8.5,
+     2.5,
+     0.75
+    ],
+    "Right": [
+     6.75,
+     8.5,
+     2.5,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Capa5",
+   "parent": "Capa4",
+   "size": [
+    1.75,
+    0.5,
+    1.0
+   ],
+   "joint": [
+    0,
+    0.625,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 1,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     30.0,
+     5.5,
+     1.75,
+     1.0
+    ],
+    "Bottom": [
+     0.0,
+     7.25,
+     1.75,
+     1.0
+    ],
+    "Front": [
+     9.5,
+     8.5,
+     1.75,
+     0.5
+    ],
+    "Back": [
+     11.5,
+     8.5,
+     1.75,
+     0.5
+    ],
+    "Left": [
+     13.5,
+     8.5,
+     1.0,
+     0.5
+    ],
+    "Right": [
+     14.75,
+     8.5,
+     1.0,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Cruz5",
+   "parent": "Capa5",
+   "size": [
+    1.0,
+    0.5,
+    1.75
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0,
+    "moss": 1,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     11.0,
+     3.5,
+     1.0,
+     1.75
+    ],
+    "Bottom": [
+     12.25,
+     3.5,
+     1.0,
+     1.75
+    ],
+    "Front": [
+     16.0,
+     8.5,
+     1.0,
+     0.5
+    ],
+    "Back": [
+     17.25,
+     8.5,
+     1.0,
+     0.5
+    ],
+    "Left": [
+     18.5,
+     8.5,
+     1.75,
+     0.5
+    ],
+    "Right": [
+     20.5,
+     8.5,
+     1.75,
+     0.5
+    ]
+   }
+  }
+ ]
+}

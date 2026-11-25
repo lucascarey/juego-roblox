@@ -7,6 +7,8 @@ return {
 	-- Atlas de cada especie (tools/creatures.py).
 	Atlas = {
 		Cuadrupedo = "rbxassetid://100673216757102",
+		Musgo = "rbxassetid://97383471487994",
+		HuevoMusgo = "rbxassetid://86779088667442",
 	},
 	-- 16 px por tile; 4 studs por tile = 4 px por stud, la misma escala en todas las piezas.
 	STUDS_PER_TILE = 4,

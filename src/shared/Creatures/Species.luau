@@ -46,7 +46,7 @@ local function fromData(data: any, atlas: string): SpeciesDef
 			neon = p.neon,
 			flat = p.flat,
 			faces = p.faces,
-			babyScale = p.babyScale,
+			babyScale = if type(p.babyScale) == "table" then v3(p.babyScale) else p.babyScale,
 		})
 	end
 	return {
@@ -260,6 +260,8 @@ end
 
 return {
 	Cuadrupedo = fromData(require(script.Parent.Data.Cuadrupedo) :: any, Textures.Atlas.Cuadrupedo),
+	Musgo = fromData(require(script.Parent.Data.Musgo) :: any, Textures.Atlas.Musgo),
+	HuevoMusgo = fromData(require(script.Parent.Data.HuevoMusgo) :: any, Textures.Atlas.HuevoMusgo),
 	Bipedo = bipedo(),
 	Serpentino = serpentino(),
 }

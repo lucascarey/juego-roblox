@@ -636,6 +636,20 @@ function ArenaBuilder.creatures()
 		local model = CreatureBuilder.build(def, CFrame.new(pos.X, y, pos.Z) * CFrame.Angles(0, math.rad(yaw), 0))
 		model.Parent = folder
 	end
+	-- Especie 1: adulto que pasea, cría a su lado y huevo.
+	local musgo = {
+		{ Species.Musgo, V(-6, 0, -22), 160, 1, true },
+		{ Species.Musgo, V(2, 0, -24), 200, 0, true },
+		{ Species.HuevoMusgo, V(-1, 0, -30), 0, 1, false },
+	}
+	for _, s in musgo do
+		local def, pos, yaw, age, wander = s[1], s[2], s[3], s[4], s[5]
+		local y = groundAt(pos.X, pos.Z) or 10
+		local cf = CFrame.new(pos.X, y, pos.Z) * CFrame.Angles(0, math.rad(yaw), 0)
+		local model = CreatureBuilder.build(def, cf, { age = age })
+		model:SetAttribute("Wander", wander)
+		model.Parent = folder
+	end
 end
 
 -- Quita la base del template y deja el spawn en el claro.

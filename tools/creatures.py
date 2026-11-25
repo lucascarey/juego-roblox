@@ -36,7 +36,7 @@ def face_dims(size):
     }
 
 
-def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=False, flat=False, pattern="mottled", baby=1.0):
+def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=False, flat=False, pattern="mottled", baby=1.0, skin=None):
     return {
         "name": name,
         "parent": parent,
@@ -48,7 +48,8 @@ def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=Fals
         "neon": neon,
         "flat": flat,
         "pattern": pattern,
-        "babyScale": baby,  # tamaño relativo de la pieza en la cría
+        "babyScale": list(baby) if isinstance(baby, tuple) else baby,  # tamaño relativo en la cría (número o x,y,z)
+        "skin": skin,
     }
 
 
@@ -57,6 +58,8 @@ def mirrored(p, out):
         q = dict(p)
         q["name"] = p["name"] + suffix
         q["joint"] = [p["joint"][0] * s, p["joint"][1], p["joint"][2]]
+        if p["rot"]:
+            q["rot"] = [p["rot"][0], p["rot"][1] * s, p["rot"][2] * s]
         if p["parent"].endswith("*"):
             q["parent"] = p["parent"][:-1] + suffix
         out.append(q)
@@ -106,6 +109,49 @@ def paint_face(rng, w, h, face, ramp_len, pattern):
     return g
 
 
+def material_map(rng, w, h, face, skin):
+    """Material de cada píxel: 0 = base, 1 = vientre claro, 2 = musgo.
+    skin: belly = fracción inferior clara en las caras laterales, moss = densidad de musgo (0..1),
+    mossTop = tapa superior casi toda de musgo."""
+    m = [[0] * w for _ in range(h)]
+    belly, moss = skin.get("belly", 0), skin.get("moss", 0)
+    if face == "Bottom":
+        return [[1 if belly else 0] * w for _ in range(h)]
+    if face != "Top" and belly:
+        # Límite rosa/blanco irregular, con gotas rosas que bajan.
+        edge = h * (1 - belly)
+        for x in range(w):
+            b = int(edge + rng.choice((-1, 0, 0, 1)))
+            if rng.random() < 0.25:
+                b += rng.randint(1, 2)
+            for y in range(max(0, b), h):
+                m[y][x] = 1
+    if face == "Top" and skin.get("mossTop"):
+        for y in range(h):
+            for x in range(w):
+                if min(x, y, w - 1 - x, h - 1 - y) >= 1 or rng.random() < 0.5:
+                    m[y][x] = 2
+        return m
+    if moss <= 0:
+        return m
+    # Manchas de musgo (más arriba que abajo) que chorrean hacia abajo.
+    for _ in range(max(1, int(w * h * moss / 16))):
+        cx = rng.randrange(w)
+        cy = int(rng.random() ** (1.8 if face != "Top" else 1) * h)
+        r = rng.choice((1, 2, 2, 3))
+        for y in range(cy - r, cy + r + 1):
+            for x in range(cx - r - 1, cx + r + 2):
+                if 0 <= x < w and 0 <= y < h and abs(x - cx) + abs(y - cy) <= r + rng.randint(0, 1):
+                    m[y][x] = 2
+        if face != "Top":
+            x, y = cx + rng.randint(-1, 1), cy + r
+            for _ in range(rng.randint(1, 4)):
+                if 0 <= x < w and 0 <= y < h:
+                    m[y][x] = 2
+                y += 1
+    return m
+
+
 def build_atlas(species):
     rng = random.Random(species["seed"])
     rects = []  # (part, face, w_px, h_px)
@@ -133,9 +179,13 @@ def build_atlas(species):
     for p, face, w, h, ox, oy in placed:
         ramp = species["ramps"][p["ramp"]]
         grid = paint_face(rng, w, h, face, len(ramp), p.get("pattern", "mottled"))
+        skin = p.get("skin")
+        mats = material_map(rng, w, h, face, skin) if skin else None
+        ramps = [ramp, species["ramps"].get("belly", ramp), species["ramps"].get("moss", ramp)]
         for gy in range(h):
             for gx in range(w):
-                img.putpixel((ox + gx, oy + gy), tuple(ramp[grid[gy][gx]]))
+                r = ramps[mats[gy][gx]] if mats else ramp
+                img.putpixel((ox + gx, oy + gy), tuple(r[grid[gy][gx]]))
         p.setdefault("faces", {})[face] = [ox / PPS, oy / PPS, w / PPS, h / PPS]
 
     out = ROOT / "assets" / "textures" / f"{species['name']}_atlas.png"
@@ -208,5 +258,67 @@ def cuadrupedo():
     }
 
 
+MUSGO_RAMPS = {
+    "body": [(196, 88, 116), (228, 118, 146), (244, 146, 170), (250, 172, 192), (254, 198, 212)],
+    "belly": [(186, 160, 164), (214, 192, 196), (234, 216, 218), (244, 232, 233), (252, 246, 246)],
+    "moss": [(62, 96, 22), (88, 124, 30), (112, 150, 40), (138, 174, 56), (164, 196, 78)],
+    "horn": [(160, 70, 98), (190, 94, 122), (214, 118, 146), (230, 142, 166), (242, 166, 186)],
+    "dark": [(120, 60, 90), (150, 80, 114), (176, 102, 138), (200, 126, 160), (220, 150, 180)],
+}
+
+
+def musgo():
+    """Especie 1 (referencia de Lucas, 2026-11-25): cuerpo en dos bloques con lomos de musgo,
+    cuello en dos segmentos, cabeza sin ojos con dos antenas, barba de musgo, patas con rodilla
+    y cola larga en cuatro bloques. Rasgo de cría: cabeza y antenas grandes."""
+    body = dict(belly=0.35, moss=0.4)
+    P = []
+    # El anca es la raíz (caderas); el pecho cuelga de ella para poder flexionar la columna.
+    P.append(part("Rear", "Root", (4, 3.75, 3.5), (0, 3.9, 1.75), skin=body, baby=(1, 1, 0.8)))
+    P.append(part("Chest", "Rear", (4, 3.75, 3.5), (0, 0, -1.75), pivot=(0, 0, 1.75), skin=body, baby=(1, 1, 0.8)))
+    for name, parent in (("HumpB", "Rear"), ("HumpF", "Chest")):
+        P.append(part(name, parent, (2.75, 0.75, 2.5), (0, 2.25, 0), skin=dict(moss=0.9, mossTop=True), baby=0.6))
+    # Cuello en dos segmentos inclinados hacia adelante y arriba.
+    P.append(part("Neck1", "Chest", (1.5, 1.5, 1.75), (0, 1.25, -1.5), pivot=(0, 0, 0.75), rot=(38, 0, 0), skin=dict(belly=0.3, moss=0.3), baby=0.85))
+    P.append(part("Neck2", "Neck1", (1.25, 1.25, 1.75), (0, 0, -0.75), pivot=(0, 0, 0.75), rot=(8, 0, 0), skin=dict(belly=0.3, moss=0.25), baby=0.85))
+    P.append(part("Head", "Neck2", (2.25, 1.75, 2.25), (0, 0, -0.75), pivot=(0, -0.2, 0.6), rot=(-46, 0, 0), skin=dict(belly=0.45, moss=0.15), baby=1.9))
+    # Antenas: dos segmentos cada una, hacia atrás y un poco abiertas.
+    mirrored(part("Ant1", "Head", (0.45, 1.1, 0.45), (0.55, 0.875, 0.35), pivot=(0, -0.5, 0), rot=(30, 0, -14), ramp="horn", pattern="solid", baby=1.7), P)
+    mirrored(part("Ant2", "Ant1*", (0.4, 1, 0.4), (0, 0.5, 0), pivot=(0, -0.45, 0), rot=(8, 0, 0), ramp="horn", pattern="solid", baby=1.7), P)
+    # Barba de musgo colgando del cuello.
+    P.append(part("Beard1", "Neck1", (1.25, 1.5, 0.5), (0, -0.6, -0.4), pivot=(0, 0.7, 0), rot=(-38, 0, 0), ramp="moss", baby=0.7))
+    P.append(part("Beard2", "Beard1", (1, 1.25, 0.4), (0, -0.7, 0), pivot=(0, 0.6, 0), ramp="moss", baby=0.7))
+    # Patas: muslo y caña con rodilla.
+    leg = dict(moss=0.35)
+    low = dict(belly=0.55, moss=0.2)
+    mirrored(part("LegFU", "Chest", (1.5, 1.75, 1.5), (1.25, -1.6, -0.5), pivot=(0, 0.75, 0), skin=leg, baby=0.8), P)
+    mirrored(part("LegFL", "LegFU*", (1.5, 1.75, 1.5), (0, -0.875, 0), pivot=(0, 0.875, 0), skin=low, baby=0.8), P)
+    mirrored(part("LegBU", "Rear", (1.5, 1.75, 1.5), (1.25, -1.6, 0.6), pivot=(0, 0.75, 0), skin=leg, baby=0.8), P)
+    mirrored(part("LegBL", "LegBU*", (1.5, 1.75, 1.5), (0, -0.875, 0), pivot=(0, 0.875, 0), skin=low, baby=0.8), P)
+    # Cola larga: cuatro bloques que se afinan.
+    prev, plen = "Rear", 3.5
+    for i, (w, h, l) in enumerate(((2, 1.75, 3.5), (1.5, 1.4, 3.25), (1.25, 1.1, 3), (1, 0.9, 2.75)), 1):
+        P.append(part(f"Tail{i}", prev, (w, h, l), (0, 0.85 if i == 1 else 0, plen / 2), pivot=(0, 0, -l / 2),
+                      rot=(-4 if i == 1 else 2, 0, 0), skin=dict(moss=0.4), baby=0.55 if i == 1 else 0.3))
+        prev, plen = f"Tail{i}", l
+    return {"name": "Musgo", "seed": 11, "babySize": 0.38, "ramps": MUSGO_RAMPS, "parts": P}
+
+
+def huevo_musgo():
+    """Huevo escalonado: capas en cruz (dos cajas cruzadas por capa) y tapa de musgo."""
+    P = []
+    prev, prev_h = "Root", 0
+    layers = ((2.5, 0.75, 0, 1), (3.25, 1.5, 0.15, 0.6), (3, 1.25, 0.45, 0), (2.5, 0.75, 0.6, 0), (1.75, 0.5, 1, 0))
+    for i, (w, h, moss, belly) in enumerate(layers, 1):
+        skin = dict(belly=belly, moss=moss, mossTop=i >= 3)
+        joint = (0, h / 2, 0) if prev == "Root" else (0, (prev_h + h) / 2, 0)
+        P.append(part(f"Capa{i}", prev, (w, h, w - 0.75), joint, skin=skin))
+        P.append(part(f"Cruz{i}", f"Capa{i}", (w - 0.75, h, w), (0, 0, 0), skin=skin))
+        prev, prev_h = f"Capa{i}", h
+    return {"name": "HuevoMusgo", "seed": 5, "ramps": MUSGO_RAMPS, "parts": P}
+
+
 if __name__ == "__main__":
     export(cuadrupedo())
+    export(musgo())
+    export(huevo_musgo())

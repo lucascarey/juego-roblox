@@ -53,6 +53,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.0,
+   "skin": null,
    "faces": {
     "Front": [
      13.5,
@@ -120,6 +121,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.0,
+   "skin": null,
    "faces": {
     "Front": [
      26.0,
@@ -183,6 +185,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.0,
+   "skin": null,
    "faces": {
     "Front": [
      0.0,
@@ -242,6 +245,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.5,
+   "skin": null,
    "faces": {
     "Top": [
      19.5,
@@ -301,6 +305,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.5,
+   "skin": null,
    "faces": {
     "Top": [
      4.0,
@@ -360,6 +365,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.5,
+   "skin": null,
    "faces": {
     "Top": [
      6.0,
@@ -419,6 +425,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.5,
+   "skin": null,
    "faces": {
     "Top": [
      8.0,
@@ -486,6 +493,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.8,
+   "skin": null,
    "faces": {
     "Front": [
      25.5,
@@ -553,6 +561,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.45,
+   "skin": null,
    "faces": {
     "Top": [
      24.0,
@@ -616,6 +625,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.15,
+   "skin": null,
    "faces": {
     "Front": [
      7.0,
@@ -679,6 +689,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.3,
+   "skin": null,
    "faces": {
     "Top": [
      3.5,
@@ -737,7 +748,8 @@
    "neon": false,
    "flat": true,
    "pattern": "mottled",
-   "babyScale": 1.3
+   "babyScale": 1.3,
+   "skin": null
   },
   {
    "name": "NostrilR",
@@ -758,7 +770,8 @@
    "neon": false,
    "flat": true,
    "pattern": "mottled",
-   "babyScale": 1.3
+   "babyScale": 1.3,
+   "skin": null
   },
   {
    "name": "SocketL",
@@ -779,7 +792,8 @@
    "neon": false,
    "flat": true,
    "pattern": "mottled",
-   "babyScale": 1.6
+   "babyScale": 1.6,
+   "skin": null
   },
   {
    "name": "SocketR",
@@ -800,7 +814,8 @@
    "neon": false,
    "flat": true,
    "pattern": "mottled",
-   "babyScale": 1.6
+   "babyScale": 1.6,
+   "skin": null
   },
   {
    "name": "EyeL",
@@ -821,7 +836,8 @@
    "neon": true,
    "flat": false,
    "pattern": "mottled",
-   "babyScale": 1.7
+   "babyScale": 1.7,
+   "skin": null
   },
   {
    "name": "EyeR",
@@ -842,7 +858,8 @@
    "neon": true,
    "flat": false,
    "pattern": "mottled",
-   "babyScale": 1.7
+   "babyScale": 1.7,
+   "skin": null
   },
   {
    "name": "EarL",
@@ -864,6 +881,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.4,
+   "skin": null,
    "faces": {
     "Front": [
      7.25,
@@ -923,6 +941,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 1.4,
+   "skin": null,
    "faces": {
     "Front": [
      10.25,
@@ -990,6 +1009,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      28.0,
@@ -1057,6 +1077,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      7.0,
@@ -1124,6 +1145,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      19.0,
@@ -1191,6 +1213,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      28.0,
@@ -1254,6 +1277,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.9,
+   "skin": null,
    "faces": {
     "Top": [
      9.0,
@@ -1317,6 +1341,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.9,
+   "skin": null,
    "faces": {
     "Top": [
      12.5,
@@ -1384,6 +1409,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      17.5,
@@ -1451,6 +1477,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      28.0,
@@ -1518,6 +1545,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      6.0,
@@ -1585,6 +1613,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Front": [
      15.0,
@@ -1648,6 +1677,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.9,
+   "skin": null,
    "faces": {
     "Top": [
      16.0,
@@ -1711,6 +1741,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.9,
+   "skin": null,
    "faces": {
     "Top": [
      19.5,
@@ -1778,6 +1809,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.8,
+   "skin": null,
    "faces": {
     "Front": [
      24.0,
@@ -1845,6 +1877,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.75,
+   "skin": null,
    "faces": {
     "Top": [
      1.5,
@@ -1912,6 +1945,7 @@
    "flat": false,
    "pattern": "mottled",
    "babyScale": 0.7,
+   "skin": null,
    "faces": {
     "Top": [
      15.5,
