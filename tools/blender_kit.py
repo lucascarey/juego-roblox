@@ -14,7 +14,7 @@ import sys
 
 import bmesh
 import bpy
-from mathutils import Vector
+from mathutils import Matrix, Vector
 
 args = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else []
 OUT = args[0] if args else "evo_kit.glb"
@@ -186,6 +186,107 @@ def bush(nm, loc):
     return finish(bm, nm, M["Bush"], loc)
 
 
+M["Concrete"] = mat("Concrete", (0.33, 0.33, 0.31))
+M["Rust"] = mat("Rust", (0.24, 0.08, 0.03))
+M["Sign"] = mat("Sign", (0.03, 0.17, 0.08))
+M["Moss"] = mat("Moss", (0.12, 0.32, 0.04))
+
+
+def broken_top(bm, top_z, amt):
+    """Rompe la cara de arriba: baja y sacude los vértices altos de forma irregular."""
+    for v in bm.verts:
+        if v.co.z > top_z - 0.01:
+            v.co.z -= rng.uniform(0, amt)
+            v.co.x += rng.uniform(-0.08, 0.08)
+            v.co.y += rng.uniform(-0.08, 0.08)
+
+
+def box(bm, size, center):
+    r = bmesh.ops.create_cube(bm, size=1.0)
+    bmesh.ops.scale(bm, vec=Vector(size), verts=r["verts"])
+    bmesh.ops.translate(bm, vec=Vector(center), verts=r["verts"])
+    return r["verts"]
+
+
+def moss_cap(nm, size, z, parent):
+    bm = bmesh.new()
+    box(bm, (size[0] * 0.9, size[1] * 0.9, 0.18), (0, 0, z))
+    jitter(bm, 0.12)
+    finish(bm, nm, M["Moss"], (0, 0, 0), parent)
+
+
+# --- Restos humanos: pilar de hormigón roto con hierros oxidados
+def concrete_pillar(nm, h, loc):
+    root = bpy.data.objects.new(nm, None)
+    col.objects.link(root)
+    root.location = loc
+    bm = bmesh.new()
+    box(bm, (1.6, 1.6, h), (0, 0, h / 2))
+    bmesh.ops.subdivide_edges(bm, edges=[e for e in bm.edges if abs(e.verts[0].co.z - e.verts[1].co.z) < 0.01], cuts=2)
+    broken_top(bm, h, h * 0.25)
+    jitter(bm, 0.03)
+    finish(bm, nm + "_Concrete", M["Concrete"], (0, 0, 0), root)
+    bm = bmesh.new()
+    for x, y in ((-0.5, -0.5), (0.5, -0.4), (0.4, 0.5)):
+        length = rng.uniform(0.8, 1.8)
+        v = box(bm, (0.1, 0.1, length), (x, y, h - 0.2 + length / 2))
+        bmesh.ops.rotate(bm, verts=v, cent=Vector((x, y, h - 0.2)), matrix=Matrix.Rotation(rng.uniform(-0.5, 0.5), 3, "X"))
+    finish(bm, nm + "_Rebar", M["Rust"], (0, 0, 0), root)
+    moss_cap(nm + "_Moss", (1.6, 1.6), h * 0.8, root)
+    return root
+
+
+# --- Pared de hormigón con borde superior roto y un agujero
+def concrete_wall(nm, loc):
+    root = bpy.data.objects.new(nm, None)
+    col.objects.link(root)
+    root.location = loc
+    bm = bmesh.new()
+    box(bm, (6, 0.6, 3.2), (0, 0, 1.6))
+    bmesh.ops.subdivide_edges(bm, edges=list(bm.edges), cuts=3)
+    broken_top(bm, 3.2, 1.6)
+    jitter(bm, 0.04)
+    finish(bm, nm + "_Concrete", M["Concrete"], (0, 0, 0), root)
+    moss_cap(nm + "_Moss", (5.5, 0.7), 1.9, root)
+    return root
+
+
+# --- Baranda oxidada y torcida
+def rust_rail(nm, loc):
+    bm = bmesh.new()
+    for i in range(5):
+        x = -3 + i * 1.5
+        v = box(bm, (0.12, 0.12, 1.2), (x, 0, 0.6))
+        bmesh.ops.rotate(bm, verts=v, cent=Vector((x, 0, 0)), matrix=Matrix.Rotation(rng.uniform(-0.25, 0.25), 3, "Y"))
+    v = box(bm, (6.2, 0.1, 0.1), (0, 0, 1.15))
+    for vert in v:
+        vert.co.z -= 0.25 * math.exp(-((vert.co.x - 1.2) ** 2))  # abolladura
+    box(bm, (6.2, 0.08, 0.08), (0, 0, 0.6))
+    return finish(bm, nm, M["Rust"], loc)
+
+
+# --- Cartel de ruta caído, inclinado
+def fallen_sign(nm, loc):
+    root = bpy.data.objects.new(nm, None)
+    col.objects.link(root)
+    root.location = loc
+    root.rotation_euler = (0, math.radians(28), math.radians(15))
+    bm = bmesh.new()
+    box(bm, (0.15, 0.15, 3.2), (0, 0, 1.6))
+    finish(bm, nm + "_Post", M["Rust"], (0, 0, 0), root)
+    bm = bmesh.new()
+    box(bm, (2.4, 0.08, 1.2), (0, 0.1, 3.0))
+    jitter(bm, 0.04)
+    finish(bm, nm + "_Plate", M["Sign"], (0, 0, 0), root)
+    return root
+
+
+concrete_pillar("ConcretePillar_A", 4.5, (84, 0, 0))
+concrete_pillar("ConcretePillar_B", 2.6, (88, 0, 0))
+concrete_wall("ConcreteWall_A", (95, 0, 0))
+rust_rail("RustRail_A", (104, 0, 0))
+fallen_sign("FallenSign_A", (110, 0, 0))
+
 stone_block("StoneBlock_A", (3, 3, 2.6), (0, 0, 1.3))
 stone_block("StoneBlock_B", (3.2, 2.4, 2.2), (5, 0, 1.1))
 stone_block("StoneBlock_C", (6, 3, 1.6), (11, 0, 0.8))
@@ -212,7 +313,7 @@ if PREVIEW:
     scene = bpy.context.scene
     cam = bpy.data.objects.new("Cam", bpy.data.cameras.new("Cam"))
     col.objects.link(cam)
-    cam.location = (40, -45, 18)
+    cam.location = (55, -62, 22)
     cam.rotation_euler = (math.radians(72), 0, 0)
     cam.data.lens = 28
     scene.camera = cam
