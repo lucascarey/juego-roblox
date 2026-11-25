@@ -1,5 +1,7 @@
 --!strict
 -- Arma una criatura de piezas rígidas (cajas) unidas por Motor6D a partir de una definición de especie.
+-- Crecimiento: con opts.age (0 = cría, 1 = adulto) la criatura se achica y cada pieza toma
+-- su proporción de cría (babyScale), interpolando de forma continua. opts.size es el tamaño individual.
 
 export type PartDef = {
 	name: string,
@@ -12,6 +14,7 @@ export type PartDef = {
 	neon: boolean?,
 	flat: boolean?, -- sin textura (dientes, ojos, detalles chicos)
 	faces: { [string]: { number } }?, -- recorte del atlas por cara: {u, v, ancho, alto} en studs
+	babyScale: number?, -- tamaño relativo de la pieza en la cría (cabeza > 1, patas < 1); default 1
 }
 
 export type SpeciesDef = {
@@ -20,6 +23,12 @@ export type SpeciesDef = {
 	parts: { PartDef },
 	atlas: string?,
 	atlasStuds: Vector2?,
+	babySize: number?, -- tamaño general de la cría respecto del adulto; default 0.4
+}
+
+export type BuildOptions = {
+	age: number?, -- 0 = cría, 1 = adulto (default)
+	size: number?, -- tamaño individual, ej. 0.9 a 1.12 (default 1)
 }
 
 local Textures = require(script.Parent.Parent.Textures)
@@ -30,31 +39,37 @@ local FACES = Enum.NormalId:GetEnumItems()
 
 -- Cubre las 6 caras con la textura pixelada teñida del color de la pieza.
 -- El desfase por pieza evita que todas las manchas queden alineadas.
-local function applySkin(part: BasePart, color: Color3, index: number)
+local function applySkin(part: BasePart, color: Color3, index: number, scale: number)
 	for _, face in FACES do
 		local t = Instance.new("Texture")
 		t.Texture = Textures.Piel
 		t.Face = face
 		t.Color3 = color
-		t.StudsPerTileU = Textures.STUDS_PER_TILE
-		t.StudsPerTileV = Textures.STUDS_PER_TILE
-		t.OffsetStudsU = (index * 1.25) % Textures.STUDS_PER_TILE
-		t.OffsetStudsV = (index * 2.5) % Textures.STUDS_PER_TILE
+		t.StudsPerTileU = Textures.STUDS_PER_TILE * scale
+		t.StudsPerTileV = Textures.STUDS_PER_TILE * scale
+		t.OffsetStudsU = (index * 1.25) % Textures.STUDS_PER_TILE * scale
+		t.OffsetStudsV = (index * 2.5) % Textures.STUDS_PER_TILE * scale
 		t.Parent = part
 	end
 end
 
 -- Cada cara muestra su recorte del atlas de la especie: el tile ocupa todo el atlas
 -- y el desfase lleva la esquina del recorte a la esquina de la cara.
-local function applyAtlas(part: BasePart, faces: { [string]: { number } }, atlas: string, atlasStuds: Vector2)
+local function applyAtlas(
+	part: BasePart,
+	faces: { [string]: { number } },
+	atlas: string,
+	atlasStuds: Vector2,
+	scale: number
+)
 	for faceName, r in faces do
 		local t = Instance.new("Texture")
 		t.Texture = atlas
 		t.Face = (Enum.NormalId :: any)[faceName]
-		t.StudsPerTileU = atlasStuds.X
-		t.StudsPerTileV = atlasStuds.Y
-		t.OffsetStudsU = r[1]
-		t.OffsetStudsV = r[2]
+		t.StudsPerTileU = atlasStuds.X * scale
+		t.StudsPerTileV = atlasStuds.Y * scale
+		t.OffsetStudsU = r[1] * scale
+		t.OffsetStudsV = r[2] * scale
 		t.Parent = part
 	end
 end
@@ -63,9 +78,24 @@ local function rad(v: Vector3): CFrame
 	return CFrame.Angles(math.rad(v.X), math.rad(v.Y), math.rad(v.Z))
 end
 
-function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
+local function lerp(a: number, b: number, t: number): number
+	return a + (b - a) * t
+end
+
+-- Escala de una pieza para una edad: tamaño general de la etapa por su proporción de cría.
+function CreatureBuilder.partScale(def: SpeciesDef, p: PartDef?, age: number, size: number): number
+	local overall = lerp(def.babySize or 0.4, 1, age) * size
+	return overall * lerp(if p then p.babyScale or 1 else 1, 1, age)
+end
+
+function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?): Model
+	local age = math.clamp(if opts and opts.age then opts.age else 1, 0, 1)
+	local size = if opts and opts.size then opts.size else 1
+
 	local model = Instance.new("Model")
 	model.Name = def.name
+	model:SetAttribute("Age", age)
+	model:SetAttribute("Size", size)
 
 	local root = Instance.new("Part")
 	root.Name = "Root"
@@ -78,15 +108,18 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 	model.PrimaryPart = root
 
 	local byName: { [string]: BasePart } = { Root = root }
+	local scaleOf: { [string]: number } = { Root = CreatureBuilder.partScale(def, nil, age, size) }
 	for i, p in def.parts do
 		local parentPart = byName[p.parent]
 		assert(parentPart, `{def.name}: la pieza "{p.name}" usa un padre inexistente "{p.parent}"`)
 		local color = def.palette[p.color]
 		assert(color, `{def.name}: color "{p.color}" no está en la paleta`)
+		local s = CreatureBuilder.partScale(def, p, age, size)
+		local ps = scaleOf[p.parent]
 
 		local part = Instance.new("Part")
 		part.Name = p.name
-		part.Size = p.size
+		part.Size = p.size * s
 		part.Color = color
 		part.Material = if p.neon then Enum.Material.Neon else Enum.Material.SmoothPlastic
 		part.TopSurface = Enum.SurfaceType.Smooth
@@ -95,13 +128,14 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 		part.Massless = true
 		part.CastShadow = not p.neon
 		if p.faces and def.atlas and def.atlasStuds then
-			applyAtlas(part, p.faces, def.atlas, def.atlasStuds)
+			applyAtlas(part, p.faces, def.atlas, def.atlasStuds, s)
 		elseif not p.neon and not p.flat then
-			applySkin(part, color, i)
+			applySkin(part, color, i, s)
 		end
 
-		local c0 = CFrame.new(p.joint) * (if p.rot then rad(p.rot) else CFrame.identity)
-		local c1 = CFrame.new(p.pivot or Vector3.zero)
+		-- La articulación se escala con el padre (está en su espacio) y el pivote con la pieza.
+		local c0 = CFrame.new(p.joint * ps) * (if p.rot then rad(p.rot) else CFrame.identity)
+		local c1 = CFrame.new((p.pivot or Vector3.zero) * s)
 		part.CFrame = parentPart.CFrame * c0 * c1:Inverse()
 		part.Parent = model
 
@@ -114,6 +148,25 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 		motor.Parent = parentPart
 
 		byName[p.name] = part
+		scaleOf[p.name] = s
+	end
+
+	-- Con proporciones de cría las patas no siempre llegan justo al piso: apoyamos la criatura.
+	local lowest = math.huge
+	for _, d in model:GetDescendants() do
+		if d:IsA("BasePart") and d ~= root then
+			local cf, half = d.CFrame, d.Size / 2
+			for _, sx in { -1, 1 } do
+				for _, sy in { -1, 1 } do
+					for _, sz in { -1, 1 } do
+						lowest = math.min(lowest, cf:PointToWorldSpace(half * Vector3.new(sx, sy, sz)).Y)
+					end
+				end
+			end
+		end
+	end
+	if lowest < math.huge then
+		model:PivotTo(model:GetPivot() + Vector3.new(0, at.Position.Y - lowest, 0))
 	end
 
 	return model

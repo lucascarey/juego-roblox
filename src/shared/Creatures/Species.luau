@@ -46,6 +46,7 @@ local function fromData(data: any, atlas: string): SpeciesDef
 			neon = p.neon,
 			flat = p.flat,
 			faces = p.faces,
+			babyScale = p.babyScale,
 		})
 	end
 	return {
@@ -53,6 +54,7 @@ local function fromData(data: any, atlas: string): SpeciesDef
 		palette = palette,
 		parts = parts,
 		atlas = atlas,
+		babySize = data.babySize,
 		atlasStuds = Vector2.new(data.atlasStuds[1], data.atlasStuds[2]),
 	}
 end
