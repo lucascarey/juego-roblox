@@ -10,6 +10,7 @@ export type PartDef = {
 	rot: Vector3?, -- rotación de la articulación en grados (X, Y, Z)
 	color: string, -- clave de la paleta
 	neon: boolean?,
+	flat: boolean?, -- sin textura (dientes, ojos, detalles chicos)
 }
 
 export type SpeciesDef = {
@@ -18,7 +19,27 @@ export type SpeciesDef = {
 	parts: { PartDef },
 }
 
+local Textures = require(script.Parent.Parent.Textures)
+
 local CreatureBuilder = {}
+
+local FACES = Enum.NormalId:GetEnumItems()
+
+-- Cubre las 6 caras con la textura pixelada teñida del color de la pieza.
+-- El desfase por pieza evita que todas las manchas queden alineadas.
+local function applySkin(part: BasePart, color: Color3, index: number)
+	for _, face in FACES do
+		local t = Instance.new("Texture")
+		t.Texture = Textures.Piel
+		t.Face = face
+		t.Color3 = color
+		t.StudsPerTileU = Textures.STUDS_PER_TILE
+		t.StudsPerTileV = Textures.STUDS_PER_TILE
+		t.OffsetStudsU = (index * 1.25) % Textures.STUDS_PER_TILE
+		t.OffsetStudsV = (index * 2.5) % Textures.STUDS_PER_TILE
+		t.Parent = part
+	end
+end
 
 local function rad(v: Vector3): CFrame
 	return CFrame.Angles(math.rad(v.X), math.rad(v.Y), math.rad(v.Z))
@@ -39,7 +60,7 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 	model.PrimaryPart = root
 
 	local byName: { [string]: BasePart } = { Root = root }
-	for _, p in def.parts do
+	for i, p in def.parts do
 		local parentPart = byName[p.parent]
 		assert(parentPart, `{def.name}: la pieza "{p.name}" usa un padre inexistente "{p.parent}"`)
 		local color = def.palette[p.color]
@@ -55,6 +76,9 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame): Model
 		part.CanCollide = false
 		part.Massless = true
 		part.CastShadow = not p.neon
+		if not p.neon and not p.flat then
+			applySkin(part, color, i)
+		end
 
 		local c0 = CFrame.new(p.joint) * (if p.rot then rad(p.rot) else CFrame.identity)
 		local c1 = CFrame.new(p.pivot or Vector3.zero)

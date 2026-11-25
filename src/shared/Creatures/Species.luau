@@ -56,10 +56,34 @@ local function cuadrupedo(): SpeciesDef
 		},
 	}
 	mirrored({
+		name = "Socket",
+		parent = "Head",
+		size = V(0.7, 0.62, 0.1),
+		joint = V(0.6, 0.35, -1.21),
+		color = "socket",
+		flat = true,
+	}, parts)
+	table.insert(parts, {
+		name = "Mouth",
+		parent = "Snout",
+		size = V(1.2, 0.12, 0.1),
+		joint = V(0, -0.22, -0.56),
+		color = "socket",
+		flat = true,
+	})
+	mirrored({
+		name = "Tooth",
+		parent = "Snout",
+		size = V(0.18, 0.26, 0.1),
+		joint = V(0.35, -0.36, -0.57),
+		color = "tooth",
+		flat = true,
+	}, parts)
+	mirrored({
 		name = "Eye",
 		parent = "Head",
 		size = V(0.4, 0.4, 0.12),
-		joint = V(0.6, 0.35, -1.23),
+		joint = V(0.6, 0.35, -1.27),
 		color = "eye",
 		neon = true,
 	}, parts)
@@ -110,6 +134,8 @@ local function cuadrupedo(): SpeciesDef
 			light = Color3.fromRGB(214, 160, 112),
 			dark = Color3.fromRGB(112, 70, 48),
 			eye = Color3.fromRGB(255, 190, 60),
+			socket = Color3.fromRGB(58, 34, 26),
+			tooth = Color3.fromRGB(244, 238, 220),
 		},
 		parts = parts,
 	}
@@ -174,10 +200,34 @@ local function bipedo(): SpeciesDef
 		},
 	}
 	mirrored({
+		name = "Socket",
+		parent = "Head",
+		size = V(0.1, 0.5, 0.55),
+		joint = V(0.8, 0.25, -0.4),
+		color = "socket",
+		flat = true,
+	}, parts)
+	mirrored({
+		name = "ToothA",
+		parent = "Head",
+		size = V(0.12, 0.25, 0.15),
+		joint = V(0.66, -0.72, -1),
+		color = "tooth",
+		flat = true,
+	}, parts)
+	mirrored({
+		name = "ToothB",
+		parent = "Head",
+		size = V(0.12, 0.25, 0.15),
+		joint = V(0.66, -0.72, -0.5),
+		color = "tooth",
+		flat = true,
+	}, parts)
+	mirrored({
 		name = "Eye",
 		parent = "Head",
 		size = V(0.1, 0.32, 0.32),
-		joint = V(0.81, 0.25, -0.4),
+		joint = V(0.86, 0.25, -0.4),
 		color = "eye",
 		neon = true,
 	}, parts)
@@ -222,6 +272,8 @@ local function bipedo(): SpeciesDef
 			light = Color3.fromRGB(240, 222, 168),
 			dark = Color3.fromRGB(150, 110, 58),
 			eye = Color3.fromRGB(80, 220, 255),
+			socket = Color3.fromRGB(70, 48, 26),
+			tooth = Color3.fromRGB(244, 238, 220),
 		},
 		parts = parts,
 	}
@@ -233,10 +285,26 @@ local function serpentino(): SpeciesDef
 		{ name = "Jaw", parent = "Head", size = V(1.5, 0.35, 1.7), joint = V(0, -0.7, -0.1), color = "light" },
 	}
 	mirrored({
+		name = "Socket",
+		parent = "Head",
+		size = V(0.5, 0.12, 0.5),
+		joint = V(0.6, 0.56, -0.55),
+		color = "socket",
+		flat = true,
+	}, parts)
+	mirrored({
+		name = "Fang",
+		parent = "Head",
+		size = V(0.15, 0.4, 0.15),
+		joint = V(0.45, -0.62, -0.9),
+		color = "tooth",
+		flat = true,
+	}, parts)
+	mirrored({
 		name = "Eye",
 		parent = "Head",
 		size = V(0.35, 0.3, 0.35),
-		joint = V(0.6, 0.6, -0.55),
+		joint = V(0.6, 0.7, -0.55),
 		color = "eye",
 		neon = true,
 	}, parts)
@@ -265,6 +333,8 @@ local function serpentino(): SpeciesDef
 			light = Color3.fromRGB(122, 184, 170),
 			dark = Color3.fromRGB(40, 82, 86),
 			eye = Color3.fromRGB(255, 110, 210),
+			socket = Color3.fromRGB(24, 46, 50),
+			tooth = Color3.fromRGB(244, 238, 220),
 		},
 		parts = parts,
 	}
