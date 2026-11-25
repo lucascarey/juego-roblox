@@ -209,6 +209,18 @@ local function onCharacter(ch: Model)
 	gui.Enabled = true
 	-- El salto de Roblox es instantáneo: se apaga y se hace a mano (carga con las traseras, despegue).
 	hum.JumpPower = 0
+	-- En el aire, menos gravedad: el arco dura más y se siente pesado (la gravedad de Roblox es ~5 veces
+	-- la real y hace todo muy rápido).
+	local root = ch.PrimaryPart :: BasePart
+	local att = Instance.new("Attachment")
+	att.Parent = root
+	local lift = Instance.new("VectorForce")
+	lift.Name = "GravedadSalto"
+	lift.Attachment0 = att
+	lift.RelativeTo = Enum.ActuatorRelativeTo.World
+	lift.ApplyAtCenterOfMass = true
+	lift.Enabled = false
+	lift.Parent = root
 end
 player.CharacterAdded:Connect(onCharacter)
 if player.Character then
@@ -247,10 +259,12 @@ UserInputService.InputBegan:Connect(function(io, processed)
 		return
 	elseif io.KeyCode == Enum.KeyCode.Space then
 		-- Salto pesado: primero carga sobre las patas de atrás y recién después despega.
-		local onGround = s.hum.FloorMaterial ~= Enum.Material.Air
+		-- Por estado del Humanoid: FloorMaterial sigue viendo el piso en saltos bajos (patas largas).
+		local st = s.hum:GetState()
+		local onGround = st ~= Enum.HumanoidStateType.Jumping and st ~= Enum.HumanoidStateType.Freefall
 		if onGround and not s.jumpAt and s.stamina >= s.stats.jumpCost then
 			s.stamina -= s.stats.jumpCost
-			s.jumpAt = os.clock() + 0.22
+			s.jumpAt = os.clock() + 0.3
 			s.model:SetAttribute("SaltoEn", os.clock()) -- la animación local arranca ya
 			input:FireServer("Accion", "Saltar") -- para que los demás vean la carga
 		end
@@ -312,6 +326,13 @@ RunService.RenderStepped:Connect(function(dt)
 		task.delay(0.1, function()
 			hum.JumpPower = 0
 		end)
+	end
+	local lift = s.model.PrimaryPart and s.model.PrimaryPart:FindFirstChild("GravedadSalto") :: VectorForce?
+	if lift then
+		local st = hum:GetState()
+		lift.Enabled = st == Enum.HumanoidStateType.Jumping or st == Enum.HumanoidStateType.Freefall
+		lift.Force =
+			Vector3.new(0, (lift.Parent :: BasePart).AssemblyMass * workspace.Gravity * (1 - stats.jumpGravity), 0)
 	end
 	-- La cabeza mira hacia donde mira la cámara: los demás jugadores lo ven por el servidor.
 	local cam = workspace.CurrentCamera

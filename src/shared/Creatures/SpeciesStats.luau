@@ -5,6 +5,7 @@ export type Stats = {
 	walk: number, -- studs/s
 	sprint: number,
 	jumpPower: number, -- más bajo = salta menos (pesada)
+	jumpGravity: number, -- fracción de la gravedad en el aire: < 1 = arco más lento y pesado
 	maxHealth: number,
 	stamina: number,
 	sprintCost: number, -- por segundo
@@ -22,7 +23,8 @@ local SpeciesStats: { [string]: Stats } = {
 	Musgo = {
 		walk = 8,
 		sprint = 20,
-		jumpPower = 30, -- el humano estándar usa 50: esta especie apenas despega
+		jumpPower = 24, -- con jumpGravity 0.55 sube ~2.6 studs (un humano ~7)
+		jumpGravity = 0.55,
 		maxHealth = 120,
 		stamina = 100,
 		sprintCost = 16,

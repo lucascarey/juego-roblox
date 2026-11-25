@@ -40,6 +40,7 @@ type Chain = {
 	prev: CFrame,
 	fr: Vector3?, -- entrada filtrada (giro)
 	fd: Vector3?, -- entrada filtrada (desplazamiento)
+	fix: { number }?, -- cola acostada: corrección por bloque hasta tocar el suelo
 }
 type Leg = {
 	upper: Motor6D,
@@ -51,6 +52,8 @@ type Leg = {
 	b: number, -- rodilla al piso
 	shorten: Spring, -- cuánto tiene que acortarse para apoyar en el suelo real
 	swing: number, -- ángulo de paso del último cuadro (para buscar el suelo donde está el pie)
+	plant: Vector3?, -- quieta: dónde quedó apoyado el pie (en el mundo)
+	plantW: Spring,
 }
 
 -- Los rayos al suelo ignoran a todas las criaturas.
@@ -193,6 +196,7 @@ function CreatureAnimator.new(model: Model)
 					b = knee.Y - lowest,
 					shorten = newSpring(),
 					swing = 0,
+					plantW = newSpring(),
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -269,6 +273,7 @@ function CreatureAnimator.new(model: Model)
 	self.breathPhase = 0
 	self.jumpCrouch = 0
 	self.vy = 0
+	self.airPitch = newSpring()
 	-- Acostado: el cuerpo baja hasta que las patas plegadas quedan apoyadas.
 	local thick = if #legs > 0 then (legs[1].upper.Part1 :: BasePart).Size.Z else 1
 	self.lieDrop = math.max(0, self.legLen - thick * 0.5)
@@ -376,13 +381,49 @@ function CreatureAnimator:_locomotion(dt: number)
 		-- bajando, delanteras estiradas para recibir el suelo y traseras que se recogen.
 		local air = pose.air.x
 		if air > 0.01 then
-			local up = self.vy > 0
-			local h = if leg.front then (if up then 0.6 else 0.3) else (if up then -0.5 else 0.2)
-			local k = if leg.front then (if up then -1.2 else -0.35) else (if up then -0.4 else -0.8)
+			local up = math.clamp(0.5 + self.vy * 0.05, 0, 1) -- 1 subiendo, 0 bajando, suave en la cima
+			local h = if leg.front then lerp(0.3, 0.6, up) else lerp(0.2, -0.5, up)
+			local k = if leg.front then lerp(-0.35, -1.2, up) else lerp(-0.8, -0.4, up)
 			hipA = lerp(hipA, h, air)
 			kneeA = lerp(kneeA, k, air)
 		end
-		leg.upper.Transform = CFrame.Angles(hipA - tilt, 0, -self.ground.roll.x)
+		local hipX, hipZ = hipA - tilt, -self.ground.roll.x
+		-- Pies fijos: quieta (atacando, excavando, respirando), cada pie apoyado se queda en su lugar
+		-- del mundo y la pata se acomoda con IK aunque el cuerpo se mueva. Así no patinan.
+		local digger = dig > 0.01 and leg.front and not leg.left
+		local planted = move < 0.15 and air < 0.05 and lie < 0.05 and jc < 0.05 and not digger
+		step(leg.plantW, if planted then 1 else 0, 6, 1, dt)
+		local lowerPart = leg.lower and leg.lower.Part1 :: BasePart
+		if planted and not leg.plant and lowerPart then
+			leg.plant = (lowerPart.CFrame * CFrame.new(0, -lowerPart.Size.Y / 2, 0)).Position
+		elseif not planted then
+			leg.plant = nil
+		end
+		local pw = leg.plantW.x
+		local hipT = CFrame.Angles(hipX, 0, hipZ)
+		if pw > 0.01 and leg.plant and leg.lower then
+			local a, b = leg.a, leg.b
+			local hipCF = (leg.upper.Part0 :: BasePart).CFrame * leg.upper.C0
+			local p = hipCF:PointToObjectSpace(leg.plant :: Vector3)
+			-- Si el cuerpo giró tanto que el pie quedaría muy estirado, lo vuelve a apoyar bajo la cadera.
+			if Vector3.new(p.X, 0, p.Z).Magnitude > 0.45 * (a + b) or p.Y > -0.3 * (a + b) then
+				leg.plant = (hipCF * CFrame.new(0, -(a + b), 0)).Position
+				p = Vector3.new(0, -(a + b), 0)
+			end
+			-- Apuntar la pata al pie con una rotación real (pitch y roll por separado fallan con
+			-- ángulos grandes) y doblar la rodilla para que el largo coincida.
+			local dir = p.Unit
+			local axis = Vector3.new(0, -1, 0):Cross(dir)
+			local aim = if axis.Magnitude > 1e-4
+				then CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(-dir.Y, -1, 1)))
+				else CFrame.identity
+			local d = math.clamp(p.Magnitude, math.abs(a - b) + 0.05, a + b)
+			local bend = math.pi - math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
+			local plantedCF = aim * CFrame.Angles(math.atan2(b * math.sin(bend), a + b * math.cos(bend)), 0, 0)
+			hipT = hipT:Lerp(plantedCF, pw)
+			kneeA = lerp(kneeA, -bend, pw)
+		end
+		leg.upper.Transform = hipT
 		if leg.lower then
 			leg.lower.Transform = CFrame.Angles(kneeA, 0, 0)
 		end
@@ -454,12 +495,12 @@ function CreatureAnimator:_ground(dt: number)
 	for _, y in g do
 		highest = math.max(highest, y)
 	end
-	step(p.air, if nominal - highest > 0.25 * L then 1 else 0, 6, 1, dt)
+	step(p.air, if nominal - highest > 0.25 * L then 1 else 0, 4, 1, dt)
 	local air = math.clamp(p.air.x, 0, 1)
 	if p.wasAir and air < 0.5 then
 		-- Aterrizaje: el cuerpo amortigua.
-		self.drop.back.v += 1.2 * L
-		self.drop.front.v += 1.2 * L
+		self.drop.back.v += 0.5 * L
+		self.drop.front.v += 0.6 * L
 	end
 	p.wasAir = air > 0.5
 	local onGround = (1 - air) * (1 - math.max(p.front, p.back))
@@ -538,6 +579,7 @@ function CreatureAnimator:_chains(dt: number)
 		local d = c.fd :: Vector3
 		local move = self.move.x
 		local damp = lerp(c.damp, if c.kind == "back" then 0.55 else 0.75, move)
+		local rest = self.pose.rest.x
 		local prevA, prevB = 0, 0
 		for i, motor in c.motors do
 			local a, b, r = c.a[i], c.b[i], c.r[i]
@@ -554,11 +596,38 @@ function CreatureAnimator:_chains(dt: number)
 			end
 			-- Cada pieza tiende a alinearse con la anterior; la cola además ondula suave.
 			local pose = self.pose
-			local wave = if c.kind == "back" then math.sin(self.t * 1.3 - i * 0.7) * 0.05 * i else 0
+			local wave = if c.kind == "back" then math.sin(self.t * 1.3 - i * 0.7) * 0.05 * i * (1 - 0.8 * rest) else 0
 			local sag = if c.kind == "back" then 0.015 * i else 0
 			if c.kind == "back" then
-				-- Acostada la cola cae al suelo; dormida además se enrosca hacia un costado.
-				sag += 0.1 * pose.rest.x
+				-- Acostada, cada bloque de la cola se apoya en el suelo que tiene abajo (sigue el terreno);
+				-- dormida además se enrosca hacia un costado.
+				if rest > 0.01 then
+					local jointW = ((motor.Part0 :: BasePart).CFrame * motor.C0).Position
+					local hit = workspace:Raycast(jointW + Vector3.new(0, 2, 0), Vector3.new(0, -30, 0), groundParams)
+					if hit then
+						local seg = motor.Part1 :: BasePart
+						local h = jointW.Y - hit.Position.Y - seg.Size.Y * 0.5
+						local lieOnGround = math.asin(math.clamp(h / seg.Size.Z, -0.6, 1))
+						-- Corrección medida: si la punta del bloque igual queda en el aire (cola enroscada y
+						-- cuerpo de costado), se va bajando hasta tocar.
+						local tip = (seg.CFrame * CFrame.new(0, -seg.Size.Y / 2, seg.Size.Z / 2)).Position
+						local under =
+							workspace:Raycast(tip + Vector3.new(0, 2, 0), Vector3.new(0, -30, 0), groundParams)
+						c.fix = c.fix or {}
+						local fix = c.fix[i] or 0
+						if under then
+							fix = math.clamp(
+								fix + math.clamp(tip.Y - under.Position.Y - 0.25, -1, 1) * dt * 1.2,
+								-0.6,
+								0.8
+							)
+						end
+						c.fix[i] = fix
+						sag = lerp(sag, lieOnGround - prevA + fix, rest)
+					end
+				elseif c.fix then
+					c.fix[i] = 0 -- de pie: sin corrección
+				end
 				wave += 0.75 * pose.sleep.x -- se enrosca al costado del cuerpo, hasta la cabeza
 			elseif c.kind == "up" then
 				sag += 0.5 * pose.sleep.x -- antenas caídas al dormir
@@ -579,7 +648,11 @@ function CreatureAnimator:_chains(dt: number)
 			a.x = math.clamp(a.x, prevA - limit, prevA + limit)
 			b.x = math.clamp(b.x, prevB - limit, prevB + limit)
 			local la, lb = a.x - prevA, b.x - prevB
-			motor.Transform = if c.kind == "back" then CFrame.Angles(la, lb, 0) else CFrame.Angles(la, 0, lb)
+			-- Cola: primero gira hacia el costado y después inclina sobre su propio eje (con la cola enroscada,
+			-- inclinar sobre el eje del bloque anterior no la bajaba al suelo).
+			motor.Transform = if c.kind == "back"
+				then CFrame.fromEulerAnglesYXZ(la, lb, 0)
+				else CFrame.Angles(la, 0, lb)
 			prevA, prevB = a.x, b.x
 		end
 	end
@@ -608,8 +681,8 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 	end
 	self.jumpCrouch = if not jumpT
 		then 0
-		elseif jumpT < 0.22 then smooth(jumpT / 0.22)
-		elseif jumpT < 0.36 then 1 - smooth((jumpT - 0.22) / 0.14)
+		elseif jumpT < 0.3 then smooth(jumpT / 0.3)
+		elseif jumpT < 0.45 then 1 - smooth((jumpT - 0.3) / 0.15)
 		else 0
 
 	local out: ActionOut = { bodyYaw = 0, neckYaw = 0, neckPitch = 0, lunge = 0 }
@@ -729,7 +802,8 @@ function CreatureAnimator:update(dt: number)
 	-- Se inclina un poco hacia adelante al trotar; al galopar se mece adelante-atrás.
 	local bodyPitch = -0.04 * trot * move + gp * 0.06 * gallop
 	-- En el aire la nariz sigue la trayectoria: arriba al subir, abajo al caer.
-	bodyPitch += math.clamp(self.vy * 0.03, -0.35, 0.4) * air
+	step(self.airPitch, math.clamp(self.vy * 0.025, -0.3, 0.35) * air, 3, 1, dt)
+	bodyPitch += self.airPitch.x
 	if self.body then
 		local c0 = self.body.C0
 		local visual = c0:Inverse() * root.CFrame:ToObjectSpace(self.vis2 :: CFrame) * c0
@@ -737,7 +811,7 @@ function CreatureAnimator:update(dt: number)
 		local pivot = c0:PointToObjectSpace(self.hipCenter)
 		-- Dormida se recuesta de costado (la panza hacia el lado donde enrosca la cola).
 		local slope = CFrame.new(pivot)
-			* CFrame.Angles(self.ground.pitch.x, 0, self.ground.roll.x + 0.42 * sleep)
+			* CFrame.Angles(self.ground.pitch.x, 0, self.ground.roll.x + 0.25 * sleep)
 			* CFrame.new(-pivot)
 		-- Excavando, el cuerpo acompaña cada rascada (atrás-adelante y de costado).
 		local digRock = math.sin(dg) * dig

@@ -94,3 +94,16 @@ Errores que ya se resolvieron y no hay que reintroducir:
 - Medir antes de mostrar: patinaje de patas, hueco pata-suelo, saltos de altura y vida/regeneración.
   Después, captura o video (los videos quedan en `C:\Users\Usuario\Pictures\LUCAS`, y Lucas los abre
   desde ahí).
+
+## 8. Más errores resueltos (ronda de pulido)
+
+- Patas con pie fijo (quieta, atacando o excavando): apuntar la pata al pie con una **rotación real**
+  (`CFrame.fromAxisAngle`). Componer el adelante-atrás y el costado como dos ángulos sueltos falla con
+  ángulos grandes y el pie no llega (patinaba 0.8–1.8 studs; ahora 0.05–0.17).
+- Cola enroscada: girar primero hacia el costado y después inclinar (`fromEulerAnglesYXZ`); en el otro
+  orden la cola no baja al suelo. Además hay una corrección medida por bloque hasta tocar el suelo.
+- Salto: para saber si está en el aire, usar el **estado del Humanoid** (Jumping/Freefall).
+  `FloorMaterial` sigue viendo el piso en saltos bajos de criaturas con patas largas. Durante el salto
+  la gravedad baja al 55% con un VectorForce, para que el arco sea más lento y pesado.
+- Pose en el aire: mezclar subiendo/bajando de forma continua según la velocidad vertical; con un
+  if subida/bajada las patas saltaban de golpe en la cima.
