@@ -92,7 +92,7 @@ local GUIDE = {
 	{ "Shift", "Sprint (gasta stamina)" },
 	{ "Espacio", "Saltar / levantarse" },
 	{ "Clic izq", "Coletazo" },
-	{ "Clic der", "Cabezazo" },
+	{ "Clic der", "Cabezazo (clic corto)" },
 	{ "E", "Excavar" },
 	{ "Z", "Acostarse (regenera vida)" },
 	{ "Z otra vez", "Dormir (regenera más)" },
@@ -178,6 +178,11 @@ type State = {
 	scale: number,
 	stamina: number,
 	lockedUntil: number, -- levantándose: no se puede mover
+	jumpAt: number?, -- salto cargando: despega en este momento
+	rightDown: number?, -- clic derecho: cuándo se apretó (si se arrastra, es girar la cámara)
+	rightPos: Vector2?,
+	lookSent: Vector2,
+	lookAt: number,
 }
 local state: State? = nil
 
@@ -198,14 +203,12 @@ local function onCharacter(ch: Model)
 		scale = scale,
 		stamina = stats.stamina,
 		lockedUntil = 0,
+		lookSent = Vector2.zero,
+		lookAt = 0,
 	}
 	gui.Enabled = true
-	hum.StateChanged:Connect(function(_, new)
-		local s = state
-		if s and s.hum == hum and new == Enum.HumanoidStateType.Jumping then
-			s.stamina = math.max(0, s.stamina - s.stats.jumpCost)
-		end
-	end)
+	-- El salto de Roblox es instantáneo: se apaga y se hace a mano (carga con las traseras, despegue).
+	hum.JumpPower = 0
 end
 player.CharacterAdded:Connect(onCharacter)
 if player.Character then
@@ -242,12 +245,37 @@ UserInputService.InputBegan:Connect(function(io, processed)
 		standUp(s)
 	elseif busy then
 		return
+	elseif io.KeyCode == Enum.KeyCode.Space then
+		-- Salto pesado: primero carga sobre las patas de atrás y recién después despega.
+		local onGround = s.hum.FloorMaterial ~= Enum.Material.Air
+		if onGround and not s.jumpAt and s.stamina >= s.stats.jumpCost then
+			s.stamina -= s.stats.jumpCost
+			s.jumpAt = os.clock() + 0.22
+			s.model:SetAttribute("SaltoEn", os.clock()) -- la animación local arranca ya
+			input:FireServer("Accion", "Saltar") -- para que los demás vean la carga
+		end
 	elseif io.KeyCode == Enum.KeyCode.E then
 		input:FireServer("Accion", "Excavar")
 		s.lockedUntil = os.clock() + 2.5 -- quieta mientras excava
 	elseif io.UserInputType == Enum.UserInputType.MouseButton1 then
 		input:FireServer("Accion", "Coletazo")
 	elseif io.UserInputType == Enum.UserInputType.MouseButton2 then
+		-- Se decide al soltar: clic corto = cabezazo, arrastrar = girar la cámara.
+		s.rightDown = os.clock()
+		s.rightPos = UserInputService:GetMouseLocation()
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(io)
+	local s = state
+	if not s or io.UserInputType ~= Enum.UserInputType.MouseButton2 or not s.rightDown then
+		return
+	end
+	local held = os.clock() - s.rightDown
+	local moved = (UserInputService:GetMouseLocation() - (s.rightPos :: Vector2)).Magnitude
+	s.rightDown = nil
+	local busy = s.model:GetAttribute("Postura") ~= nil or os.clock() < s.lockedUntil
+	if held < 0.25 and moved < 8 and not busy then
 		input:FireServer("Accion", "Cabezazo")
 	end
 end)
@@ -273,7 +301,29 @@ RunService.RenderStepped:Connect(function(dt)
 		s.stamina = math.min(stats.stamina, s.stamina + regen * dt)
 	end
 	hum.WalkSpeed = if locked then 0 else (if sprinting then stats.sprint else stats.walk) * s.scale
-	hum.JumpPower = if locked or s.stamina < stats.jumpCost then 0 else stats.jumpPower * math.sqrt(s.scale)
+	-- Despegue del salto: arriba y hacia adelante (empuje de las traseras).
+	if s.jumpAt and os.clock() >= s.jumpAt then
+		s.jumpAt = nil
+		hum.JumpPower = stats.jumpPower * math.sqrt(s.scale)
+		-- ChangeState y no Jump = true: el script de controles de Roblox pisa Jump en cada cuadro.
+		hum:ChangeState(Enum.HumanoidStateType.Jumping)
+		local root = s.model.PrimaryPart :: BasePart
+		root.AssemblyLinearVelocity += root.CFrame.LookVector * 6 * s.scale
+		task.delay(0.1, function()
+			hum.JumpPower = 0
+		end)
+	end
+	-- La cabeza mira hacia donde mira la cámara: los demás jugadores lo ven por el servidor.
+	local cam = workspace.CurrentCamera
+	local root = s.model.PrimaryPart
+	if cam and root and os.clock() - s.lookAt > 0.15 then
+		local dir = root.CFrame:VectorToObjectSpace(cam.CFrame.LookVector)
+		local look = Vector2.new(math.atan2(-dir.X, -dir.Z), math.asin(math.clamp(dir.Y, -1, 1)) + 0.25)
+		if (look - s.lookSent).Magnitude > 0.05 then
+			s.lookSent, s.lookAt = look, os.clock()
+			input:FireServer("Mirar", look)
+		end
+	end
 
 	healthFill.Size = UDim2.fromScale(math.clamp(hum.Health / hum.MaxHealth, 0, 1), 1)
 	staminaFill.Size = UDim2.fromScale(s.stamina / stats.stamina, 1)

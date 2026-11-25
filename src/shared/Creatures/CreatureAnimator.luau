@@ -16,8 +16,14 @@
 --   - En el aire (salto o caída) recoge las patas y al caer amortigua.
 -- Funciona con cualquier especie que use los nombres de piezas de tools/creatures.py.
 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
 local CreatureAnimator = {}
 CreatureAnimator.__index = CreatureAnimator
+
+-- En el cliente: el jugador local mueve la cabeza de su criatura con la cámara.
+local LOCAL_ID = if RunService:IsClient() and Players.LocalPlayer then Players.LocalPlayer.UserId else nil
 
 local TAU = 2 * math.pi
 
@@ -261,6 +267,8 @@ function CreatureAnimator.new(model: Model)
 		wasAir = false,
 	}
 	self.breathPhase = 0
+	self.jumpCrouch = 0
+	self.vy = 0
 	-- Acostado: el cuerpo baja hasta que las patas plegadas quedan apoyadas.
 	local thick = if #legs > 0 then (legs[1].upper.Part1 :: BasePart).Size.Z else 1
 	self.lieDrop = math.max(0, self.legLen - thick * 0.5)
@@ -338,18 +346,41 @@ function CreatureAnimator:_locomotion(dt: number)
 			hipA = lerp(hipA, if leg.front then 1.45 else 1.3, lie)
 			kneeA = lerp(kneeA, if leg.front then 0 else -2.6, lie)
 		end
-		-- Excavar: la delantera derecha rasca el suelo hacia atrás.
+		-- Excavar: la delantera derecha rasca el suelo hacia atrás; la otra delantera y las traseras
+		-- se afirman flexionadas.
 		local dig = pose.dig.x
-		if dig > 0.01 and leg.front and not leg.left then
+		if dig > 0.01 then
 			local dg = self.t * 7
-			hipA = lerp(hipA, 0.55 + 0.5 * math.sin(dg), dig)
-			kneeA = lerp(kneeA, -0.7 - 0.6 * math.max(0, math.sin(dg + 1.2)), dig)
+			if leg.front and not leg.left then
+				hipA = lerp(hipA, 0.55 + 0.5 * math.sin(dg), dig)
+				kneeA = lerp(kneeA, -0.7 - 0.6 * math.max(0, math.sin(dg + 1.2)), dig)
+			elseif leg.front then
+				hipA += 0.1 * dig
+				kneeA -= 0.25 * dig
+			else
+				hipA += 0.25 * dig
+				kneeA -= 0.45 * dig
+			end
 		end
-		-- En el aire: delanteras adelante y dobladas, traseras estiradas atrás.
+		-- Salto, carga: las traseras se flexionan para empujar.
+		local jc = self.jumpCrouch
+		if jc > 0.01 then
+			if leg.front then
+				kneeA -= 0.3 * jc
+			else
+				hipA += 0.55 * jc
+				kneeA -= 1.1 * jc
+			end
+		end
+		-- En el aire: subiendo, delanteras recogidas y traseras estiradas atrás (recién empujaron);
+		-- bajando, delanteras estiradas para recibir el suelo y traseras que se recogen.
 		local air = pose.air.x
 		if air > 0.01 then
-			hipA = lerp(hipA, if leg.front then 0.55 else -0.45, air)
-			kneeA = lerp(kneeA, if leg.front then -1.1 else -0.5, air)
+			local up = self.vy > 0
+			local h = if leg.front then (if up then 0.6 else 0.3) else (if up then -0.5 else 0.2)
+			local k = if leg.front then (if up then -1.2 else -0.35) else (if up then -0.4 else -0.8)
+			hipA = lerp(hipA, h, air)
+			kneeA = lerp(kneeA, k, air)
 		end
 		leg.upper.Transform = CFrame.Angles(hipA - tilt, 0, -self.ground.roll.x)
 		if leg.lower then
@@ -457,6 +488,28 @@ end
 function CreatureAnimator:_lookAround(dt: number, move: number)
 	local look = self.look
 	local rng = self.rng :: Random
+	local owner = (self.model :: Model):GetAttribute("Jugador")
+	if owner then
+		-- Criatura de un jugador: la cabeza mira hacia donde mira su cámara (el local la lee directo,
+		-- los demás reciben el atributo Mirar). Si la cámara mira para atrás, gira hasta donde puede.
+		local yawT, pitchT = 0, 0
+		local cam = workspace.CurrentCamera
+		if owner == LOCAL_ID and cam then
+			local dir = (self.vis2 :: CFrame):VectorToObjectSpace(cam.CFrame.LookVector)
+			yawT = math.atan2(-dir.X, -dir.Z)
+			pitchT = math.asin(math.clamp(dir.Y, -1, 1)) + 0.25 -- la cámara mira un poco hacia abajo
+		else
+			local m = (self.model :: Model):GetAttribute("Mirar")
+			if typeof(m) == "Vector2" then
+				yawT, pitchT = m.X, m.Y
+			end
+		end
+		look.tyaw = math.clamp(yawT, -1.3, 1.3)
+		look.tpitch = math.clamp(pitchT, -0.6, 0.5)
+		step(look.yaw, look.tyaw, 2, 1, dt)
+		step(look.pitch, look.tpitch, 2, 1, dt)
+		return
+	end
 	look.next -= dt
 	if look.next <= 0 then
 		if move > 0.5 then
@@ -506,7 +559,7 @@ function CreatureAnimator:_chains(dt: number)
 			if c.kind == "back" then
 				-- Acostada la cola cae al suelo; dormida además se enrosca hacia un costado.
 				sag += 0.1 * pose.rest.x
-				wave += 0.3 * pose.sleep.x
+				wave += 0.75 * pose.sleep.x -- se enrosca al costado del cuerpo, hasta la cabeza
 			elseif c.kind == "up" then
 				sag += 0.5 * pose.sleep.x -- antenas caídas al dormir
 			end
@@ -545,6 +598,19 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 	end
 	a.t += dt
 	step(a.eat, if name == "Comer" then 1 else 0, 0.9, 1, dt)
+	-- Carga del salto: el jugador local usa su propio reloj (SaltoEn) para no esperar al servidor.
+	local jumpT: number? = nil
+	local localJump = model:GetAttribute("SaltoEn") :: number?
+	if localJump and os.clock() - localJump < 1 then
+		jumpT = os.clock() - localJump
+	elseif name == "Saltar" then
+		jumpT = a.t
+	end
+	self.jumpCrouch = if not jumpT
+		then 0
+		elseif jumpT < 0.22 then smooth(jumpT / 0.22)
+		elseif jumpT < 0.36 then 1 - smooth((jumpT - 0.22) / 0.14)
+		else 0
 
 	local out: ActionOut = { bodyYaw = 0, neckYaw = 0, neckPitch = 0, lunge = 0 }
 	self.tailYaw, self.tailPitch, self.whip = 0, 0, 0
@@ -649,24 +715,36 @@ function CreatureAnimator:update(dt: number)
 	-- Respiración: más lenta y profunda acostada y dormida (fase acumulada: sin saltos al cambiar).
 	self.breathPhase += dt * TAU * lerp(0.28, 0.17, sleep)
 	local breath = math.sin(self.breathPhase)
-	local backDrop = self.drop.back.x + pose.back * self.lieDrop
-	local frontDrop = self.drop.front.x + pose.front * self.lieDrop
+	local dig = pose.dig.x
+	local dg = t * 7
+	local jc = self.jumpCrouch
+	self.vy = if root.Anchored then 0 else root.AssemblyLinearVelocity.Y
+	local air = pose.air.x
+	local backDrop = self.drop.back.x + pose.back * self.lieDrop + 0.25 * L * jc + 0.06 * L * dig
+	local frontDrop = self.drop.front.x + pose.front * self.lieDrop + 0.06 * L * jc + 0.12 * L * dig
 	local stepRoll = math.sin(self.phase * TAU) * 0.035 * move * (1 - trot)
 	local shift = math.sin(t * 0.37) * 0.025 * still
 	local gp = math.sin(self.phase * TAU) -- ciclo del galope
-	local bodyY = -backDrop + breath * (0.012 + 0.01 * rest) * L * still + gp * 0.05 * L * gallop
+	local bodyY = -backDrop + breath * (0.012 + 0.01 * rest) * L * still + gp * 0.05 * L * gallop - 0.1 * L * sleep
 	-- Se inclina un poco hacia adelante al trotar; al galopar se mece adelante-atrás.
 	local bodyPitch = -0.04 * trot * move + gp * 0.06 * gallop
+	-- En el aire la nariz sigue la trayectoria: arriba al subir, abajo al caer.
+	bodyPitch += math.clamp(self.vy * 0.03, -0.35, 0.4) * air
 	if self.body then
 		local c0 = self.body.C0
 		local visual = c0:Inverse() * root.CFrame:ToObjectSpace(self.vis2 :: CFrame) * c0
 		-- Inclinación del terreno, girando alrededor del centro de las caderas a nivel del piso.
 		local pivot = c0:PointToObjectSpace(self.hipCenter)
-		local slope = CFrame.new(pivot) * CFrame.Angles(self.ground.pitch.x, 0, self.ground.roll.x) * CFrame.new(-pivot)
+		-- Dormida se recuesta de costado (la panza hacia el lado donde enrosca la cola).
+		local slope = CFrame.new(pivot)
+			* CFrame.Angles(self.ground.pitch.x, 0, self.ground.roll.x + 0.42 * sleep)
+			* CFrame.new(-pivot)
+		-- Excavando, el cuerpo acompaña cada rascada (atrás-adelante y de costado).
+		local digRock = math.sin(dg) * dig
 		self.body.Transform = visual
-			* CFrame.new(0, bodyY + self.ground.dy.x, -act.lunge)
+			* CFrame.new(0, bodyY + self.ground.dy.x, -act.lunge + 0.06 * L * digRock)
 			* slope
-			* CFrame.Angles(bodyPitch, act.bodyYaw, stepRoll + shift - yawRate * 0.04)
+			* CFrame.Angles(bodyPitch, act.bodyYaw, stepRoll + shift - yawRate * 0.04 + 0.04 * digRock)
 	end
 	local chestPitch = 0
 	if self.spine then
@@ -685,10 +763,12 @@ function CreatureAnimator:update(dt: number)
 	if n > 0 then
 		local nod = math.sin(self.phase * TAU * 2) * 0.05 * move * (1 - trot * 0.5)
 		local calm = (1 - 0.7 * eat) * (1 - sleep)
-		local yaw = self.look.yaw.x * calm + yawRate * 0.22 + act.neckYaw
+		-- Dormida gira la cabeza hacia la cola enroscada; excavando mira la pata que rasca.
+		local yaw = self.look.yaw.x * calm + yawRate * 0.22 + act.neckYaw - 1.6 * sleep - 0.15 * dig
 		local pitch = self.look.pitch.x * calm + nod - (bodyPitch + chestPitch) - self.ground.pitch.x * 0.5
 		-- Acostada baja un poco la cabeza; dormida la apoya en el suelo. Excavando mira el pozo.
-		pitch += breath * 0.02 * sleep - 0.55 * pose.dig.x + act.neckPitch
+		pitch += breath * 0.02 * sleep + act.neckPitch
+		pitch += dig * (-0.9 + 0.1 * math.sin(dg + 0.6)) -- cabeza abajo, acompaña la rascada
 		-- Comer: cabeza al pasto, mastica y cada tanto tira para arrancar.
 		local tug = math.max(0, math.sin(t * TAU / 1.7)) ^ 6
 		pitch += eat * (-1.25 + math.sin(t * 9) * 0.05 + tug * 0.3)

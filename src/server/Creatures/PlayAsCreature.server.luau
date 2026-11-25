@@ -21,7 +21,7 @@ local input = Instance.new("RemoteEvent")
 input.Name = "CriaturaInput"
 input.Parent = remotes
 
-local ACTIONS = { Excavar = 2.5 } -- las de ataque las maneja CreatureCombat
+local ACTIONS = { Excavar = 2.5, Saltar = 0.35 } -- las de ataque las maneja CreatureCombat
 local busyUntil: { [Player]: number } = {}
 
 local function becomeCreature(player: Player, speciesName: string, age: number, spawnAt: CFrame)
@@ -40,9 +40,18 @@ local function becomeCreature(player: Player, speciesName: string, age: number, 
 	local root = model.PrimaryPart :: BasePart
 	local rear = model:FindFirstChild("Rear") :: BasePart
 	local chest = model:FindFirstChild("Chest") :: BasePart
-	-- La Root pasa a ser la caja de colisión: ocupa la huella del cuerpo, cerca del piso.
-	local hover = root.Position.Y - spawnAt.Position.Y
-	local boxY = math.max(0.4, hover)
+	-- La Root pasa a ser la caja de colisión del cuerpo (como en los personajes de Roblox: las patas
+	-- son solo visuales y HipHeight es su largo). Se sube la Root a la altura del cuerpo y se
+	-- compensan las articulaciones que cuelgan de ella para que nada se mueva.
+	local bodyY = rear.Position.Y - spawnAt.Position.Y
+	local dh = rear.Position.Y - root.Position.Y
+	for _, m in root:GetChildren() do
+		if m:IsA("Motor6D") then
+			m.C0 = CFrame.new(0, -dh, 0) * m.C0
+		end
+	end
+	root.CFrame += Vector3.new(0, dh, 0)
+	local boxY = rear.Size.Y * 0.6
 	root.Name = "HumanoidRootPart"
 	root.Size = Vector3.new(rear.Size.X * 0.85, boxY, (rear.Size.Z + chest.Size.Z) * 0.85)
 	root.Anchored = false
@@ -52,7 +61,7 @@ local function becomeCreature(player: Player, speciesName: string, age: number, 
 	local hum = Instance.new("Humanoid")
 	hum.RequiresNeck = false
 	hum.BreakJointsOnDeath = false
-	hum.HipHeight = hover - boxY / 2
+	hum.HipHeight = bodyY - boxY / 2
 	local scale = SpeciesStats.ageScale(age)
 	hum.WalkSpeed = stats.walk * scale
 	hum.UseJumpPower = true
@@ -106,6 +115,9 @@ input.OnServerEvent:Connect(function(player: Player, kind: unknown, value: unkno
 	end
 	if kind == "Humano" then
 		player:LoadCharacter()
+	elseif kind == "Mirar" and typeof(value) == "Vector2" then
+		-- Hacia dónde mira la cabeza (para que los demás jugadores lo vean), dentro de lo posible.
+		model:SetAttribute("Mirar", Vector2.new(math.clamp(value.X, -1.3, 1.3), math.clamp(value.Y, -0.6, 0.5)))
 	elseif kind == "Postura" then
 		-- Solo valores conocidos; dormir solo desde acostada.
 		local current = model:GetAttribute("Postura")
