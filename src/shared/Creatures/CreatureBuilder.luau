@@ -91,7 +91,8 @@ function CreatureBuilder.partScale(def: SpeciesDef, p: PartDef?, age: number, si
 	local overall = lerp(def.babySize or 0.4, 1, age) * size
 	local b = if p and p.babyScale then p.babyScale else 1
 	local bv = if typeof(b) == "Vector3" then b else Vector3.one * (b :: number)
-	return overall * bv:Lerp(Vector3.one, age)
+	-- Las proporciones de cría se pierden rápido al principio: la joven ya tiene la cabeza casi adulta.
+	return overall * bv:Lerp(Vector3.one, 1 - (1 - age) ^ 2)
 end
 
 function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?): Model

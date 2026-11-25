@@ -61,14 +61,23 @@ RunService.Heartbeat:Connect(function(dt)
 			s.wait -= dt
 			s.cur = math.max(0, s.cur - 6 * dt)
 			if s.wait <= 0 then
+				-- Paso (55%), trote (25%) o sprint (20%); el sprint va más lejos.
+				local roll = s.rng:NextNumber()
 				local a = s.rng:NextNumber(0, 2 * math.pi)
-				local r = s.rng:NextNumber(6, RADIUS)
+				local r = if roll > 0.8 then s.rng:NextNumber(25, 40) else s.rng:NextNumber(6, RADIUS)
 				s.target = s.home + Vector3.new(math.cos(a) * r, 0, math.sin(a) * r)
+				model:SetAttribute("Accion", nil)
 				-- La mayoría camina; a veces trota.
 				-- Las crías tienen patas cortas: van más lento.
 				local age = model:GetAttribute("Age") :: number? or 1
 				local scale = 0.4 + 0.6 * age
-				s.speed = scale * (if s.rng:NextNumber() < 0.3 then s.rng:NextNumber(9, 12) else s.rng:NextNumber(3, 5))
+				s.speed = scale
+					* (
+						if roll > 0.8
+							then s.rng:NextNumber(18, 22)
+							elseif roll > 0.55 then s.rng:NextNumber(9, 12)
+							else s.rng:NextNumber(3, 5)
+					)
 			end
 		end
 		local target = s.target
@@ -77,7 +86,18 @@ RunService.Heartbeat:Connect(function(dt)
 			local dist = flat.Magnitude
 			if dist < 1.5 then
 				s.target = nil
-				s.wait = s.rng:NextNumber(1.5, 5)
+				-- Al llegar: a veces come, a veces hace un coletazo de prueba, si no mira alrededor.
+				local roll = s.rng:NextNumber()
+				if roll < 0.35 then
+					model:SetAttribute("Accion", "Comer")
+					s.wait = s.rng:NextNumber(4, 7)
+				elseif roll < 0.55 then
+					model:SetAttribute("Accion", "Coletazo")
+					model:SetAttribute("AccionId", (model:GetAttribute("AccionId") :: number? or 0) + 1)
+					s.wait = 1.8
+				else
+					s.wait = s.rng:NextNumber(1.5, 4)
+				end
 			else
 				-- Gira de a poco hacia el destino y frena en las curvas cerradas.
 				local look = cf.LookVector
