@@ -48,6 +48,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -119,6 +120,7 @@
     1.75
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -186,6 +188,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -249,6 +252,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -320,6 +324,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -391,6 +396,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -462,6 +468,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -533,6 +540,7 @@
     0,
     14
    ],
+   "tilt": null,
    "ramp": "horn",
    "neon": false,
    "flat": false,
@@ -601,6 +609,7 @@
     0,
     -14
    ],
+   "tilt": null,
    "ramp": "horn",
    "neon": false,
    "flat": false,
@@ -669,6 +678,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "horn",
    "neon": false,
    "flat": false,
@@ -737,6 +747,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "horn",
    "neon": false,
    "flat": false,
@@ -805,6 +816,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "moss",
    "neon": false,
    "flat": false,
@@ -869,6 +881,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "moss",
    "neon": false,
    "flat": false,
@@ -933,6 +946,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -999,6 +1013,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1065,6 +1080,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1132,6 +1148,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1199,6 +1216,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1265,6 +1283,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1331,6 +1350,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1398,6 +1418,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1469,6 +1490,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1539,6 +1561,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1609,6 +1632,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1679,6 +1703,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,

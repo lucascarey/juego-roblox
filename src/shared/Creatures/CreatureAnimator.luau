@@ -28,6 +28,9 @@ CreatureAnimator.__index = CreatureAnimator
 local LOCAL_ID = if RunService:IsClient() and Players.LocalPlayer then Players.LocalPlayer.UserId else nil
 
 local TAU = 2 * math.pi
+-- Pose de reposo de los pétalos en el modelo (tools/creatures.py, tilt): el animador la descuenta.
+local PETAL_REST = math.rad(43)
+local TIP_REST = math.rad(30)
 
 type Spring = { x: number, v: number }
 type Chain = {
@@ -1077,13 +1080,14 @@ function CreatureAnimator:update(dt: number)
 			local sway = math.sin(t * 1.3 + i * 1.3) * 0.1 + math.sin(t * 2.9 + i * 2.1) * 0.05
 			-- Siempre tambalea, abierta o cerrada (dormida, un poco menos).
 			local wobble = if act.petal then 0 else sway * (1 - 0.45 * sleep)
-			motor.Transform = CFrame.Angles(target + wobble, 0, 0)
+			-- Los pétalos ya vienen semicerrados en el modelo (-43°, la punta -30°): se anima respecto de eso.
+			motor.Transform = CFrame.Angles(target + wobble + PETAL_REST, 0, 0)
 			-- La punta acompaña con un poco de retraso visual: se curva más al cerrar y se estira al abrir.
 			local tip = tips[i]
 			if tip then
 				local tipWobble = (math.sin(t * 1.3 + i * 1.3 - 0.8) * 0.14 + math.sin(t * 3.1 + i) * 0.05)
 					* (1 - 0.45 * sleep)
-				tip.Transform = CFrame.Angles(target * 0.7 + (if act.petal then 0 else tipWobble), 0, 0)
+				tip.Transform = CFrame.Angles(target * 0.7 + (if act.petal then 0 else tipWobble) + TIP_REST, 0, 0)
 			end
 		end
 	end

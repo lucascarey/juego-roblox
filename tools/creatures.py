@@ -36,7 +36,7 @@ def face_dims(size):
     }
 
 
-def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=False, flat=False, pattern="mottled", baby=1.0, skin=None):
+def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=False, flat=False, pattern="mottled", baby=1.0, skin=None, tilt=None):
     return {
         "name": name,
         "parent": parent,
@@ -44,6 +44,7 @@ def part(name, parent, size, joint, pivot=None, rot=None, ramp="body", neon=Fals
         "joint": list(joint),
         "pivot": list(pivot) if pivot else None,
         "rot": list(rot) if rot else None,
+        "tilt": list(tilt) if tilt else None,  # segunda rotación, sobre los ejes ya girados por rot
         "ramp": ramp,
         "neon": neon,
         "flat": flat,
@@ -397,8 +398,9 @@ def grieta():
         r = math.radians(a)
         base, tip = f"Petal{i + 1}", f"PetalTip{i + 1}"
         P.append(part(base, "Head", (1.45, 1.7, 0.35), (math.sin(r) * 0.4, math.cos(r) * 0.4, -0.3),
-                      pivot=(0, -0.85, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.7))
-        P.append(part(tip, base, (1.15, 1.4, 0.3), (0, 0.85, 0), pivot=(0, -0.7, 0), skin=dict(cracks=0.3), baby=1.7))
+                      pivot=(0, -0.85, 0), rot=(0, 0, -a), tilt=(-43, 0, 0), skin=dict(cracks=0.3), baby=1.7))
+        P.append(part(tip, base, (1.15, 1.4, 0.3), (0, 0.85, 0), pivot=(0, -0.7, 0), tilt=(-30, 0, 0),
+                      skin=dict(cracks=0.3), baby=1.7))
         # Remate en semipunta: dos escalones que se afinan al final del flagelo.
         P.append(part(f"PetalPoint{i + 1}", tip, (0.75, 0.5, 0.26), (0, 0.7, 0), pivot=(0, -0.25, 0), skin=dict(cracks=0.2), baby=1.7))
         P.append(part(f"PetalPointTip{i + 1}", f"PetalPoint{i + 1}", (0.38, 0.35, 0.22), (0, 0.25, 0), pivot=(0, -0.17, 0),

@@ -48,6 +48,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -116,6 +117,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -180,6 +182,7 @@
     1.25
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -240,6 +243,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "light",
    "neon": false,
    "flat": false,
@@ -300,6 +304,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -360,6 +365,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -420,6 +426,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -488,6 +495,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -556,6 +564,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -620,6 +629,7 @@
     0.6
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "light",
    "neon": false,
    "flat": false,
@@ -684,6 +694,7 @@
     0.1
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "light",
    "neon": false,
    "flat": false,
@@ -744,6 +755,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": true,
@@ -766,6 +778,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": true,
@@ -788,6 +801,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": true,
@@ -810,6 +824,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": true,
@@ -832,6 +847,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "eye",
    "neon": true,
    "flat": false,
@@ -854,6 +870,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "eye",
    "neon": true,
    "flat": false,
@@ -876,6 +893,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -936,6 +954,7 @@
    ],
    "pivot": null,
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -1004,6 +1023,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1072,6 +1092,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1140,6 +1161,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1208,6 +1230,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1272,6 +1295,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -1336,6 +1360,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -1404,6 +1429,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1472,6 +1498,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1540,6 +1567,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1608,6 +1636,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "leg",
    "neon": false,
    "flat": false,
@@ -1672,6 +1701,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -1736,6 +1766,7 @@
     0
    ],
    "rot": null,
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,
@@ -1804,6 +1835,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1872,6 +1904,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "body",
    "neon": false,
    "flat": false,
@@ -1940,6 +1973,7 @@
     0,
     0
    ],
+   "tilt": null,
    "ramp": "dark",
    "neon": false,
    "flat": false,

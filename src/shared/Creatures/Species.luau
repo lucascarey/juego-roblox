@@ -42,6 +42,7 @@ local function fromData(data: any, atlas: string): SpeciesDef
 			joint = v3(p.joint) :: Vector3,
 			pivot = v3(p.pivot),
 			rot = v3(p.rot),
+			tilt = v3(p.tilt),
 			color = p.ramp,
 			neon = p.neon,
 			flat = p.flat,

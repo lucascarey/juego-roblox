@@ -10,6 +10,7 @@ export type PartDef = {
 	joint: Vector3, -- punto de la articulación en el espacio de la pieza padre
 	pivot: Vector3?, -- mismo punto en el espacio de esta pieza (default: centro)
 	rot: Vector3?, -- rotación de la articulación en grados (X, Y, Z)
+	tilt: Vector3?, -- segunda rotación, aplicada después de rot sobre los ejes ya girados (pétalos en anillo)
 	color: string, -- clave de la paleta
 	neon: boolean?,
 	flat: boolean?, -- sin textura (dientes, ojos, detalles chicos)
@@ -145,7 +146,9 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?)
 		end
 
 		-- La articulación se escala con el padre (está en su espacio) y el pivote con la pieza.
-		local c0 = CFrame.new(p.joint * ps) * (if p.rot then rad(p.rot) else CFrame.identity)
+		local c0 = CFrame.new(p.joint * ps)
+			* (if p.rot then rad(p.rot) else CFrame.identity)
+			* (if p.tilt then rad(p.tilt) else CFrame.identity)
 		local c1 = CFrame.new((p.pivot or Vector3.zero) * s)
 		part.CFrame = parentPart.CFrame * c0 * c1:Inverse()
 		part.Parent = model
