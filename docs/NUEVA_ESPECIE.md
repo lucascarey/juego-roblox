@@ -165,3 +165,7 @@ Errores que ya se resolvieron y no hay que reintroducir:
 - Pie aparte (pieza `Foot` hija de la caña, al ras del tobillo): el animador lo mantiene plano. Sin eso, el pie
   gira con la caña y la punta o el talón se hunden en el suelo (pasaba 0.23 studs).
 - Comparar las patas con la planilla de cerca (captura con zoom) antes de dar el modelo por bueno.
+- Comparar con una imagen lado a lado (planilla | captura en Play de perfil con FieldOfView 30, cabeza a
+  la izquierda como la planilla) armada con ffmpeg `hstack`, y corregir hasta que coincida: posición del
+  muslo a lo largo del cuerpo (Grieta: al centro), altura del cuerpo, altura de la cabeza, curva de la cola.
+- No agregar piezas que no están en la planilla (los "hombros" de Grieta parecían brazos: Lucas no los quería).

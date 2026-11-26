@@ -361,14 +361,13 @@ def grieta():
     rock = dict(belly=0.3, cracks=0.5)
     P = []
     # Cuerpo: caderas (raíz, sobre las patas) y pecho grande adelante, un poco más alto.
-    P.append(part("Rear", "Root", (3, 2.8, 3), (0, 4.4, 0), skin=rock, baby=(1, 1, 0.85)))
-    P.append(part("Chest", "Rear", (3.6, 3.2, 3.6), (0, 0.4, -1.5), pivot=(0, 0, 1.8), skin=rock, baby=(1, 1, 0.85)))
-    # Hombros marcados a los costados del pecho (en el frente de la planilla).
-    mirrored(part("Shoulder", "Chest", (0.9, 2.6, 1.7), (1.95, -0.9, -0.5), skin=rock, baby=0.8), P)
+    P.append(part("Rear", "Root", (3, 3.4, 3), (0, 5.3, 0), skin=rock, baby=(1, 1, 0.85)))
+    # Columna arqueada hacia abajo: el lomo más alto está en las caderas y el pecho baja hacia adelante.
+    P.append(part("Chest", "Rear", (3.6, 4, 3.6), (0, 0.2, -1.5), pivot=(0, 0, 1.8), rot=(-6, 0, 0), skin=rock, baby=(1, 1, 0.85)))
     # Cuello y cabeza: la cabeza ES la estrella. Un núcleo chico (oculto entre los pétalos) y cinco
     # pétalos grandes de dos segmentos que, cerrados, forman el capullo en gota; al abrir muestran la
     # boca. Sin bloque cuadrado a la vista.
-    P.append(part("Neck1", "Chest", (1.7, 1.7, 1.2), (0, 0.3, -1.8), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck1", "Chest", (1.8, 1.8, 1.2), (0, 0.3, -1.8), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
     P.append(part("Neck2", "Neck1", (1.5, 1.5, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
     P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), skin=dict(cracks=0.4), baby=1.5))
     P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.6))
@@ -395,27 +394,27 @@ def grieta():
     # Dos patas (bípeda) como en la planilla: muslo grande inclinado hacia adelante (rodilla adelante),
     # caña que baja hacia atrás hasta el tobillo y pie plano con tres dedos. El tobillo queda justo debajo
     # de la cadera (la animación necesita eso para pisar bien).
-    #   muslo: 2.3 de cadera a rodilla, 35° adelante -> rodilla 1.32 adelante y 1.88 abajo
-    #   caña: 2.05 de rodilla a tobillo, 40° atrás (rot relativa -75°) -> vuelve 1.32 atrás
-    mirrored(part("LegBU", "Rear", (1.8, 2.6, 2), (1.45, -0.9, 0.2), pivot=(0, 1.15, 0), rot=(35, 0, 0),
+    #   muslo: 2.9 de cadera a rodilla, 35° adelante -> rodilla 1.66 adelante y 2.38 abajo
+    #   caña: 2.25 de rodilla a tobillo, 47.5° atrás (rot relativa -82.5°) -> vuelve 1.66 atrás
+    mirrored(part("LegBU", "Rear", (1.9, 3.4, 2.6), (1.5, -1.1, -1.2), pivot=(0, 1.45, 0), rot=(35, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (1.2, 2.2, 1.3), (0, -1.15, 0), pivot=(0, 0.95, 0), rot=(-75, 0, 0),
+    mirrored(part("LegBL", "LegBU*", (1.3, 2.4, 1.4), (0, -1.45, 0), pivot=(0, 1.05, 0), rot=(-82.5, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("Foot", "LegBL*", (1.7, 0.6, 2.4), (0, -1.1, 0), pivot=(0, 0.3, 0.6), rot=(40, 0, 0),
+    mirrored(part("Foot", "LegBL*", (1.8, 0.6, 2.6), (0, -1.2, 0), pivot=(0, 0.3, 0.7), rot=(47.5, 0, 0),
                   skin=dict(cracks=0.3), baby=0.9), P)
     for j, x in enumerate((-0.55, 0, 0.55), 1):
-        mirrored(part(f"Toe{j}", "Foot*", (0.45, 0.45, 0.6), (x, -0.075, -1.4), skin=dict(cracks=0.2), baby=0.9), P)
+        mirrored(part(f"Toe{j}", "Foot*", (0.5, 0.45, 0.6), (x, -0.075, -1.5), skin=dict(cracks=0.2), baby=0.9), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
     prev, plen = "Rear", 3
     sizes = ((2.2, 2), (1.85, 1.65), (1.5, 1.35), (1.2, 1.1), (0.95, 0.85), (0.7, 0.65))
     for i, (w, h) in enumerate(sizes, 1):
-        P.append(part(f"Tail{i}", prev, (w, h, 1.6), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -0.8),
-                      rot=(0 if i == 1 else 8, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
+        P.append(part(f"Tail{i}", prev, (w, h, 1.9), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -0.95),
+                      rot=(14 if i == 1 else 6.5, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
                       baby=0.6 if i == 1 else 0.4))
-        prev, plen = f"Tail{i}", 1.6
+        prev, plen = f"Tail{i}", 1.9
     # Púas en el lomo, del pecho a la cola, inclinadas hacia atrás.
-    spikes = (("Chest", -1.1, 1.6), ("Chest", 0.3, 1.6), ("Rear", -0.6, 1.4), ("Rear", 0.7, 1.4),
+    spikes = (("Chest", -1.1, 2), ("Chest", 0.3, 2), ("Rear", -0.6, 1.7), ("Rear", 0.7, 1.7),
               ("Tail1", 0, 1), ("Tail2", 0, 0.85), ("Tail3", 0, 0.7))
     for i, (parent, z, top) in enumerate(spikes, 1):
         P.append(part(f"Spike{i}", parent, (0.3, 1, 0.3), (0, top, z), pivot=(0, -0.5, 0), rot=(30, 0, 0),
