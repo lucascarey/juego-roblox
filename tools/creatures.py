@@ -387,46 +387,47 @@ def grieta():
     # boca. Sin bloque cuadrado a la vista.
     P.append(part("Neck1", "Chest", (1.8, 1.8, 1.2), (0, 0.3, -1.4), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
     P.append(part("Neck2", "Neck1", (1.5, 1.5, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), rot=(6, 0, 0), skin=rock, baby=0.9))
-    P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), rot=(6, 0, 0), skin=dict(cracks=0.4), baby=1.5))
-    P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.6))
+    P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), rot=(6, 0, 0), skin=dict(cracks=0.4), baby=1.2))
+    P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.25))
     # Fondo de la boca (oscuro, sin brillo) y anillo de dientes, en el frente del núcleo.
-    P.append(part("Maw", "Head", (1.1, 1.1, 0.15), (0, 0, -0.33), ramp="maw", flat=True, baby=1.6))
+    P.append(part("Maw", "Head", (1.1, 1.1, 0.15), (0, 0, -0.33), ramp="maw", flat=True, baby=1.25))
     for i in range(12):
         a = math.radians(i * 30)
         P.append(part(f"Tooth{i + 1}", "Head", (0.15, 0.22, 0.1), (math.sin(a) * 0.55, math.cos(a) * 0.55, -0.38),
-                      rot=(0, 0, -i * 30), ramp="tooth", flat=True, baby=1.6))
+                      rot=(0, 0, -i * 30), ramp="tooth", flat=True, baby=1.25))
     # Cinco pétalos de dos segmentos que forman la cabeza, con dientes chicos en la cara de adentro.
     for i in range(5):
         a = i * 72
         r = math.radians(a)
         base, tip = f"Petal{i + 1}", f"PetalTip{i + 1}"
         P.append(part(base, "Head", (1.45, 1.7, 0.35), (math.sin(r) * 0.4, math.cos(r) * 0.4, -0.3),
-                      pivot=(0, -0.85, 0), rot=(0, 0, -a), tilt=(-43, 0, 0), skin=dict(cracks=0.3), baby=1.7))
+                      pivot=(0, -0.85, 0), rot=(0, 0, -a), tilt=(-43, 0, 0), skin=dict(cracks=0.3), baby=1.25))
         P.append(part(tip, base, (1.15, 1.4, 0.3), (0, 0.85, 0), pivot=(0, -0.7, 0), tilt=(-30, 0, 0),
-                      skin=dict(cracks=0.3), baby=1.7))
+                      skin=dict(cracks=0.3), baby=1.25))
         # Remate en semipunta: dos escalones que se afinan al final del flagelo.
-        P.append(part(f"PetalPoint{i + 1}", tip, (0.75, 0.5, 0.26), (0, 0.7, 0), pivot=(0, -0.25, 0), skin=dict(cracks=0.2), baby=1.7))
+        P.append(part(f"PetalPoint{i + 1}", tip, (0.75, 0.5, 0.26), (0, 0.7, 0), pivot=(0, -0.25, 0), skin=dict(cracks=0.2), baby=1.25))
         P.append(part(f"PetalPointTip{i + 1}", f"PetalPoint{i + 1}", (0.38, 0.35, 0.22), (0, 0.25, 0), pivot=(0, -0.17, 0),
-                      skin=dict(cracks=0.1), baby=1.7))
+                      skin=dict(cracks=0.1), baby=1.25))
         for j, y in enumerate((-0.45, 0, 0.45)):
             P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.22),
-                          ramp="tooth", flat=True, baby=1.7))
+                          ramp="tooth", flat=True, baby=1.25))
         for j, y in enumerate((-0.35, 0, 0.35)):
             P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
-                          ramp="tooth", flat=True, baby=1.7))
-    # Dos patas (bípeda) como en la planilla: muslo grande inclinado hacia adelante (rodilla adelante),
-    # caña que baja hacia atrás hasta el tobillo y pie plano con tres dedos. El tobillo queda justo debajo
+                          ramp="tooth", flat=True, baby=1.25))
+    # Dos patas (bípeda) según el dibujo de Lucas (2026-11-26): muslo grande metido arriba en el torso
+    # que baja hacia ATRÁS (rodilla atrás, como ave), caña que baja hacia adelante hasta el tobillo y pie
+    # largo y plano que se afina hacia adelante con tres dedos. El tobillo queda justo debajo
     # de la cadera (la animación necesita eso para pisar bien).
-    #   muslo: 2.9 de cadera a rodilla, 35° adelante -> rodilla 1.66 adelante y 2.38 abajo
-    #   caña: 2.25 de rodilla a tobillo, 47.5° atrás (rot relativa -82.5°) -> vuelve 1.66 atrás
-    mirrored(part("LegBU", "Rear", (1.3, 3.4, 2.4), (1.25, -0.4, -1.5), pivot=(0, 1.45, 0), rot=(35, 0, 0),
+    #   muslo: 2.9 de cadera a rodilla, 30° atrás -> rodilla 1.45 atrás y 2.51 abajo
+    #   caña: 3.4 de rodilla a tobillo, 25.2° adelante (rot relativa 55.2°) -> vuelve 1.45 adelante
+    mirrored(part("LegBU", "Rear", (1.4, 3.6, 2.4), (1.55, 0.6, -1.5), pivot=(0, 0.9, 0), rot=(-30, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (0.8, 2.4, 0.9), (0, -1.45, 0), pivot=(0, 1.05, 0), rot=(-82.5, 0, 0),
+    mirrored(part("LegBL", "LegBU*", (0.8, 3.6, 0.9), (0, -2.0, 0), pivot=(0, 1.6, 0), rot=(55.2, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("Foot", "LegBL*", (1.2, 0.5, 2.4), (0, -1.2, 0), pivot=(0, 0.25, 0.7), rot=(47.5, 0, 0),
+    mirrored(part("Foot", "LegBL*", (1.2, 0.5, 2.6), (0, -1.8, 0), pivot=(0, 0.25, 0.9), rot=(-25.2, 0, 0),
                   skin=dict(cracks=0.3), baby=0.9), P)
     for j, x in enumerate((-0.4, 0, 0.4), 1):
-        mirrored(part(f"Toe{j}", "Foot*", (0.34, 0.4, 0.6), (x, -0.05, -1.4), skin=dict(cracks=0.2), baby=0.9), P)
+        mirrored(part(f"Toe{j}", "Foot*", (0.34, 0.4, 0.6), (x, -0.05, -1.55), skin=dict(cracks=0.2), baby=0.9), P)
         # Punta de cada dedo: una garra que se afina en dos bloques y apunta hacia abajo y adelante.
         mirrored(part(f"Claw{j}", f"Toe{j}*", (0.24, 0.24, 0.4), (0, 0, -0.3), pivot=(0, 0, 0.2), rot=(-6, 0, 0),
                       ramp="dark", pattern="solid", baby=0.9), P)

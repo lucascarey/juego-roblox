@@ -62,6 +62,7 @@ type Leg = {
 	wasStance: boolean,
 	lastStep: number,
 	foot: Motor6D?, -- pie aparte (se mantiene plano)
+	flex: number, -- 1 rodilla adelante; -1 rodilla atrás (pata de ave): flexionar gira al revés
 	plantW: Spring,
 }
 
@@ -228,6 +229,8 @@ function CreatureAnimator.new(model: Model)
 					wasStance = true,
 					lastStep = 0,
 					foot = m["Foot" .. side],
+					-- Rodilla detrás de la línea cadera-tobillo (+Z es atrás): pata de ave.
+					flex = if knee.Z > (hip.Z + ankle.Z) / 2 + 0.05 then -1 else 1,
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -235,6 +238,10 @@ function CreatureAnimator.new(model: Model)
 	end
 	self.legs = legs
 	self.legLen = math.max(0.5, hipY - lowest)
+	-- Altura del vientre (base de la pieza donde nacen las patas): si la cadera está metida arriba en el
+	-- torso, al acostarse baja el vientre hasta las patas plegadas, no la cadera.
+	local body = if #legs > 0 then legs[1].upper.Part0 :: BasePart else nil
+	self.bellyY = if body and rest[body] then rest[body].Position.Y - body.Size.Y / 2 - lowest else nil
 	self.groundOffset = -lowest -- altura de la Root sobre el piso en reposo
 	local hipCenter = Vector3.zero
 	for _, leg in legs do
@@ -328,7 +335,13 @@ function CreatureAnimator.new(model: Model)
 	self.airPitch = newSpring()
 	-- Acostado: el cuerpo baja hasta que las patas plegadas quedan apoyadas.
 	local thick = if #legs > 0 then (legs[1].upper.Part1 :: BasePart).Size.Z else 1
-	self.lieDrop = math.max(0, self.legLen - thick * 0.5)
+	self.lieDrop = math.max(0, math.min(self.legLen, self.bellyY or math.huge) - thick * 0.5)
+	local l1 = legs[1]
+	if l1 and l1.flex < 0 and l1.lower then
+		-- Pata de ave acostada: muslo a 45° atrás con la rodilla en el piso y la caña acostada adelante.
+		local shin = l1.lower.Part1 :: BasePart
+		self.lieDrop = math.max(0, self.legLen - (l1.a * math.cos(math.rad(45)) + shin.Size.Z * 0.5))
+	end
 	return self
 end
 
@@ -424,16 +437,21 @@ function CreatureAnimator:_locomotion(dt: number)
 		if leg.lower and e > 0.01 then
 			ikHip, ikKnee = legIK(leg, leg.D0 - e)
 		end
+		local fl = leg.flex
+		ikHip *= fl
+		ikKnee *= fl
 		local tilt = self.ground.pitch.x + (if leg.front then self.lastChestPitch or 0 else 0)
 		-- La rodilla dobla hacia atrás en el vuelo; un poco más en las traseras.
 		local hipA = hip + ikHip
-		local kneeA = knee * (if leg.front then 1 else 1.2) + ikKnee
+		local kneeA = knee * (if leg.front then 1 else 1.2) * fl + ikKnee
 		local pose = self.pose
 		-- Acostado: delanteras estiradas hacia adelante, traseras plegadas debajo.
 		local lie = if leg.front then pose.front else pose.back
 		if lie > 0 then
-			hipA = lerp(hipA, if leg.front then 1.45 else 1.3, lie)
-			kneeA = lerp(kneeA, if leg.front then 0 else -2.6, lie)
+			-- Pata de ave: muslo hacia atrás y caña acostada en el piso hacia adelante.
+			-- (reposo -30° y +55°: el muslo pasa a -45° y la caña a 90°, horizontal hacia adelante).
+			hipA = lerp(hipA, if leg.front then 1.45 elseif fl < 0 then -0.26 else 1.3, lie)
+			kneeA = lerp(kneeA, if leg.front then 0 elseif fl < 0 then 1.4 else -2.6, lie)
 		end
 		-- Excavar: la delantera derecha rasca el suelo hacia atrás; la otra delantera y las traseras
 		-- se afirman flexionadas.
@@ -447,8 +465,8 @@ function CreatureAnimator:_locomotion(dt: number)
 				hipA += 0.1 * dig
 				kneeA -= 0.25 * dig
 			else
-				hipA += 0.25 * dig
-				kneeA -= 0.45 * dig
+				hipA += 0.25 * dig * fl
+				kneeA -= 0.45 * dig * fl
 			end
 		end
 		-- Salto, carga: las traseras se flexionan para empujar.
@@ -457,8 +475,8 @@ function CreatureAnimator:_locomotion(dt: number)
 			if leg.front then
 				kneeA -= 0.3 * jc
 			else
-				hipA += 0.55 * jc
-				kneeA -= 1.1 * jc
+				hipA += 0.55 * jc * fl
+				kneeA -= 1.1 * jc * fl
 			end
 		end
 		-- En el aire: subiendo, delanteras recogidas y traseras estiradas atrás (recién empujaron);
@@ -467,7 +485,7 @@ function CreatureAnimator:_locomotion(dt: number)
 		if air > 0.01 then
 			local up = math.clamp(0.5 + self.vy * 0.05, 0, 1) -- 1 subiendo, 0 bajando, suave en la cima
 			local h = if leg.front then lerp(0.3, 0.6, up) else lerp(0.2, -0.5, up)
-			local k = if leg.front then lerp(-0.35, -1.2, up) else lerp(-0.8, -0.4, up)
+			local k = if leg.front then lerp(-0.35, -1.2, up) else lerp(-0.8, -0.4, up) * fl
 			hipA = lerp(hipA, h, air)
 			kneeA = lerp(kneeA, k, air)
 		end
@@ -502,9 +520,9 @@ function CreatureAnimator:_locomotion(dt: number)
 				then CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(-toFoot.Y, -1, 1)))
 				else CFrame.identity
 			local plantHip, plantKnee = legIK(leg, p.Magnitude)
-			local plantedCF = aim * CFrame.Angles(plantHip, 0, 0)
+			local plantedCF = aim * CFrame.Angles(plantHip * fl, 0, 0)
 			hipT = hipT:Lerp(plantedCF, pw)
-			kneeA = lerp(kneeA, plantKnee, pw)
+			kneeA = lerp(kneeA, plantKnee * fl, pw)
 		end
 		leg.upper.Transform = hipT
 		if leg.lower then
