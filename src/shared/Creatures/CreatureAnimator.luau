@@ -63,6 +63,8 @@ type Leg = {
 	lastStep: number,
 	foot: Motor6D?, -- pie aparte (se mantiene plano)
 	flex: number, -- 1 rodilla adelante; -1 rodilla atrás (pata de ave): flexionar gira al revés
+	lieHip: number, -- pata de ave acostada: giro de cadera y rodilla (desde el reposo) para dejar el muslo
+	lieKnee: number, -- a 45° atrás con la rodilla en el piso y la caña acostada hacia adelante
 	plantW: Spring,
 }
 
@@ -231,6 +233,10 @@ function CreatureAnimator.new(model: Model)
 					foot = m["Foot" .. side],
 					-- Rodilla detrás de la línea cadera-tobillo (+Z es atrás): pata de ave.
 					flex = if knee.Z > (hip.Z + ankle.Z) / 2 + 0.05 then -1 else 1,
+					-- Ángulos de reposo (positivo = el extremo de abajo hacia adelante, -Z).
+					lieHip = math.rad(-45) - math.atan2(hip.Z - knee.Z, hip.Y - knee.Y),
+					lieKnee = math.rad(135)
+						- (math.atan2(knee.Z - ankle.Z, knee.Y - ankle.Y) - math.atan2(hip.Z - knee.Z, hip.Y - knee.Y)),
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -449,9 +455,8 @@ function CreatureAnimator:_locomotion(dt: number)
 		local lie = if leg.front then pose.front else pose.back
 		if lie > 0 then
 			-- Pata de ave: muslo hacia atrás y caña acostada en el piso hacia adelante.
-			-- (reposo -30° y +55°: el muslo pasa a -45° y la caña a 90°, horizontal hacia adelante).
-			hipA = lerp(hipA, if leg.front then 1.45 elseif fl < 0 then -0.26 else 1.3, lie)
-			kneeA = lerp(kneeA, if leg.front then 0 elseif fl < 0 then 1.4 else -2.6, lie)
+			hipA = lerp(hipA, if leg.front then 1.45 elseif fl < 0 then leg.lieHip else 1.3, lie)
+			kneeA = lerp(kneeA, if leg.front then 0 elseif fl < 0 then leg.lieKnee else -2.6, lie)
 		end
 		-- Excavar: la delantera derecha rasca el suelo hacia atrás; la otra delantera y las traseras
 		-- se afirman flexionadas.
