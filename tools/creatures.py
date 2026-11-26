@@ -404,6 +404,11 @@ def grieta():
                   skin=dict(cracks=0.3), baby=0.9), P)
     for j, x in enumerate((-0.55, 0, 0.55), 1):
         mirrored(part(f"Toe{j}", "Foot*", (0.5, 0.45, 0.6), (x, -0.075, -1.5), skin=dict(cracks=0.2), baby=0.9), P)
+        # Punta de cada dedo: una garra que se afina en dos bloques y apunta hacia abajo y adelante.
+        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.34, 0.3, 0.4), (0, 0, -0.3), pivot=(0, 0, 0.2), rot=(-6, 0, 0),
+                      ramp="dark", pattern="solid", baby=0.9), P)
+        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.18, 0.16, 0.35), (0, -0.02, -0.2), pivot=(0, 0, 0.17), rot=(-6, 0, 0),
+                      ramp="dark", pattern="solid", baby=0.9), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
     prev, plen = "Rear", 3
