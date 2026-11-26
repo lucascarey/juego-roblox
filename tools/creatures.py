@@ -363,31 +363,32 @@ def grieta():
     P.append(part("Rear", "Root", (3, 2.6, 2.6), (0, 4.3, 1.3), skin=rock, baby=(1, 1, 0.85)))
     P.append(part("Waist", "Rear", (2.2, 2, 2.2), (0, 0.1, -1.3), pivot=(0, 0, 1.1), skin=rock, baby=(1, 1, 0.85)))
     P.append(part("Chest", "Rear", (3.3, 3, 3), (0, 0.3, -3.5), pivot=(0, 0, 1.5), skin=rock, baby=(1, 1, 0.85)))
-    # Cuello y cabeza en gota: nuca angosta y frente ancha con la boca.
+    # Cuello y cabeza: la cabeza ES la estrella. Un núcleo chico (oculto entre los pétalos) y cinco
+    # pétalos grandes de dos segmentos que, cerrados, forman el capullo en gota; al abrir muestran la
+    # boca. Sin bloque cuadrado a la vista.
     P.append(part("Neck1", "Chest", (1.6, 1.6, 1.2), (0, 0.6, -1.5), pivot=(0, 0, 0.6), rot=(8, 0, 0), skin=rock, baby=0.9))
     P.append(part("Neck2", "Neck1", (1.4, 1.4, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
-    P.append(part("HeadBack", "Neck2", (1.7, 1.7, 1), (0, 0, -0.5), pivot=(0, 0, 0.5), skin=dict(cracks=0.4), baby=1.5))
-    P.append(part("Head", "HeadBack", (2.5, 2.5, 1.4), (0, 0, -0.5), pivot=(0, 0, 0.7), skin=dict(cracks=0.4), baby=1.6))
-    # Fondo de la boca (oscuro, sin brillo) y anillo de dientes.
-    P.append(part("Maw", "Head", (1.3, 1.3, 0.15), (0, 0, -0.75), ramp="maw", flat=True, baby=1.6))
+    P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), skin=dict(cracks=0.4), baby=1.5))
+    P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.6))
+    # Fondo de la boca (oscuro, sin brillo) y anillo de dientes, en el frente del núcleo.
+    P.append(part("Maw", "Head", (1.1, 1.1, 0.15), (0, 0, -0.33), ramp="maw", flat=True, baby=1.6))
     for i in range(12):
         a = math.radians(i * 30)
-        P.append(part(f"Tooth{i + 1}", "Head", (0.18, 0.28, 0.12), (math.sin(a) * 0.75, math.cos(a) * 0.75, -0.8),
+        P.append(part(f"Tooth{i + 1}", "Head", (0.15, 0.22, 0.1), (math.sin(a) * 0.55, math.cos(a) * 0.55, -0.38),
                       rot=(0, 0, -i * 30), ramp="tooth", flat=True, baby=1.6))
-    # Cinco pétalos de dos segmentos alrededor de la boca, con dientes chicos en la cara de adentro
-    # (la de adelante cuando la estrella está abierta). La animación los cierra o los abre.
+    # Cinco pétalos de dos segmentos que forman la cabeza, con dientes chicos en la cara de adentro.
     for i in range(5):
         a = i * 72
         r = math.radians(a)
         base, tip = f"Petal{i + 1}", f"PetalTip{i + 1}"
-        P.append(part(base, "Head", (0.9, 1.2, 0.3), (math.sin(r) * 0.5, math.cos(r) * 0.5, -0.72),
-                      pivot=(0, -0.6, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.7))
-        P.append(part(tip, base, (0.65, 1.1, 0.25), (0, 0.6, 0), pivot=(0, -0.55, 0), skin=dict(cracks=0.3), baby=1.7))
-        for j, y in enumerate((-0.3, 0, 0.3)):
-            P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.2),
+        P.append(part(base, "Head", (1.45, 1.7, 0.35), (math.sin(r) * 0.4, math.cos(r) * 0.4, -0.3),
+                      pivot=(0, -0.85, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.7))
+        P.append(part(tip, base, (1.15, 1.4, 0.3), (0, 0.85, 0), pivot=(0, -0.7, 0), skin=dict(cracks=0.3), baby=1.7))
+        for j, y in enumerate((-0.45, 0, 0.45)):
+            P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.22),
                           ramp="tooth", flat=True, baby=1.7))
-        for j, y in enumerate((-0.2, 0.2)):
-            P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.17),
+        for j, y in enumerate((-0.35, 0, 0.35)):
+            P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
                           ramp="tooth", flat=True, baby=1.7))
     # Púas en el lomo, inclinadas hacia atrás.
     spikes = (("Chest", -0.8, 1.5), ("Chest", 0.6, 1.5), ("Waist", 0, 1), ("Rear", -0.6, 1.3), ("Rear", 0.6, 1.3))
