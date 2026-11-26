@@ -142,3 +142,8 @@ Errores que ya se resolvieron y no hay que reintroducir:
   trabado. Levantar otro con `rojo serve --port 34873` y pedirle a Lucas que cambie el puerto en el
   plugin.
 - El zoo es una lista `PENS` en `ZooBuilder`: especie nueva = una entrada más.
+- Salto hacia adelante: el Humanoid frena lo horizontal en el suelo **y en el aire** si no hay tecla
+  apretada. Un empujón suelto no sirve (avanzaba ~1 stud): hay que mantener la velocidad hacia
+  adelante durante el vuelo (`leapUntil` en CreatureControls). `jumpForward` por especie.
+- Piezas decorativas sin animar (cintura, nuca de la cabeza, dientes) se pueden agregar libremente;
+  la animación solo mira los nombres que conoce.

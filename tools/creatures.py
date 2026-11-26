@@ -352,50 +352,60 @@ GRIETA_RAMPS = {
 
 
 def grieta():
-    """Especie 2 (referencia de Lucas, 2026-11-26): cuadrúpedo bajo de piel de roca roja agrietada,
-    cabeza que es una boca en estrella de 5 pétalos (se abren para morder) con anillo de dientes,
-    púas en el lomo y cola larga de 6 bloques que se curva hacia el suelo. Nada brilla.
-    Rasgo de cría: la cabeza/boca grande."""
+    """Especie 2 (referencia de Lucas, 2026-11-26; v2 con sus correcciones): cazadora delgada y
+    atlética de piel de roca roja agrietada. Caderas, cintura y pecho marcados; patas finas y largas;
+    cabeza en forma de gota (angosta atrás, ancha adelante) que termina en una boca en estrella de 5
+    pétalos de 2 articulaciones con muchos dientes chicos del lado de adentro. Púas en el lomo y cola
+    larga de 6 bloques. Nada brilla. Rasgo de cría: la cabeza/boca grande."""
     rock = dict(belly=0.3, cracks=0.5)
     P = []
-    # Cuerpo: anca atrás, pecho adelante más alto y ancho (como en el perfil de la referencia).
-    P.append(part("Rear", "Root", (4, 2.6, 4), (0, 3.4, 2), skin=rock, baby=(1, 1, 0.85)))
-    P.append(part("Chest", "Rear", (4.5, 3.2, 4.5), (0, 0.3, -2), pivot=(0, 0, 2.25), skin=rock, baby=(1, 1, 0.85)))
-    # Cuello corto y cabeza-boca.
-    P.append(part("Neck1", "Chest", (2.6, 2.4, 1.2), (0, 0.1, -2.25), pivot=(0, 0, 0.6), rot=(4, 0, 0), skin=rock, baby=0.9))
-    P.append(part("Neck2", "Neck1", (2.3, 2.2, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
-    P.append(part("Head", "Neck2", (2.8, 2.8, 1), (0, 0, -0.5), pivot=(0, 0, 0.5), skin=dict(cracks=0.4), baby=1.6))
+    # Cuerpo: caderas (raíz), cintura angosta y pecho profundo. El pecho cuelga de las caderas (columna).
+    P.append(part("Rear", "Root", (3, 2.6, 2.6), (0, 4.3, 1.3), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Waist", "Rear", (2.2, 2, 2.2), (0, 0.1, -1.3), pivot=(0, 0, 1.1), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Chest", "Rear", (3.3, 3, 3), (0, 0.3, -3.5), pivot=(0, 0, 1.5), skin=rock, baby=(1, 1, 0.85)))
+    # Cuello y cabeza en gota: nuca angosta y frente ancha con la boca.
+    P.append(part("Neck1", "Chest", (1.6, 1.6, 1.2), (0, 0.6, -1.5), pivot=(0, 0, 0.6), rot=(8, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck2", "Neck1", (1.4, 1.4, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
+    P.append(part("HeadBack", "Neck2", (1.7, 1.7, 1), (0, 0, -0.5), pivot=(0, 0, 0.5), skin=dict(cracks=0.4), baby=1.5))
+    P.append(part("Head", "HeadBack", (2.5, 2.5, 1.4), (0, 0, -0.5), pivot=(0, 0, 0.7), skin=dict(cracks=0.4), baby=1.6))
     # Fondo de la boca (oscuro, sin brillo) y anillo de dientes.
-    P.append(part("Maw", "Head", (1.4, 1.4, 0.15), (0, 0, -0.55), ramp="maw", flat=True, baby=1.6))
-    for i in range(8):
-        a = math.radians(i * 45)
-        P.append(part(f"Tooth{i + 1}", "Head", (0.22, 0.32, 0.12), (math.sin(a) * 0.82, math.cos(a) * 0.82, -0.6),
-                      rot=(0, 0, -i * 45), ramp="tooth", flat=True, baby=1.6))
-    # Cinco pétalos alrededor de la boca: el eje largo apunta hacia afuera; la animación los inclina
-    # hacia adelante (cerrar) o los abre.
+    P.append(part("Maw", "Head", (1.3, 1.3, 0.15), (0, 0, -0.75), ramp="maw", flat=True, baby=1.6))
+    for i in range(12):
+        a = math.radians(i * 30)
+        P.append(part(f"Tooth{i + 1}", "Head", (0.18, 0.28, 0.12), (math.sin(a) * 0.75, math.cos(a) * 0.75, -0.8),
+                      rot=(0, 0, -i * 30), ramp="tooth", flat=True, baby=1.6))
+    # Cinco pétalos de dos segmentos alrededor de la boca, con dientes chicos en la cara de adentro
+    # (la de adelante cuando la estrella está abierta). La animación los cierra o los abre.
     for i in range(5):
         a = i * 72
         r = math.radians(a)
-        P.append(part(f"Petal{i + 1}", "Head", (1.1, 1.8, 0.35), (math.sin(r) * 0.55, math.cos(r) * 0.55, -0.55),
-                      pivot=(0, -0.9, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.8))
+        base, tip = f"Petal{i + 1}", f"PetalTip{i + 1}"
+        P.append(part(base, "Head", (0.9, 1.2, 0.3), (math.sin(r) * 0.5, math.cos(r) * 0.5, -0.72),
+                      pivot=(0, -0.6, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.7))
+        P.append(part(tip, base, (0.65, 1.1, 0.25), (0, 0.6, 0), pivot=(0, -0.55, 0), skin=dict(cracks=0.3), baby=1.7))
+        for j, y in enumerate((-0.3, 0, 0.3)):
+            P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.2),
+                          ramp="tooth", flat=True, baby=1.7))
+        for j, y in enumerate((-0.2, 0.2)):
+            P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.17),
+                          ramp="tooth", flat=True, baby=1.7))
     # Púas en el lomo, inclinadas hacia atrás.
-    spikes = (("Chest", -1.4), ("Chest", 0), ("Chest", 1.4), ("Rear", -1), ("Rear", 0.8))
-    for i, (parent, z) in enumerate(spikes, 1):
-        top = 1.6 if parent == "Chest" else 1.3
-        P.append(part(f"Spike{i}", parent, (0.35, 1.2, 0.35), (0, top, z), pivot=(0, -0.6, 0), rot=(30, 0, 0),
+    spikes = (("Chest", -0.8, 1.5), ("Chest", 0.6, 1.5), ("Waist", 0, 1), ("Rear", -0.6, 1.3), ("Rear", 0.6, 1.3))
+    for i, (parent, z, top) in enumerate(spikes, 1):
+        P.append(part(f"Spike{i}", parent, (0.3, 1, 0.3), (0, top, z), pivot=(0, -0.5, 0), rot=(30, 0, 0),
                       ramp="dark", pattern="solid", baby=0.5))
-    # Patas: delanteras en el pecho, traseras más gruesas en el anca.
-    mirrored(part("LegFU", "Chest", (1.6, 1.4, 1.6), (1.6, -1.3, -0.6), pivot=(0, 0.55, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegFL", "LegFU*", (1.5, 1.4, 1.8), (0, -0.7, 0), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegBU", "Rear", (1.8, 1.5, 1.9), (1.4, -1.0, 0.5), pivot=(0, 0.55, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegBL", "LegBU*", (1.6, 1.4, 2), (0, -0.75, 0), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
-    # Cola larga: seis bloques que se afinan y se curvan hacia el suelo.
-    prev, plen = "Rear", 4
-    sizes = ((2.4, 2.1), (2, 1.8), (1.7, 1.5), (1.4, 1.2), (1.1, 1), (0.8, 0.8))
+    # Patas finas y largas de cazadora; las traseras con muslo un poco más grueso.
+    mirrored(part("LegFU", "Chest", (1, 1.9, 1.1), (1.25, -1, -0.2), pivot=(0, 0.8, 0), skin=rock, baby=0.85), P)
+    mirrored(part("LegFL", "LegFU*", (0.8, 1.9, 1), (0, -0.95, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
+    mirrored(part("LegBU", "Rear", (1.2, 1.9, 1.3), (1.2, -0.8, 0.2), pivot=(0, 0.8, 0), skin=rock, baby=0.85), P)
+    mirrored(part("LegBL", "LegBU*", (0.9, 1.9, 1.1), (0, -0.95, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
+    # Cola larga y fina: seis bloques que se afinan, bajan suave y se enroscan al final.
+    prev, plen = "Rear", 2.6
+    sizes = ((1.6, 1.4), (1.35, 1.2), (1.1, 1), (0.9, 0.85), (0.7, 0.7), (0.55, 0.55))
     for i, (w, h) in enumerate(sizes, 1):
-        P.append(part(f"Tail{i}", prev, (w, h, 2), (0, 0.2 if i == 1 else 0, plen / 2), pivot=(0, 0, -1),
+        P.append(part(f"Tail{i}", prev, (w, h, 2), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -1),
                       rot=(0 if i == 1 else 5, 15 if i >= 4 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
-                      baby=0.55 if i == 1 else 0.35))
+                      baby=0.6 if i == 1 else 0.4))
         prev, plen = f"Tail{i}", 2
     return {
         "name": "Grieta",

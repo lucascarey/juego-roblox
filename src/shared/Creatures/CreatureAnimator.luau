@@ -238,6 +238,14 @@ function CreatureAnimator.new(model: Model)
 		end
 	end
 	self.petals = petals
+	-- Segunda articulación de cada pétalo (la punta), si la especie la tiene.
+	local tips = {}
+	for i = 1, 8 do
+		if m["PetalTip" .. i] then
+			table.insert(tips, m["PetalTip" .. i])
+		end
+	end
+	self.petalTips = tips
 
 	-- Apéndices con inercia.
 	local tail = {}
@@ -814,13 +822,13 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 		local neckP, lunge, petal
 		if k < 0.3 then
 			local s = smooth(k / 0.3)
-			neckP, lunge, petal = 0.2 * s, -0.2 * s, lerp(-0.6, 0.45, s)
+			neckP, lunge, petal = 0.2 * s, -0.2 * s, lerp(-0.75, 0.45, s)
 		elseif k < 0.45 then
 			local s = smooth((k - 0.3) / 0.15)
 			neckP, lunge, petal = lerp(0.2, -0.35, s), lerp(-0.2, 1.1, s), lerp(0.45, -1.35, s)
 		elseif k < 1.1 then
 			local s = smooth((k - 0.45) / 0.65)
-			neckP, lunge, petal = lerp(-0.35, 0, s), lerp(1.1, 0, s), lerp(-1.35, -0.6, s)
+			neckP, lunge, petal = lerp(-0.35, 0, s), lerp(1.1, 0, s), lerp(-1.35, -0.75, s)
 		else
 			neckP, lunge, petal = 0, 0, nil
 		end
@@ -988,11 +996,20 @@ function CreatureAnimator:update(dt: number)
 	-- Pétalos: entreabiertos respirando, mastican al comer, cerrados al dormir; el mordisco manda.
 	local petals = self.petals :: { Motor6D }
 	if #petals > 0 then
-		local base = -0.6 - 0.45 * sleep + breath * 0.06 + eat * 0.3 * math.sin(t * 9)
+		-- Normal: medio cerrada. Acostada o dormida: cerrada del todo.
+		local closed = math.max(rest, sleep)
+		local base = lerp(-0.75, -1.3, closed) + breath * 0.05 * (1 - closed) + eat * 0.3 * math.sin(t * 9)
 		local target = act.petal or base
+		local tips = self.petalTips :: { Motor6D }
 		for i, motor in petals do
-			local wobble = if act.petal then 0 else math.sin(t * 1.7 + i * 1.3) * 0.04 * (1 - sleep)
+			local wobble = if act.petal then 0 else math.sin(t * 1.7 + i * 1.3) * 0.04 * (1 - closed)
 			motor.Transform = CFrame.Angles(target + wobble, 0, 0)
+			-- La punta acompaña con un poco de retraso visual: se curva más al cerrar y se estira al abrir.
+			local tip = tips[i]
+			if tip then
+				local tipWobble = math.sin(t * 1.7 + i * 1.3 - 0.8) * 0.06 * (1 - closed)
+				tip.Transform = CFrame.Angles(target * 0.7 + (if act.petal then 0 else tipWobble), 0, 0)
+			end
 		end
 	end
 

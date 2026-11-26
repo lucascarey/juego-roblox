@@ -6,6 +6,7 @@ export type Stats = {
 	sprint: number,
 	jumpPower: number, -- más bajo = salta menos (pesada)
 	jumpGravity: number, -- fracción de la gravedad en el aire: < 1 = arco más lento y pesado
+	jumpForward: number, -- empuje hacia adelante al saltar (studs/s, adulta)
 	maxHealth: number,
 	stamina: number,
 	sprintCost: number, -- por segundo
@@ -29,6 +30,7 @@ local SpeciesStats: { [string]: Stats } = {
 		sprint = 20,
 		jumpPower = 24, -- con jumpGravity 0.55 sube ~2.6 studs (un humano ~7)
 		jumpGravity = 0.55,
+		jumpForward = 6,
 		maxHealth = 120,
 		stamina = 100,
 		sprintCost = 16,
@@ -44,16 +46,17 @@ local SpeciesStats: { [string]: Stats } = {
 		secondary = "Cabezazo",
 		frontAttack = "Cabezazo",
 	},
-	-- Especie 2: más pesada y baja; su arma es la boca en estrella.
+	-- Especie 2: cazadora liviana y atlética; su arma es la boca en estrella.
 	Grieta = {
-		walk = 7,
-		sprint = 17,
-		jumpPower = 20, -- todavía más pesada que Musgo: salta menos
-		jumpGravity = 0.55,
-		maxHealth = 150,
+		walk = 8,
+		sprint = 22,
+		jumpPower = 34, -- más liviana que Musgo: salta más alto y más lejos hacia adelante
+		jumpGravity = 0.6,
+		jumpForward = 16,
+		maxHealth = 110,
 		stamina = 100,
-		sprintCost = 18,
-		jumpCost = 30,
+		sprintCost = 14,
+		jumpCost = 22,
 		staminaRegen = 12,
 		regenRest = 3,
 		regenSleep = 7,
@@ -61,7 +64,7 @@ local SpeciesStats: { [string]: Stats } = {
 		standUpSleep = 4.5,
 		damageTail = 14,
 		damageHead = 10,
-		damageBite = 24,
+		damageBite = 22,
 		primary = "Mordisco",
 		secondary = "Coletazo",
 		frontAttack = "Mordisco",
