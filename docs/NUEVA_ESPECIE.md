@@ -169,3 +169,8 @@ Errores que ya se resolvieron y no hay que reintroducir:
   la izquierda como la planilla) armada con ffmpeg `hstack`, y corregir hasta que coincida: posición del
   muslo a lo largo del cuerpo (Grieta: al centro), altura del cuerpo, altura de la cabeza, curva de la cola.
 - No agregar piezas que no están en la planilla (los "hombros" de Grieta parecían brazos: Lucas no los quería).
+- Tamaño de especie: `"scale"` en la definición (tools/creatures.py) escala medidas, articulaciones y
+  pivotes antes de pintar (misma densidad de píxeles). Grieta = 0.6 (la mitad de Musgo). `babySize` define
+  cuánto más chica es la cría (Grieta 0.65: poca diferencia entre etapas; Musgo 0.38).
+- El constructor y el animador apoyan la criatura sobre las patas (Leg/Foot/Toe/Claw/Paw) si las tiene:
+  una cabeza o boca grande de cría quedaba más baja que los pies y la dejaba flotando.

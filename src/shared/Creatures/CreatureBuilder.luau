@@ -163,9 +163,19 @@ function CreatureBuilder.build(def: SpeciesDef, at: CFrame, opts: BuildOptions?)
 	end
 
 	-- Con proporciones de cría las patas no siempre llegan justo al piso: apoyamos la criatura.
+	-- Si tiene patas, se apoya sobre las patas (y sus pies/dedos); si no, sobre la pieza más baja.
+	-- Así una cabeza o una boca grande (pétalos abiertos de la cría) no la deja flotando.
+	local function isLeg(name: string): boolean
+		return name:match("^Leg") ~= nil
+			or name:match("^Foot") ~= nil
+			or name:match("^Toe") ~= nil
+			or name:match("^Claw") ~= nil
+			or name:match("^Paw") ~= nil
+	end
+	local hasLegs = model:FindFirstChild("LegBUL") ~= nil or model:FindFirstChild("LegFUL") ~= nil
 	local lowest = math.huge
 	for _, d in model:GetDescendants() do
-		if d:IsA("BasePart") and d ~= root then
+		if d:IsA("BasePart") and d ~= root and (not hasLegs or isLeg(d.Name)) then
 			local cf, half = d.CFrame, d.Size / 2
 			for _, sx in { -1, 1 } do
 				for _, sy in { -1, 1 } do

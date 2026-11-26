@@ -171,9 +171,19 @@ function CreatureAnimator.new(model: Model)
 			break
 		end
 	end
+	-- Piso en reposo: el punto más bajo de las patas (pies, dedos) si las tiene; si no, de toda la criatura.
+	-- (Una boca o cabeza grande de cría puede quedar más abajo que los pies y no es el apoyo.)
+	local hasLegs = m.LegBUL ~= nil or m.LegFUL ~= nil
+	local function isLeg(name: string): boolean
+		return name:match("^Leg") ~= nil
+			or name:match("^Foot") ~= nil
+			or name:match("^Toe") ~= nil
+			or name:match("^Claw") ~= nil
+			or name:match("^Paw") ~= nil
+	end
 	local lowest = math.huge
 	for part, cf in rest do
-		if part ~= root then
+		if part ~= root and (not hasLegs or isLeg(part.Name)) then
 			local half = part.Size / 2
 			for _, sx in { -1, 1 } do
 				for _, sy in { -1, 1 } do

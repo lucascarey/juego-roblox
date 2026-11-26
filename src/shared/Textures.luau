@@ -9,8 +9,8 @@ return {
 		Cuadrupedo = "rbxassetid://100673216757102",
 		Musgo = "rbxassetid://97383471487994",
 		HuevoMusgo = "rbxassetid://86779088667442",
-		Grieta = "rbxassetid://94985094375874",
-		HuevoGrieta = "rbxassetid://94405179796760",
+		Grieta = "rbxassetid://127867047499995",
+		HuevoGrieta = "rbxassetid://105701807455976",
 	},
 	-- 16 px por tile; 4 studs por tile = 4 px por stud, la misma escala en todas las piezas.
 	STUDS_PER_TILE = 4,

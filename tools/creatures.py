@@ -218,7 +218,21 @@ def build_atlas(species):
     return out, (ATLAS_W / PPS, atlas_h / PPS)
 
 
+def apply_scale(species):
+    """Escala toda la especie (medidas, articulaciones, pivotes). Va antes de pintar el atlas, así la
+    densidad de píxeles sigue siendo la misma que en las demás especies."""
+    s = species.get("scale", 1)
+    if s == 1:
+        return
+    for p in species["parts"]:
+        p["size"] = [v * s for v in p["size"]]
+        p["joint"] = [v * s for v in p["joint"]]
+        if p["pivot"]:
+            p["pivot"] = [v * s for v in p["pivot"]]
+
+
 def export(species):
+    apply_scale(species)
     atlas_path, atlas_studs = build_atlas(species)
     data = {
         "name": species["name"],
@@ -400,18 +414,18 @@ def grieta():
     # de la cadera (la animación necesita eso para pisar bien).
     #   muslo: 2.9 de cadera a rodilla, 35° adelante -> rodilla 1.66 adelante y 2.38 abajo
     #   caña: 2.25 de rodilla a tobillo, 47.5° atrás (rot relativa -82.5°) -> vuelve 1.66 atrás
-    mirrored(part("LegBU", "Rear", (1.9, 3.4, 2.6), (1.5, -1.1, -1.2), pivot=(0, 1.45, 0), rot=(35, 0, 0),
+    mirrored(part("LegBU", "Rear", (1.3, 3.4, 2.4), (1.4, -1.1, -1.2), pivot=(0, 1.45, 0), rot=(35, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (1.3, 2.4, 1.4), (0, -1.45, 0), pivot=(0, 1.05, 0), rot=(-82.5, 0, 0),
+    mirrored(part("LegBL", "LegBU*", (0.8, 2.4, 0.9), (0, -1.45, 0), pivot=(0, 1.05, 0), rot=(-82.5, 0, 0),
                   skin=rock, baby=0.85), P)
-    mirrored(part("Foot", "LegBL*", (1.8, 0.6, 2.6), (0, -1.2, 0), pivot=(0, 0.3, 0.7), rot=(47.5, 0, 0),
+    mirrored(part("Foot", "LegBL*", (1.2, 0.5, 2.4), (0, -1.2, 0), pivot=(0, 0.25, 0.7), rot=(47.5, 0, 0),
                   skin=dict(cracks=0.3), baby=0.9), P)
-    for j, x in enumerate((-0.55, 0, 0.55), 1):
-        mirrored(part(f"Toe{j}", "Foot*", (0.5, 0.45, 0.6), (x, -0.075, -1.5), skin=dict(cracks=0.2), baby=0.9), P)
+    for j, x in enumerate((-0.4, 0, 0.4), 1):
+        mirrored(part(f"Toe{j}", "Foot*", (0.34, 0.4, 0.6), (x, -0.05, -1.4), skin=dict(cracks=0.2), baby=0.9), P)
         # Punta de cada dedo: una garra que se afina en dos bloques y apunta hacia abajo y adelante.
-        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.34, 0.3, 0.4), (0, 0, -0.3), pivot=(0, 0, 0.2), rot=(-6, 0, 0),
+        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.24, 0.24, 0.4), (0, 0, -0.3), pivot=(0, 0, 0.2), rot=(-6, 0, 0),
                       ramp="dark", pattern="solid", baby=0.9), P)
-        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.18, 0.16, 0.35), (0, -0.02, -0.2), pivot=(0, 0, 0.17), rot=(-6, 0, 0),
+        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.13, 0.13, 0.35), (0, -0.02, -0.2), pivot=(0, 0, 0.17), rot=(-6, 0, 0),
                       ramp="dark", pattern="solid", baby=0.9), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
@@ -431,7 +445,8 @@ def grieta():
     return {
         "name": "Grieta",
         "seed": 21,
-        "babySize": 0.4,
+        "scale": 0.6,  # adulta a la mitad del tamaño de Musgo (pedido de Lucas)
+        "babySize": 0.65,  # cría al 65% de la adulta: menos diferencia entre etapas
         "ramps": GRIETA_RAMPS,
         "solids": {"maw": (24, 20, 30), "tooth": (232, 226, 212)},
         "parts": P,
@@ -449,7 +464,7 @@ def huevo_grieta():
         P.append(part(f"Capa{i}", prev, (w, h, w - 0.75), joint, skin=skin))
         P.append(part(f"Cruz{i}", f"Capa{i}", (w - 0.75, h, w), (0, 0, 0), skin=skin))
         prev, prev_h = f"Capa{i}", h
-    return {"name": "HuevoGrieta", "seed": 22, "ramps": GRIETA_RAMPS, "parts": P}
+    return {"name": "HuevoGrieta", "seed": 22, "scale": 0.7, "ramps": GRIETA_RAMPS, "parts": P}
 
 
 if __name__ == "__main__":
