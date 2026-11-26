@@ -343,8 +343,8 @@ def huevo_musgo():
 
 
 GRIETA_RAMPS = {
-    "body": [(112, 40, 40), (142, 56, 54), (168, 74, 68), (190, 94, 86), (208, 116, 106)],
-    "belly": [(150, 80, 76), (176, 102, 96), (198, 124, 116), (214, 144, 134), (228, 166, 154)],
+    "body": [(90, 30, 30), (116, 42, 40), (138, 56, 52), (158, 72, 66), (176, 90, 82)],
+    "belly": [(124, 62, 58), (146, 80, 74), (166, 98, 90), (182, 116, 106), (196, 134, 122)],
     "crack": [(64, 22, 24), (78, 28, 30), (92, 34, 36), (104, 42, 42), (116, 50, 48)],
     "dark": [(70, 26, 28), (88, 34, 36), (104, 42, 44), (120, 52, 52), (136, 62, 60)],
     "moss": [(112, 40, 40), (142, 56, 54), (168, 74, 68), (190, 94, 86), (208, 116, 106)],
@@ -359,10 +359,10 @@ def grieta():
     rock = dict(belly=0.3, cracks=0.5)
     P = []
     # Cuerpo: anca atrás, pecho adelante más alto y ancho (como en el perfil de la referencia).
-    P.append(part("Rear", "Root", (4, 3, 3.5), (0, 4.2, 1.75), skin=rock, baby=(1, 1, 0.85)))
-    P.append(part("Chest", "Rear", (4.5, 3.5, 4), (0, 0.3, -1.75), pivot=(0, 0, 2), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Rear", "Root", (4, 2.6, 4), (0, 3.4, 2), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Chest", "Rear", (4.5, 3.2, 4.5), (0, 0.3, -2), pivot=(0, 0, 2.25), skin=rock, baby=(1, 1, 0.85)))
     # Cuello corto y cabeza-boca.
-    P.append(part("Neck1", "Chest", (2.6, 2.4, 1.2), (0, 0.3, -2), pivot=(0, 0, 0.6), rot=(4, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck1", "Chest", (2.6, 2.4, 1.2), (0, 0.1, -2.25), pivot=(0, 0, 0.6), rot=(4, 0, 0), skin=rock, baby=0.9))
     P.append(part("Neck2", "Neck1", (2.3, 2.2, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
     P.append(part("Head", "Neck2", (2.8, 2.8, 1), (0, 0, -0.5), pivot=(0, 0, 0.5), skin=dict(cracks=0.4), baby=1.6))
     # Fondo de la boca (oscuro, sin brillo) y anillo de dientes.
@@ -379,22 +379,22 @@ def grieta():
         P.append(part(f"Petal{i + 1}", "Head", (1.1, 1.8, 0.35), (math.sin(r) * 0.55, math.cos(r) * 0.55, -0.55),
                       pivot=(0, -0.9, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.8))
     # Púas en el lomo, inclinadas hacia atrás.
-    spikes = (("Chest", -1.2), ("Chest", 0.2), ("Chest", 1.5), ("Rear", -0.8), ("Rear", 0.6))
+    spikes = (("Chest", -1.4), ("Chest", 0), ("Chest", 1.4), ("Rear", -1), ("Rear", 0.8))
     for i, (parent, z) in enumerate(spikes, 1):
-        top = 1.75 if parent == "Chest" else 1.5
+        top = 1.6 if parent == "Chest" else 1.3
         P.append(part(f"Spike{i}", parent, (0.35, 1.2, 0.35), (0, top, z), pivot=(0, -0.6, 0), rot=(30, 0, 0),
                       ramp="dark", pattern="solid", baby=0.5))
     # Patas: delanteras en el pecho, traseras más gruesas en el anca.
-    mirrored(part("LegFU", "Chest", (1.6, 1.8, 1.6), (1.6, -1.5, -0.6), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegFL", "LegFU*", (1.5, 1.8, 1.8), (0, -0.9, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegBU", "Rear", (1.8, 1.8, 1.9), (1.4, -1.2, 0.4), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
-    mirrored(part("LegBL", "LegBU*", (1.6, 1.8, 2), (0, -0.9, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegFU", "Chest", (1.6, 1.4, 1.6), (1.6, -1.3, -0.6), pivot=(0, 0.55, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegFL", "LegFU*", (1.5, 1.4, 1.8), (0, -0.7, 0), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegBU", "Rear", (1.8, 1.5, 1.9), (1.4, -1.0, 0.5), pivot=(0, 0.55, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegBL", "LegBU*", (1.6, 1.4, 2), (0, -0.75, 0), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
     # Cola larga: seis bloques que se afinan y se curvan hacia el suelo.
-    prev, plen = "Rear", 3.5
-    sizes = ((2.4, 2.2), (2, 1.8), (1.7, 1.5), (1.4, 1.2), (1.1, 1), (0.8, 0.8))
+    prev, plen = "Rear", 4
+    sizes = ((2.4, 2.1), (2, 1.8), (1.7, 1.5), (1.4, 1.2), (1.1, 1), (0.8, 0.8))
     for i, (w, h) in enumerate(sizes, 1):
         P.append(part(f"Tail{i}", prev, (w, h, 2), (0, 0.2 if i == 1 else 0, plen / 2), pivot=(0, 0, -1),
-                      rot=(20 if i == 1 else 12, 0, 0), skin=dict(belly=0.25, cracks=0.4),
+                      rot=(0 if i == 1 else 5, 15 if i >= 4 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
                       baby=0.55 if i == 1 else 0.35))
         prev, plen = f"Tail{i}", 2
     return {

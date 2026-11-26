@@ -124,3 +124,21 @@ Errores que ya se resolvieron y no hay que reintroducir:
   terrones de 0.65 studs, vida de 0.7–1.1 s.
 - Estilo de sonido elegido por Lucas: realista y suave. Musgo no tiene boca: su voz es solo
   respiración y resoplidos (la voz propia se define cuando haya más especies).
+
+## 10. Aprendido con la especie 2 (Grieta)
+
+- El constructor apoya en el suelo la pieza **más baja**: si la cola en reposo baja más que las patas, la
+  criatura queda flotando. La curva de la cola en reposo tiene que terminar a la altura de los pies
+  (Grieta: Tail1 0°, las demás 5°).
+- Los rojos también se aclaran con la luz de Roblox (se veían salmón): usar rampas más oscuras que la
+  referencia, igual que pasó con el rosa de Musgo.
+- Una pieza que la animación no conoce (pétalos de la boca) necesita su propio bloque en el animador.
+  Los ataques de cada especie van en `SpeciesStats` (`primary`, `secondary`, `frontAttack`); los
+  controles, la guía y la IA los leen de ahí.
+- Piezas en anillo (pétalos, dientes): la orientación radial va en el C0 (`rot=(0, 0, -ángulo)`) y la
+  inclinación hacia adelante se anima con `Transform`; con ángulos Euler en el C0 no se puede componer
+  bien "girar en el anillo y después inclinar".
+- Rojo: si Studio no recibe los cambios aunque el plugin diga conectado, el servidor de Rojo quedó
+  trabado. Levantar otro con `rojo serve --port 34873` y pedirle a Lucas que cambie el puerto en el
+  plugin.
+- El zoo es una lista `PENS` en `ZooBuilder`: especie nueva = una entrada más.
