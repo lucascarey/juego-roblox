@@ -147,3 +147,15 @@ Errores que ya se resolvieron y no hay que reintroducir:
   adelante durante el vuelo (`leapUntil` en CreatureControls). `jumpForward` por especie.
 - Piezas decorativas sin animar (cintura, nuca de la cabeza, dientes) se pueden agregar libremente;
   la animación solo mira los nombres que conoce.
+
+## 11. ERROR GRAVE con Grieta: la hice cuadrúpeda y era BÍPEDA
+
+- Antes de modelar, **contar las patas en TODAS las vistas** (frente, atrás, arriba, perfil) y escribirlo
+  ("frente: 2 patas, atrás: 2, arriba: 2 → bípeda"). En el perfil, un muslo inclinado + caña + pie se
+  puede confundir con dos patas: el frente y la espalda mandan.
+- Confirmarle a Lucas la lectura de la planilla (cantidad de patas, partes) ANTES de modelar.
+- El animador ya soporta bípedas: patas `LegBU/LegBL` + `L/R` sin delanteras → `self.biped`. Camina
+  alternando, el galope también alterna, el terreno usa un rayo extra adelante para la pendiente, y
+  excava con el hocico (baja el pecho y la cabeza). El pie es una pieza hija de la caña, al ras de su base.
+- Para capturas en Play con la criatura del jugador: la cabeza sigue a la cámara. Sacar el atributo
+  `Jugador` del modelo en el cliente para que mire adelante.

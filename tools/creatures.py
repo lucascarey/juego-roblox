@@ -352,22 +352,24 @@ GRIETA_RAMPS = {
 
 
 def grieta():
-    """Especie 2 (referencia de Lucas, 2026-11-26; v2 con sus correcciones): cazadora delgada y
-    atlética de piel de roca roja agrietada. Caderas, cintura y pecho marcados; patas finas y largas;
-    cabeza en forma de gota (angosta atrás, ancha adelante) que termina en una boca en estrella de 5
-    pétalos de 2 articulaciones con muchos dientes chicos del lado de adentro. Púas en el lomo y cola
-    larga de 6 bloques. Nada brilla. Rasgo de cría: la cabeza/boca grande."""
+    """Especie 2 (referencia de Lucas, 2026-11-26): carnívora BÍPEDA de piel de roca roja agrietada.
+    Según la planilla (frente y atrás muestran solo dos patas): cuerpo horizontal sobre dos patas en
+    las caderas (muslo grueso, caña y pie con dedos hacia adelante), pecho grande adelante con hombros
+    marcados, cuello corto, cabeza formada por los pétalos de la estrella, púas en el lomo y cola larga
+    de contrapeso que baja hacia el suelo y se enrosca al final. Nada brilla.
+    Rasgo de cría: la cabeza/boca grande."""
     rock = dict(belly=0.3, cracks=0.5)
     P = []
-    # Cuerpo: caderas (raíz), cintura angosta y pecho profundo. El pecho cuelga de las caderas (columna).
-    P.append(part("Rear", "Root", (3, 2.6, 2.6), (0, 4.3, 1.3), skin=rock, baby=(1, 1, 0.85)))
-    P.append(part("Waist", "Rear", (2.2, 2, 2.2), (0, 0.1, -1.3), pivot=(0, 0, 1.1), skin=rock, baby=(1, 1, 0.85)))
-    P.append(part("Chest", "Rear", (3.3, 3, 3), (0, 0.3, -3.5), pivot=(0, 0, 1.5), skin=rock, baby=(1, 1, 0.85)))
+    # Cuerpo: caderas (raíz, sobre las patas) y pecho grande adelante, un poco más alto.
+    P.append(part("Rear", "Root", (3, 2.8, 3), (0, 4.4, 0), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Chest", "Rear", (3.6, 3.2, 3.6), (0, 0.4, -1.5), pivot=(0, 0, 1.8), skin=rock, baby=(1, 1, 0.85)))
+    # Hombros marcados a los costados del pecho (en el frente de la planilla).
+    mirrored(part("Shoulder", "Chest", (0.8, 1.5, 1.5), (1.95, -0.3, -0.5), skin=rock, baby=0.8), P)
     # Cuello y cabeza: la cabeza ES la estrella. Un núcleo chico (oculto entre los pétalos) y cinco
     # pétalos grandes de dos segmentos que, cerrados, forman el capullo en gota; al abrir muestran la
     # boca. Sin bloque cuadrado a la vista.
-    P.append(part("Neck1", "Chest", (1.6, 1.6, 1.2), (0, 0.6, -1.5), pivot=(0, 0, 0.6), rot=(8, 0, 0), skin=rock, baby=0.9))
-    P.append(part("Neck2", "Neck1", (1.4, 1.4, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
+    P.append(part("Neck1", "Chest", (1.7, 1.7, 1.2), (0, 0.3, -1.8), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck2", "Neck1", (1.5, 1.5, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
     P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), skin=dict(cracks=0.4), baby=1.5))
     P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.6))
     # Fondo de la boca (oscuro, sin brillo) y anillo de dientes, en el frente del núcleo.
@@ -390,24 +392,26 @@ def grieta():
         for j, y in enumerate((-0.35, 0, 0.35)):
             P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
                           ramp="tooth", flat=True, baby=1.7))
-    # Púas en el lomo, inclinadas hacia atrás.
-    spikes = (("Chest", -0.8, 1.5), ("Chest", 0.6, 1.5), ("Waist", 0, 1), ("Rear", -0.6, 1.3), ("Rear", 0.6, 1.3))
+    # Dos patas (bípeda): muslo grueso, caña más fina y pie con los dedos hacia adelante. El pie va
+    # al ras de la base de la caña, así el apoyo de la animación sigue siendo la caña.
+    mirrored(part("LegBU", "Rear", (1.5, 2, 1.7), (1.4, -0.9, 0.2), pivot=(0, 0.85, 0), skin=rock, baby=0.85), P)
+    mirrored(part("LegBL", "LegBU*", (1, 1.8, 1.1), (0, -1, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
+    mirrored(part("Foot", "LegBL*", (1.3, 0.5, 2), (0, -0.65, -0.45), skin=dict(cracks=0.3), baby=0.9), P)
+    # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
+    # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
+    prev, plen = "Rear", 3
+    sizes = ((2.2, 2), (1.85, 1.65), (1.5, 1.35), (1.2, 1.1), (0.95, 0.85), (0.7, 0.65))
+    for i, (w, h) in enumerate(sizes, 1):
+        P.append(part(f"Tail{i}", prev, (w, h, 1.6), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -0.8),
+                      rot=(0 if i == 1 else 8, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
+                      baby=0.6 if i == 1 else 0.4))
+        prev, plen = f"Tail{i}", 1.6
+    # Púas en el lomo, del pecho a la cola, inclinadas hacia atrás.
+    spikes = (("Chest", -1.1, 1.6), ("Chest", 0.3, 1.6), ("Rear", -0.6, 1.4), ("Rear", 0.7, 1.4),
+              ("Tail1", 0, 1), ("Tail2", 0, 0.85), ("Tail3", 0, 0.7))
     for i, (parent, z, top) in enumerate(spikes, 1):
         P.append(part(f"Spike{i}", parent, (0.3, 1, 0.3), (0, top, z), pivot=(0, -0.5, 0), rot=(30, 0, 0),
                       ramp="dark", pattern="solid", baby=0.5))
-    # Patas finas y largas de cazadora; las traseras con muslo un poco más grueso.
-    mirrored(part("LegFU", "Chest", (1, 1.9, 1.1), (1.25, -1, -0.2), pivot=(0, 0.8, 0), skin=rock, baby=0.85), P)
-    mirrored(part("LegFL", "LegFU*", (0.8, 1.9, 1), (0, -0.95, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
-    mirrored(part("LegBU", "Rear", (1.2, 1.9, 1.3), (1.2, -0.8, 0.2), pivot=(0, 0.8, 0), skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (0.9, 1.9, 1.1), (0, -0.95, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
-    # Cola larga y fina: seis bloques que se afinan, bajan suave y se enroscan al final.
-    prev, plen = "Rear", 2.6
-    sizes = ((1.6, 1.4), (1.35, 1.2), (1.1, 1), (0.9, 0.85), (0.7, 0.7), (0.55, 0.55))
-    for i, (w, h) in enumerate(sizes, 1):
-        P.append(part(f"Tail{i}", prev, (w, h, 2), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -1),
-                      rot=(0 if i == 1 else 5, 15 if i >= 4 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
-                      baby=0.6 if i == 1 else 0.4))
-        prev, plen = f"Tail{i}", 2
     return {
         "name": "Grieta",
         "seed": 21,

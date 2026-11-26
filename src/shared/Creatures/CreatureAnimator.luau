@@ -144,6 +144,8 @@ function CreatureAnimator.new(model: Model)
 		end
 	end
 	self.spine = if m.Chest and m.Chest ~= self.body then m.Chest else nil
+	-- Bípeda: tiene patas traseras pero no delanteras (camina, corre y excava distinto).
+	self.biped = m.LegBUL ~= nil and m.LegFUL == nil
 
 	-- Pose de reposo armada desde las articulaciones (las posiciones vivas pueden no estar resueltas
 	-- todavía cuando la criatura recién llega por streaming).
@@ -368,7 +370,9 @@ function CreatureAnimator:_locomotion(dt: number)
 		local walkOff = (if leg.front then 0.25 else 0) + (if leg.left then 0 else 0.5)
 		local trotOff = if leg.front == leg.left then 0.5 else 0
 		-- Galope: las traseras casi juntas y después las delanteras casi juntas.
-		local galOff = (if leg.front then 0.5 else 0) + (if leg.left then 0 else 0.12)
+		local galOff = if self.biped
+			then (if leg.left then 0 else 0.5)
+			else (if leg.front then 0.5 else 0) + (if leg.left then 0 else 0.12)
 		local u = (self.phase + lerp(lerp(walkOff, trotOff, trot), galOff, gallop)) % 1
 		local hip, knee = legPose(u, duty, amp)
 		leg.swing = hip * self.move.x
@@ -527,7 +531,7 @@ end
 -- Ajuste al terreno: altura del suelo bajo cada cadera, plano del cuerpo y cuánto acortar cada pata.
 function CreatureAnimator:_ground(dt: number)
 	local legs = self.legs :: { Leg }
-	if #legs < 4 then
+	if #legs < 2 then
 		return
 	end
 	local cf = self.vis2 :: CFrame
@@ -571,12 +575,22 @@ function CreatureAnimator:_ground(dt: number)
 	end
 	p.wasAir = air > 0.5
 	local onGround = (1 - air) * (1 - math.max(p.front, p.back))
+	-- Bípeda (sin patas delanteras): la pendiente adelante-atrás se mide con un rayo extra adelante.
+	local biped = nF == 0
+	if biped then
+		local span = math.max(1.5, self.bodyLen * 0.6)
+		local hz = zB / nB
+		local probe = cf:PointToWorldSpace(Vector3.new(self.hipCenter.X, 0, hz - span))
+		local hit = workspace:Raycast(probe + Vector3.new(0, L, 0), Vector3.new(0, -3 * L, 0), groundParams)
+		F, nF, zF = if hit then hit.Position.Y else nominal, 1, hz - span
+	end
 	F, B, Lf, R = F / nF, B / nB, Lf / nL, R / nR
 	zF, zB, xL, xR = zF / nF, zB / nB, xL / nL, xR / nR
 	local slopeF = (F - B) / math.max(0.5, zB - zF) -- sube hacia adelante (-Z)
 	local slopeL = (Lf - R) / math.max(0.5, xR - xL) -- sube hacia la izquierda (-X)
-	local gc = (F + B) / 2
-	local zc, xc = (zF + zB) / 2, (xL + xR) / 2
+	-- Bípeda: el cuerpo se apoya donde están las patas (atrás del rayo de adelante).
+	local gc = if biped then B else (F + B) / 2
+	local zc, xc = if biped then zB else (zF + zB) / 2, (xL + xR) / 2
 	-- Lo que el plano no explica lo absorben las patas: el cuerpo baja hasta que la pata con el
 	-- suelo más bajo llegue estirada, y las demás doblan la rodilla.
 	local lower = 0
@@ -822,13 +836,13 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 		local neckP, lunge, petal
 		if k < 0.3 then
 			local s = smooth(k / 0.3)
-			neckP, lunge, petal = 0.2 * s, -0.2 * s, lerp(-1.22, 0.45, s)
+			neckP, lunge, petal = 0.2 * s, -0.2 * s, lerp(-0.75, 0.45, s)
 		elseif k < 0.45 then
 			local s = smooth((k - 0.3) / 0.15)
 			neckP, lunge, petal = lerp(0.2, -0.35, s), lerp(-0.2, 1.1, s), lerp(0.45, -1.35, s)
 		elseif k < 1.1 then
 			local s = smooth((k - 0.45) / 0.65)
-			neckP, lunge, petal = lerp(-0.35, 0, s), lerp(1.1, 0, s), lerp(-1.4, -1.22, s)
+			neckP, lunge, petal = lerp(-0.35, 0, s), lerp(1.1, 0, s), lerp(-1.4, -0.75, s)
 		else
 			neckP, lunge, petal = 0, 0, nil
 		end
@@ -916,7 +930,10 @@ function CreatureAnimator:update(dt: number)
 	self.vy = if root.Anchored then 0 else root.AssemblyLinearVelocity.Y
 	local air = pose.air.x
 	local backDrop = self.drop.back.x + pose.back * self.lieDrop + 0.25 * L * jc + 0.06 * L * dig
-	local frontDrop = self.drop.front.x + pose.front * self.lieDrop + 0.06 * L * jc + 0.12 * L * dig
+	local frontDrop = self.drop.front.x
+		+ pose.front * self.lieDrop
+		+ 0.06 * L * jc
+		+ (if self.biped then 0.45 else 0.12) * L * dig -- bípeda: baja el pecho para llegar al suelo con el hocico
 	local stepRoll = math.sin(self.phase * TAU) * 0.035 * move * (1 - trot)
 	local shift = math.sin(t * 0.37) * 0.025 * still
 	local gp = math.sin(self.phase * TAU) -- ciclo del galope
@@ -939,7 +956,10 @@ function CreatureAnimator:update(dt: number)
 		local digRock = math.sin(dg) * dig
 		-- Cada rascada (la pata va hacia atrás) tira tierra.
 		local digSin = math.sin(dg)
-		if dig > 0.6 and (self.lastDigSin or 0) > 0 and digSin <= 0 then
+		if dig > 0.6 and (self.lastDigSin or 0) > 0 and digSin <= 0 and self.biped and self.m.Head then
+			local head = (self.m.Head.Part1 :: BasePart).Position
+			self:_emit("Rascada", head - Vector3.new(0, 1, 0), { dir = -(self.vis2 :: CFrame).LookVector })
+		elseif dig > 0.6 and (self.lastDigSin or 0) > 0 and digSin <= 0 then
 			for _, leg in self.legs :: { Leg } do
 				if leg.front and not leg.left then
 					local fp = footOf(leg)
@@ -977,7 +997,12 @@ function CreatureAnimator:update(dt: number)
 		local pitch = self.look.pitch.x * calm + nod - (bodyPitch + chestPitch) - self.ground.pitch.x * 0.5
 		-- Acostada baja un poco la cabeza; dormida la apoya en el suelo. Excavando mira el pozo.
 		pitch += breath * 0.02 * sleep + act.neckPitch
-		pitch += dig * (-0.9 + 0.1 * math.sin(dg + 0.6)) -- cabeza abajo, acompaña la rascada
+		if self.biped then
+			-- Bípeda: excava con el hocico, hunde la cabeza y la mueve hozando adelante-atrás.
+			pitch += dig * (-1.75 + 0.22 * math.sin(dg + 0.6))
+		else
+			pitch += dig * (-0.9 + 0.1 * math.sin(dg + 0.6)) -- cabeza abajo, acompaña la rascada
+		end
 		-- Comer: cabeza al pasto, mastica y cada tanto tira para arrancar.
 		local tug = math.max(0, math.sin(t * TAU / 1.7)) ^ 6
 		pitch += eat * (-1.25 + math.sin(t * 9) * 0.05 + tug * 0.3)
@@ -996,21 +1021,33 @@ function CreatureAnimator:update(dt: number)
 	-- Pétalos: entreabiertos respirando, mastican al comer, cerrados al dormir; el mordisco manda.
 	local petals = self.petals :: { Motor6D }
 	if #petals > 0 then
-		-- Normal: casi cerrada (capullo que forma la cabeza). Acostada o dormida: cerrada del todo.
+		-- De pie: semiabierta. Acostada y dormida: cerrada; acostada (despierta) se abre cada tanto.
 		local closed = math.max(rest, sleep)
-		local base = lerp(-1.22, -1.4, closed) + breath * 0.05 * (1 - closed) + eat * 0.3 * math.sin(t * 9)
+		local peekW = self.petalPeek or newSpring()
+		self.petalPeek = peekW
+		self.nextPeek = (self.nextPeek or 6) - dt
+		if self.nextPeek <= 0 then
+			self.nextPeek = (self.rng :: Random):NextNumber(6, 12)
+			self.peekUntil = t + 1.8
+		end
+		step(peekW, if t < (self.peekUntil or 0) then 1 else 0, 1.2, 1, dt)
+		local peek = peekW.x * math.clamp(rest - sleep, 0, 1)
+		local base = lerp(lerp(-0.75, -1.4, closed), -0.8, peek)
+			+ breath * 0.05 * (1 - closed)
+			+ eat * 0.3 * math.sin(t * 9)
 		local target = act.petal or base
 		local tips = self.petalTips :: { Motor6D }
 		for i, motor in petals do
 			-- Tambaleo: cada pétalo se mueve solo, lento e irregular (dos ondas); dormida casi nada.
 			local sway = math.sin(t * 1.3 + i * 1.3) * 0.1 + math.sin(t * 2.9 + i * 2.1) * 0.05
-			local wobble = if act.petal then 0 else sway * (1 - 0.8 * sleep) * (1 - 0.4 * rest)
+			-- Siempre tambalea, abierta o cerrada (dormida, un poco menos).
+			local wobble = if act.petal then 0 else sway * (1 - 0.45 * sleep)
 			motor.Transform = CFrame.Angles(target + wobble, 0, 0)
 			-- La punta acompaña con un poco de retraso visual: se curva más al cerrar y se estira al abrir.
 			local tip = tips[i]
 			if tip then
 				local tipWobble = (math.sin(t * 1.3 + i * 1.3 - 0.8) * 0.14 + math.sin(t * 3.1 + i) * 0.05)
-					* (1 - 0.8 * sleep)
+					* (1 - 0.45 * sleep)
 				tip.Transform = CFrame.Angles(target * 0.7 + (if act.petal then 0 else tipWobble), 0, 0)
 			end
 		end
