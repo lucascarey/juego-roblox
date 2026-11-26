@@ -419,7 +419,7 @@ def grieta():
     # de la cadera (la animación necesita eso para pisar bien).
     #   muslo: 2.9 de cadera a rodilla, 35° adelante -> rodilla 1.66 adelante y 2.38 abajo
     #   caña: 2.25 de rodilla a tobillo, 47.5° atrás (rot relativa -82.5°) -> vuelve 1.66 atrás
-    mirrored(part("LegBU", "Rear", (1.3, 3.4, 2.4), (1.4, -1.1, -1.2), pivot=(0, 1.45, 0), rot=(35, 0, 0),
+    mirrored(part("LegBU", "Rear", (1.3, 3.4, 2.4), (1.25, -0.4, -1.5), pivot=(0, 1.45, 0), rot=(35, 0, 0),
                   skin=rock, baby=0.85), P)
     mirrored(part("LegBL", "LegBU*", (0.8, 2.4, 0.9), (0, -1.45, 0), pivot=(0, 1.05, 0), rot=(-82.5, 0, 0),
                   skin=rock, baby=0.85), P)
