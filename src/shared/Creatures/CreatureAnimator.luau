@@ -230,6 +230,15 @@ function CreatureAnimator.new(model: Model)
 	end
 	self.neck = neck
 
+	-- Boca en estrella (Grieta): pétalos que respiran, mastican, se cierran al dormir y muerden.
+	local petals = {}
+	for i = 1, 8 do
+		if m["Petal" .. i] then
+			table.insert(petals, m["Petal" .. i])
+		end
+	end
+	self.petals = petals
+
 	-- Apéndices con inercia.
 	local tail = {}
 	for i = 1, 8 do
@@ -709,7 +718,7 @@ function CreatureAnimator:_chains(dt: number)
 end
 
 -- Acciones que pide el servidor. Devuelve el peso de "comer" y los ángulos del coletazo.
-type ActionOut = { bodyYaw: number, neckYaw: number, neckPitch: number, lunge: number }
+type ActionOut = { bodyYaw: number, neckYaw: number, neckPitch: number, lunge: number, petal: number? }
 
 function CreatureAnimator:_action(dt: number): (number, ActionOut)
 	local a = self.action
@@ -734,11 +743,11 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 			local fwd = (self.vis2 :: CFrame).LookVector
 			self:_emit("ColaGolpe", tip, { dir = -fwd })
 		end
-	elseif name == "Cabezazo" and m.Head then
+	elseif (name == "Cabezazo" or name == "Mordisco") and m.Head then
 		local head = (m.Head.Part1 :: BasePart).Position
 		if crossed(0.3) then
 			self:_emit("Embestida", head)
-		elseif crossed(0.42) then
+		elseif crossed(if name == "Mordisco" then 0.45 else 0.42) then
 			self:_emit("CabezaGolpe", head)
 		end
 	end
@@ -799,6 +808,23 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 			neckP, lunge = 0, 0
 		end
 		out.neckPitch, out.lunge = neckP, lunge * self.legLen * 0.25
+	elseif name == "Mordisco" then
+		-- Abre la boca del todo (pétalos hacia atrás), se lanza y la cierra de golpe; después vuelve.
+		local k = a.t
+		local neckP, lunge, petal
+		if k < 0.3 then
+			local s = smooth(k / 0.3)
+			neckP, lunge, petal = 0.2 * s, -0.2 * s, lerp(-0.35, 0.45, s)
+		elseif k < 0.45 then
+			local s = smooth((k - 0.3) / 0.15)
+			neckP, lunge, petal = lerp(0.2, -0.35, s), lerp(-0.2, 1.1, s), lerp(0.45, -1.35, s)
+		elseif k < 1.1 then
+			local s = smooth((k - 0.45) / 0.65)
+			neckP, lunge, petal = lerp(-0.35, 0, s), lerp(1.1, 0, s), lerp(-1.35, -0.35, s)
+		else
+			neckP, lunge, petal = 0, 0, nil
+		end
+		out.neckPitch, out.lunge, out.petal = neckP, lunge * self.legLen * 0.25, petal
 	end
 	return a.eat.x, out
 end
@@ -956,6 +982,17 @@ function CreatureAnimator:update(dt: number)
 		for i, motor in self.neck do
 			local w = weights[i] or 0
 			motor.Transform = CFrame.Angles(pitch * w + (fold[i] or 0), yaw * w, 0)
+		end
+	end
+
+	-- Pétalos: entreabiertos respirando, mastican al comer, cerrados al dormir; el mordisco manda.
+	local petals = self.petals :: { Motor6D }
+	if #petals > 0 then
+		local base = -0.35 - 0.55 * sleep + breath * 0.06 + eat * 0.3 * math.sin(t * 9)
+		local target = act.petal or base
+		for i, motor in petals do
+			local wobble = if act.petal then 0 else math.sin(t * 1.7 + i * 1.3) * 0.04 * (1 - sleep)
+			motor.Transform = CFrame.Angles(target + wobble, 0, 0)
 		end
 	end
 

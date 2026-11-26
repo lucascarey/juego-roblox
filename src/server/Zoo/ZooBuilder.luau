@@ -1,6 +1,7 @@
 --!strict
--- Zona de pruebas tipo zoo: baseplate plano con un corral grande de pasto con desniveles
--- (para probar cómo las patas se adaptan al terreno) y las etapas de una especie adentro.
+-- Zona de pruebas tipo zoo: baseplate plano con un corral por especie (pasto con desniveles para
+-- probar cómo las patas se adaptan al terreno) con huevo, cría, joven y adulta adentro.
+-- Especie nueva = una entrada más en PENS.
 -- Se corre en modo edición (desde Studio / MCP): ZooBuilder.build().
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -13,9 +14,34 @@ local ZooBuilder = {}
 local V = Vector3.new
 local VOXEL = 4
 
--- Corral: centro y medidas en studs (el piso de afuera está a y = 0).
-local PEN_CENTER = V(0, 0, 80)
+-- Corrales: centro y medidas en studs (el piso de afuera está a y = 0).
 local PEN_SIZE = V(160, 0, 120)
+type Pen = {
+	species: string,
+	egg: string,
+	center: Vector3,
+	group: string,
+	padColors: { Color3 }, -- cría, joven, adulta
+	seed: number, -- cambia las lomas de cada corral
+}
+local PENS: { Pen } = {
+	{
+		species = "Musgo",
+		egg = "HuevoMusgo",
+		center = V(0, 0, 80),
+		group = "Familia1",
+		padColors = { Color3.fromRGB(250, 196, 214), Color3.fromRGB(240, 150, 180), Color3.fromRGB(214, 112, 150) },
+		seed = 0.3,
+	},
+	{
+		species = "Grieta",
+		egg = "HuevoGrieta",
+		center = V(190, 0, 80),
+		group = "Familia2",
+		padColors = { Color3.fromRGB(226, 150, 140), Color3.fromRGB(196, 100, 92), Color3.fromRGB(156, 62, 58) },
+		seed = 4.7,
+	},
+}
 local EDGE = 12 -- franja junto al cerco que queda plana
 local FLOOR_DEPTH = 12
 
@@ -32,13 +58,13 @@ end
 
 -- Altura del pasto dentro del corral: lomas suaves, un par de montículos y un escalón,
 -- todo bajando a 0 cerca del cerco.
-local function height(x: number, z: number): number
-	local lx, lz = x - PEN_CENTER.X, z - PEN_CENTER.Z
+local function height(pen: Pen, x: number, z: number): number
+	local lx, lz = x - pen.center.X, z - pen.center.Z
 	local hx, hz = PEN_SIZE.X / 2, PEN_SIZE.Z / 2
 	local edgeDist = math.min(hx - math.abs(lx), hz - math.abs(lz))
 	local fade = math.clamp((edgeDist - EDGE) / 18, 0, 1)
 	fade = fade * fade * (3 - 2 * fade)
-	local h = 4.5 * math.noise(lx / 46, lz / 46, 0.3) + 2 * math.noise(lx / 17, lz / 17, 7.1)
+	local h = 4.5 * math.noise(lx / 46, lz / 46, pen.seed) + 2 * math.noise(lx / 17, lz / 17, pen.seed + 6.8)
 	h += 7 * math.exp(-((lx + 38) ^ 2 + (lz - 18) ^ 2) / 300) -- loma
 	h += 4 * math.exp(-((lx - 42) ^ 2 + (lz + 22) ^ 2) / 180) -- montículo
 	-- Escalón (desnivel marcado) en una franja del corral, con borde en rampa empinada (4 studs)
@@ -46,15 +72,14 @@ local function height(x: number, z: number): number
 	local inX = math.clamp(math.min(lx - 10, 60 - lx) / 4, 0, 1)
 	local inZ = math.clamp((lz - 8) / 4, 0, 1)
 	h += 2.5 * inX * inZ
-	return math.max(-3, h) * fade
+	-- Sin pozos bajo el nivel del borde: abajo está el baseplate y se vería.
+	return math.max(0, h) * fade
 end
 
-local function terrain()
+local function terrain(pen: Pen)
 	local t = workspace.Terrain
-	t:Clear()
-	t.Decoration = false -- sin pasto alto: tiene que verse dónde apoyan las patas
 	local hx, hz = PEN_SIZE.X / 2, PEN_SIZE.Z / 2
-	local minC = V(PEN_CENTER.X - hx, -FLOOR_DEPTH, PEN_CENTER.Z - hz)
+	local minC = V(pen.center.X - hx, -FLOOR_DEPTH, pen.center.Z - hz)
 	local nx, nz = PEN_SIZE.X / VOXEL, PEN_SIZE.Z / VOXEL
 	local ny = (FLOOR_DEPTH + 20) / VOXEL
 	local mats, occ = {}, {}
@@ -66,7 +91,7 @@ local function terrain()
 		for iz = 1, nz do
 			local x = minC.X + (ix - 0.5) * VOXEL
 			local z = minC.Z + (iz - 0.5) * VOXEL
-			local h = height(x, z)
+			local h = height(pen, x, z)
 			for iy = 1, ny do
 				local bottom = minC.Y + (iy - 1) * VOXEL
 				local o = math.clamp((h - bottom) / VOXEL, 0, 1)
@@ -93,34 +118,24 @@ local function block(parent: Instance, name: string, size: Vector3, cf: CFrame, 
 	return p
 end
 
--- Baseplate en cuatro piezas alrededor del corral, para que no se superponga con el pasto.
+-- Baseplate: una losa grande; adentro de los corrales el pasto queda por encima y la tapa.
 local function baseplate(parent: Instance)
-	local W = 1024
-	local gray = Color3.fromRGB(99, 95, 98)
-	local hx, hz = PEN_SIZE.X / 2, PEN_SIZE.Z / 2
-	local c = PEN_CENTER
-	local function slab(name: string, x0: number, x1: number, z0: number, z1: number)
-		block(
-			parent,
-			name,
-			V(x1 - x0, 16, z1 - z0),
-			CFrame.new((x0 + x1) / 2, -8, (z0 + z1) / 2),
-			gray,
-			Enum.Material.SmoothPlastic
-		)
-	end
-	slab("BaseNorte", -W / 2, W / 2, c.Z + hz, W / 2)
-	slab("BaseSur", -W / 2, W / 2, -W / 2, c.Z - hz)
-	slab("BaseOeste", -W / 2, c.X - hx, c.Z - hz, c.Z + hz)
-	slab("BaseEste", c.X + hx, W / 2, c.Z - hz, c.Z + hz)
+	block(
+		parent,
+		"Baseplate",
+		V(1024, 16, 1024),
+		CFrame.new(95, -8, 80),
+		Color3.fromRGB(99, 95, 98),
+		Enum.Material.SmoothPlastic
+	)
 end
 
 -- Cerco de madera en bloques: postes cada 8 studs y dos travesaños.
-local function fence(parent: Instance)
+local function fence(parent: Instance, pen: Pen)
 	local wood = Color3.fromRGB(122, 84, 52)
 	local dark = Color3.fromRGB(92, 62, 38)
 	local hx, hz = PEN_SIZE.X / 2, PEN_SIZE.Z / 2
-	local c = PEN_CENTER
+	local c = pen.center
 	local sides = {
 		{ V(c.X - hx, 0, c.Z - hz), V(1, 0, 0), PEN_SIZE.X },
 		{ V(c.X - hx, 0, c.Z + hz), V(1, 0, 0), PEN_SIZE.X },
@@ -150,13 +165,14 @@ end
 
 -- Las cuatro etapas de la especie: una familia (madre adulta con su joven y su cría) junto al huevo.
 -- La IA (server/Creatures/CreatureAI) maneja a las que tienen IA = true.
-local function creatures(parent: Instance)
-	local c = PEN_CENTER
+local function creatures(parent: Instance, pen: Pen)
+	local c = pen.center
+	local sp = (Species :: any)[pen.species]
 	local list = {
-		{ Species.HuevoMusgo, V(-12, 0, -8), 30, 1, nil },
-		{ Species.Musgo, V(-4, 0, -12), 200, 0, "Cria" },
-		{ Species.Musgo, V(10, 0, 0), 160, 0.5, "Joven" },
-		{ Species.Musgo, V(-20, 0, 14), 120, 1, "Madre" },
+		{ (Species :: any)[pen.egg], V(-12, 0, -8), 30, 1, nil },
+		{ sp, V(-4, 0, -12), 200, 0, "Cria" },
+		{ sp, V(10, 0, 0), 160, 0.5, "Joven" },
+		{ sp, V(-20, 0, 14), 120, 1, "Madre" },
 	}
 	for _, s in list do
 		local def, off, yaw, age, role = s[1], s[2], s[3], s[4], s[5]
@@ -165,7 +181,7 @@ local function creatures(parent: Instance)
 		local model = CreatureBuilder.build(def, cf, { age = age })
 		if role then
 			model:SetAttribute("IA", true)
-			model:SetAttribute("Grupo", "Familia1")
+			model:SetAttribute("Grupo", pen.group)
 			model:SetAttribute("Rol", role)
 		end
 		model.Parent = parent
@@ -174,32 +190,32 @@ end
 
 -- Carteles junto al cerco sur (del lado del spawn): cada uno convierte al jugador en una etapa y lo
 -- deja adentro del corral. Los maneja server/Creatures/PlayAsCreature.
-local function stagePads(parent: Instance)
-	local c = PEN_CENTER
+local function stagePads(parent: Instance, pen: Pen)
+	local c = pen.center
 	local fenceZ = c.Z - PEN_SIZE.Z / 2
 	local stages = {
-		{ "Cría", 0, Color3.fromRGB(250, 196, 214) },
-		{ "Joven", 0.5, Color3.fromRGB(240, 150, 180) },
-		{ "Adulta", 1, Color3.fromRGB(214, 112, 150) },
+		{ "Cría", 0, pen.padColors[1] },
+		{ "Joven", 0.5, pen.padColors[2] },
+		{ "Adulta", 1, pen.padColors[3] },
 	}
 	for i, s in stages do
 		local name, age, color = s[1], s[2], s[3]
 		local x = c.X + (i - 2) * 8
 		local pad = block(
 			parent,
-			"Etapa" .. name,
+			"Etapa" .. pen.species .. name,
 			V(5, 1, 5),
 			CFrame.new(x, 0.5, fenceZ - 7),
 			color,
 			Enum.Material.SmoothPlastic
 		)
-		pad:SetAttribute("Especie", "Musgo")
+		pad:SetAttribute("Especie", pen.species)
 		pad:SetAttribute("Edad", age)
 		-- Aparece adentro del corral, mirando hacia el centro (+Z).
 		pad:SetAttribute("Aparece", CFrame.new(x, 0, fenceZ + 10) * CFrame.Angles(0, math.pi, 0))
 		local prompt = Instance.new("ProximityPrompt")
 		prompt.ActionText = "Jugar como " .. string.lower(name)
-		prompt.ObjectText = "Musgo"
+		prompt.ObjectText = pen.species
 		prompt.KeyboardKeyCode = Enum.KeyCode.F
 		prompt.MaxActivationDistance = 8
 		prompt.RequiresLineOfSight = false
@@ -217,7 +233,7 @@ local function stagePads(parent: Instance)
 		text.TextSize = 20
 		text.TextColor3 = Color3.new(1, 1, 1)
 		text.TextStrokeTransparency = 0.4
-		text.Text = name
+		text.Text = pen.species .. ": " .. name
 		text.Parent = bb
 	end
 end
@@ -231,19 +247,27 @@ function ZooBuilder.build()
 		end
 	end
 	local root = folder("Zoo")
-	terrain()
+	workspace.Terrain:Clear()
+	workspace.Terrain.Decoration = false -- sin pasto alto: tiene que verse dónde apoyan las patas
+	for _, pen in PENS do
+		terrain(pen)
+	end
 	task.wait() -- los rayos no ven el terreno nuevo hasta el próximo cuadro
 	baseplate(root)
-	fence(root)
-	stagePads(root)
 	local crit = Instance.new("Folder")
 	crit.Name = "Criaturas"
 	crit.Parent = root
-	creatures(crit)
+	for _, pen in PENS do
+		fence(root, pen)
+		stagePads(root, pen)
+		creatures(crit, pen)
+	end
 
+	-- Spawn entre los dos corrales, del lado de los carteles.
 	local spawn = workspace:FindFirstChildOfClass("SpawnLocation")
 	if spawn then
-		spawn.CFrame = CFrame.new(0, 0.5, PEN_CENTER.Z - PEN_SIZE.Z / 2 - 16)
+		local first, last = PENS[1].center, PENS[#PENS].center
+		spawn.CFrame = CFrame.new((first.X + last.X) / 2, 0.5, first.Z - PEN_SIZE.Z / 2 - 16)
 	end
 end
 

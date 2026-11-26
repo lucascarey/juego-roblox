@@ -110,6 +110,25 @@ def paint_face(rng, w, h, face, ramp_len, pattern):
 
 
 def material_map(rng, w, h, face, skin):
+    """Igual que _materials, más grietas (material 3 = rampa "dark") si skin tiene cracks."""
+    m = _materials(rng, w, h, face, skin)
+    cracks = skin.get("cracks", 0)
+    if cracks <= 0 or face == "Bottom":
+        return m  # sin grietas no se usa el rng: los atlas viejos quedan idénticos
+    # Grietas: líneas finas que avanzan casi rectas y a veces se quiebran.
+    for _ in range(max(1, int(w * h * cracks / 30))):
+        x, y = rng.randrange(w), rng.randrange(h)
+        dx, dy = rng.choice(((1, 0), (0, 1), (1, 1), (1, -1)))
+        for _ in range(rng.randint(3, 7)):
+            if 0 <= x < w and 0 <= y < h:
+                m[y][x] = 3
+            if rng.random() < 0.35:
+                dx, dy = rng.choice(((1, 0), (0, 1), (1, 1), (1, -1), (-1, 1)))
+            x, y = x + dx, y + dy
+    return m
+
+
+def _materials(rng, w, h, face, skin):
     """Material de cada píxel: 0 = base, 1 = vientre claro, 2 = musgo.
     skin: belly = fracción inferior clara en las caras laterales, moss = densidad de musgo (0..1),
     mossTop = tapa superior casi toda de musgo."""
@@ -181,7 +200,12 @@ def build_atlas(species):
         grid = paint_face(rng, w, h, face, len(ramp), p.get("pattern", "mottled"))
         skin = p.get("skin")
         mats = material_map(rng, w, h, face, skin) if skin else None
-        ramps = [ramp, species["ramps"].get("belly", ramp), species["ramps"].get("moss", ramp)]
+        ramps = [
+            ramp,
+            species["ramps"].get("belly", ramp),
+            species["ramps"].get("moss", ramp),
+            species["ramps"].get("crack", ramp),
+        ]
         for gy in range(h):
             for gx in range(w):
                 r = ramps[mats[gy][gx]] if mats else ramp
@@ -318,7 +342,88 @@ def huevo_musgo():
     return {"name": "HuevoMusgo", "seed": 5, "ramps": MUSGO_RAMPS, "parts": P}
 
 
+GRIETA_RAMPS = {
+    "body": [(112, 40, 40), (142, 56, 54), (168, 74, 68), (190, 94, 86), (208, 116, 106)],
+    "belly": [(150, 80, 76), (176, 102, 96), (198, 124, 116), (214, 144, 134), (228, 166, 154)],
+    "crack": [(64, 22, 24), (78, 28, 30), (92, 34, 36), (104, 42, 42), (116, 50, 48)],
+    "dark": [(70, 26, 28), (88, 34, 36), (104, 42, 44), (120, 52, 52), (136, 62, 60)],
+    "moss": [(112, 40, 40), (142, 56, 54), (168, 74, 68), (190, 94, 86), (208, 116, 106)],
+}
+
+
+def grieta():
+    """Especie 2 (referencia de Lucas, 2026-11-26): cuadrúpedo bajo de piel de roca roja agrietada,
+    cabeza que es una boca en estrella de 5 pétalos (se abren para morder) con anillo de dientes,
+    púas en el lomo y cola larga de 6 bloques que se curva hacia el suelo. Nada brilla.
+    Rasgo de cría: la cabeza/boca grande."""
+    rock = dict(belly=0.3, cracks=0.5)
+    P = []
+    # Cuerpo: anca atrás, pecho adelante más alto y ancho (como en el perfil de la referencia).
+    P.append(part("Rear", "Root", (4, 3, 3.5), (0, 4.2, 1.75), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Chest", "Rear", (4.5, 3.5, 4), (0, 0.3, -1.75), pivot=(0, 0, 2), skin=rock, baby=(1, 1, 0.85)))
+    # Cuello corto y cabeza-boca.
+    P.append(part("Neck1", "Chest", (2.6, 2.4, 1.2), (0, 0.3, -2), pivot=(0, 0, 0.6), rot=(4, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck2", "Neck1", (2.3, 2.2, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
+    P.append(part("Head", "Neck2", (2.8, 2.8, 1), (0, 0, -0.5), pivot=(0, 0, 0.5), skin=dict(cracks=0.4), baby=1.6))
+    # Fondo de la boca (oscuro, sin brillo) y anillo de dientes.
+    P.append(part("Maw", "Head", (1.4, 1.4, 0.15), (0, 0, -0.55), ramp="maw", flat=True, baby=1.6))
+    for i in range(8):
+        a = math.radians(i * 45)
+        P.append(part(f"Tooth{i + 1}", "Head", (0.22, 0.32, 0.12), (math.sin(a) * 0.82, math.cos(a) * 0.82, -0.6),
+                      rot=(0, 0, -i * 45), ramp="tooth", flat=True, baby=1.6))
+    # Cinco pétalos alrededor de la boca: el eje largo apunta hacia afuera; la animación los inclina
+    # hacia adelante (cerrar) o los abre.
+    for i in range(5):
+        a = i * 72
+        r = math.radians(a)
+        P.append(part(f"Petal{i + 1}", "Head", (1.1, 1.8, 0.35), (math.sin(r) * 0.55, math.cos(r) * 0.55, -0.55),
+                      pivot=(0, -0.9, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.8))
+    # Púas en el lomo, inclinadas hacia atrás.
+    spikes = (("Chest", -1.2), ("Chest", 0.2), ("Chest", 1.5), ("Rear", -0.8), ("Rear", 0.6))
+    for i, (parent, z) in enumerate(spikes, 1):
+        top = 1.75 if parent == "Chest" else 1.5
+        P.append(part(f"Spike{i}", parent, (0.35, 1.2, 0.35), (0, top, z), pivot=(0, -0.6, 0), rot=(30, 0, 0),
+                      ramp="dark", pattern="solid", baby=0.5))
+    # Patas: delanteras en el pecho, traseras más gruesas en el anca.
+    mirrored(part("LegFU", "Chest", (1.6, 1.8, 1.6), (1.6, -1.5, -0.6), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegFL", "LegFU*", (1.5, 1.8, 1.8), (0, -0.9, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegBU", "Rear", (1.8, 1.8, 1.9), (1.4, -1.2, 0.4), pivot=(0, 0.7, 0), skin=rock, baby=0.8), P)
+    mirrored(part("LegBL", "LegBU*", (1.6, 1.8, 2), (0, -0.9, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.8), P)
+    # Cola larga: seis bloques que se afinan y se curvan hacia el suelo.
+    prev, plen = "Rear", 3.5
+    sizes = ((2.4, 2.2), (2, 1.8), (1.7, 1.5), (1.4, 1.2), (1.1, 1), (0.8, 0.8))
+    for i, (w, h) in enumerate(sizes, 1):
+        P.append(part(f"Tail{i}", prev, (w, h, 2), (0, 0.2 if i == 1 else 0, plen / 2), pivot=(0, 0, -1),
+                      rot=(20 if i == 1 else 12, 0, 0), skin=dict(belly=0.25, cracks=0.4),
+                      baby=0.55 if i == 1 else 0.35))
+        prev, plen = f"Tail{i}", 2
+    return {
+        "name": "Grieta",
+        "seed": 21,
+        "babySize": 0.4,
+        "ramps": GRIETA_RAMPS,
+        "solids": {"maw": (24, 20, 30), "tooth": (232, 226, 212)},
+        "parts": P,
+    }
+
+
+def huevo_grieta():
+    """Huevo de roca roja agrietada (sin planilla de Lucas: armado a ojo con la misma forma)."""
+    P = []
+    prev, prev_h = "Root", 0
+    layers = ((2.5, 0.75), (3.25, 1.5), (3, 1.25), (2.5, 0.75), (1.75, 0.5))
+    for i, (w, h) in enumerate(layers, 1):
+        skin = dict(belly=0.5 if i == 1 else 0, cracks=0.7)
+        joint = (0, h / 2, 0) if prev == "Root" else (0, (prev_h + h) / 2, 0)
+        P.append(part(f"Capa{i}", prev, (w, h, w - 0.75), joint, skin=skin))
+        P.append(part(f"Cruz{i}", f"Capa{i}", (w - 0.75, h, w), (0, 0, 0), skin=skin))
+        prev, prev_h = f"Capa{i}", h
+    return {"name": "HuevoGrieta", "seed": 22, "ramps": GRIETA_RAMPS, "parts": P}
+
+
 if __name__ == "__main__":
     export(cuadrupedo())
     export(musgo())
     export(huevo_musgo())
+    export(grieta())
+    export(huevo_grieta())

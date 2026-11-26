@@ -17,6 +17,10 @@ export type Stats = {
 	standUpSleep: number, -- ...estando dormida (más lento)
 	damageTail: number,
 	damageHead: number,
+	damageBite: number?,
+	primary: string, -- ataque del clic izquierdo
+	secondary: string, -- ataque del clic derecho (clic corto)
+	frontAttack: string, -- el que usa la IA cuando el enemigo está adelante
 }
 
 local SpeciesStats: { [string]: Stats } = {
@@ -36,6 +40,31 @@ local SpeciesStats: { [string]: Stats } = {
 		standUpSleep = 4,
 		damageTail = 18,
 		damageHead = 10,
+		primary = "Coletazo",
+		secondary = "Cabezazo",
+		frontAttack = "Cabezazo",
+	},
+	-- Especie 2: más pesada y baja; su arma es la boca en estrella.
+	Grieta = {
+		walk = 7,
+		sprint = 17,
+		jumpPower = 20, -- todavía más pesada que Musgo: salta menos
+		jumpGravity = 0.55,
+		maxHealth = 150,
+		stamina = 100,
+		sprintCost = 18,
+		jumpCost = 30,
+		staminaRegen = 12,
+		regenRest = 3,
+		regenSleep = 7,
+		standUpRest = 2.3,
+		standUpSleep = 4.5,
+		damageTail = 14,
+		damageHead = 10,
+		damageBite = 24,
+		primary = "Mordisco",
+		secondary = "Coletazo",
+		frontAttack = "Mordisco",
 	},
 }
 

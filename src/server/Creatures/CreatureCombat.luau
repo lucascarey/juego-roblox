@@ -14,6 +14,7 @@ local CreatureCombat = {}
 CreatureCombat.TIMING = {
 	Coletazo = { hit = 0.55, total = 1.5 },
 	Cabezazo = { hit = 0.4, total = 1 },
+	Mordisco = { hit = 0.45, total = 1.1 },
 }
 
 local function sizeOf(model: Model): (number, number)
@@ -75,7 +76,7 @@ function CreatureCombat.resolve(attacker: Model, kind: string, attackerName: str
 		if kind == "Coletazo" then
 			-- Arco detrás y a los costados, hasta el largo del cuerpo + cola.
 			hit = dist < bodyLen * 0.5 + tailLen and rel.Z > -bodyLen * 0.2
-		elseif kind == "Cabezazo" then
+		elseif kind == "Cabezazo" or kind == "Mordisco" then
 			-- Adelante, cerca.
 			hit = rel.Z < 0 and dist < bodyLen * 0.9 and math.abs(rel.X) < bodyLen * 0.5
 		end
@@ -83,7 +84,10 @@ function CreatureCombat.resolve(attacker: Model, kind: string, attackerName: str
 			table.insert(hits, t)
 			local hum = t:FindFirstChildOfClass("Humanoid")
 			local dmg = if stats
-				then (if kind == "Coletazo" then stats.damageTail else stats.damageHead) * scale
+				then (if kind == "Coletazo"
+					then stats.damageTail
+					elseif kind == "Mordisco" then stats.damageBite or stats.damageHead
+					else stats.damageHead) * scale
 				else 10
 			if hum then
 				hum:TakeDamage(dmg)

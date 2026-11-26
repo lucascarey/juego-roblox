@@ -113,6 +113,7 @@ local title = label(guide, "Controles", 16, COLORS.text)
 title.Font = Enum.Font.GothamBold
 title.Position = UDim2.fromOffset(14, 10)
 title.Size = UDim2.fromOffset(200, 22)
+local guideDesc: { TextLabel } = {}
 for i, row in GUIDE do
 	local y = 40 + (i - 1) * 24
 	local key = Instance.new("TextLabel")
@@ -126,6 +127,7 @@ for i, row in GUIDE do
 	key.Parent = guide
 	corner(key, 4)
 	local desc = label(guide, row[2], 13, COLORS.dim)
+	guideDesc[i] = desc
 	desc.Position = UDim2.fromOffset(100, y)
 	desc.Size = UDim2.fromOffset(190, 20)
 	desc.TextWrapped = true
@@ -207,6 +209,9 @@ local function onCharacter(ch: Model)
 		lookAt = 0,
 	}
 	gui.Enabled = true
+	-- Cada especie tiene sus ataques: la guía muestra los de esta.
+	guideDesc[4].Text = stats.primary
+	guideDesc[5].Text = stats.secondary .. " (clic corto)"
 	-- El salto de Roblox es instantáneo: se apaga y se hace a mano (carga con las traseras, despegue).
 	hum.JumpPower = 0
 	-- En el aire, menos gravedad: el arco dura más y se siente pesado (la gravedad de Roblox es ~5 veces
@@ -272,7 +277,7 @@ UserInputService.InputBegan:Connect(function(io, processed)
 		input:FireServer("Accion", "Excavar")
 		s.lockedUntil = os.clock() + 2.5 -- quieta mientras excava
 	elseif io.UserInputType == Enum.UserInputType.MouseButton1 then
-		input:FireServer("Accion", "Coletazo")
+		input:FireServer("Accion", s.stats.primary)
 	elseif io.UserInputType == Enum.UserInputType.MouseButton2 then
 		-- Se decide al soltar: clic corto = cabezazo, arrastrar = girar la cámara.
 		s.rightDown = os.clock()
@@ -290,7 +295,7 @@ UserInputService.InputEnded:Connect(function(io)
 	s.rightDown = nil
 	local busy = s.model:GetAttribute("Postura") ~= nil or os.clock() < s.lockedUntil
 	if held < 0.25 and moved < 8 and not busy then
-		input:FireServer("Accion", "Cabezazo")
+		input:FireServer("Accion", s.stats.secondary)
 	end
 end)
 

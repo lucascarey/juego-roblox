@@ -221,7 +221,11 @@ local function startBehavior(b: Brain, name: string)
 	b.since = os.clock()
 	b.target = nil
 	b.model:SetAttribute("IA_Estado", name) -- para ver en Studio qué está haciendo
-	if name ~= "Comer" and name ~= "Excavar" and b.model:GetAttribute("Accion") ~= "Coletazo" then
+	if
+		name ~= "Comer"
+		and name ~= "Excavar"
+		and not CreatureCombat.TIMING[b.model:GetAttribute("Accion") :: string? or ""]
+	then
 		b.model:SetAttribute("Accion", nil)
 	end
 	if name ~= "Descansar" and name ~= "Dormir" then
@@ -365,7 +369,7 @@ local function think(b: Brain)
 		local tailReach = b.bodyLen * 0.5 + b.bodyLen * 1.3
 		if now >= b.nextAttack and b.model:GetAttribute("Postura") == nil then
 			if rel.Z < 0 and dist < b.bodyLen * 0.9 and math.abs(rel.X) < b.bodyLen * 0.5 then
-				b.nextAttack = now + (CreatureCombat.attack(b.model, "Cabezazo", "IA") or 1) + 0.6
+				b.nextAttack = now + (CreatureCombat.attack(b.model, b.stats.frontAttack, "IA") or 1) + 0.6
 			elseif rel.Z > -b.bodyLen * 0.2 and dist < tailReach then
 				b.nextAttack = now + (CreatureCombat.attack(b.model, "Coletazo", "IA") or 1.5) + 0.8
 			end
