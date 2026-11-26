@@ -364,7 +364,7 @@ def grieta():
     P.append(part("Rear", "Root", (3, 2.8, 3), (0, 4.4, 0), skin=rock, baby=(1, 1, 0.85)))
     P.append(part("Chest", "Rear", (3.6, 3.2, 3.6), (0, 0.4, -1.5), pivot=(0, 0, 1.8), skin=rock, baby=(1, 1, 0.85)))
     # Hombros marcados a los costados del pecho (en el frente de la planilla).
-    mirrored(part("Shoulder", "Chest", (0.8, 1.5, 1.5), (1.95, -0.3, -0.5), skin=rock, baby=0.8), P)
+    mirrored(part("Shoulder", "Chest", (0.9, 2.6, 1.7), (1.95, -0.9, -0.5), skin=rock, baby=0.8), P)
     # Cuello y cabeza: la cabeza ES la estrella. Un núcleo chico (oculto entre los pétalos) y cinco
     # pétalos grandes de dos segmentos que, cerrados, forman el capullo en gota; al abrir muestran la
     # boca. Sin bloque cuadrado a la vista.
@@ -392,11 +392,19 @@ def grieta():
         for j, y in enumerate((-0.35, 0, 0.35)):
             P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
                           ramp="tooth", flat=True, baby=1.7))
-    # Dos patas (bípeda): muslo grueso, caña más fina y pie con los dedos hacia adelante. El pie va
-    # al ras de la base de la caña, así el apoyo de la animación sigue siendo la caña.
-    mirrored(part("LegBU", "Rear", (1.5, 2, 1.7), (1.4, -0.9, 0.2), pivot=(0, 0.85, 0), skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (1, 1.8, 1.1), (0, -1, 0), pivot=(0, 0.9, 0), skin=rock, baby=0.85), P)
-    mirrored(part("Foot", "LegBL*", (1.3, 0.5, 2), (0, -0.65, -0.45), skin=dict(cracks=0.3), baby=0.9), P)
+    # Dos patas (bípeda) como en la planilla: muslo grande inclinado hacia adelante (rodilla adelante),
+    # caña que baja hacia atrás hasta el tobillo y pie plano con tres dedos. El tobillo queda justo debajo
+    # de la cadera (la animación necesita eso para pisar bien).
+    #   muslo: 2.3 de cadera a rodilla, 35° adelante -> rodilla 1.32 adelante y 1.88 abajo
+    #   caña: 2.05 de rodilla a tobillo, 40° atrás (rot relativa -75°) -> vuelve 1.32 atrás
+    mirrored(part("LegBU", "Rear", (1.8, 2.6, 2), (1.45, -0.9, 0.2), pivot=(0, 1.15, 0), rot=(35, 0, 0),
+                  skin=rock, baby=0.85), P)
+    mirrored(part("LegBL", "LegBU*", (1.2, 2.2, 1.3), (0, -1.15, 0), pivot=(0, 0.95, 0), rot=(-75, 0, 0),
+                  skin=rock, baby=0.85), P)
+    mirrored(part("Foot", "LegBL*", (1.7, 0.6, 2.4), (0, -1.1, 0), pivot=(0, 0.3, 0.6), rot=(40, 0, 0),
+                  skin=dict(cracks=0.3), baby=0.9), P)
+    for j, x in enumerate((-0.55, 0, 0.55), 1):
+        mirrored(part(f"Toe{j}", "Foot*", (0.45, 0.45, 0.6), (x, -0.075, -1.4), skin=dict(cracks=0.2), baby=0.9), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
     prev, plen = "Rear", 3

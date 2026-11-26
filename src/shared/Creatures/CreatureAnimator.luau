@@ -51,12 +51,14 @@ type Leg = {
 	left: boolean,
 	hip: Vector3, -- cadera en el espacio de la Root, en reposo
 	a: number, -- cadera a rodilla
-	b: number, -- rodilla al piso
+	b: number, -- rodilla al tobillo
+	D0: number, -- cadera al tobillo en reposo (= a + b si la pata está recta; menos si está doblada)
 	shorten: Spring, -- cuánto tiene que acortarse para apoyar en el suelo real
 	swing: number, -- ángulo de paso del último cuadro (para buscar el suelo donde está el pie)
 	plant: Vector3?, -- quieta: dónde quedó apoyado el pie (en el mundo)
 	wasStance: boolean,
 	lastStep: number,
+	foot: Motor6D?, -- pie aparte (se mantiene plano)
 	plantW: Spring,
 }
 
@@ -192,6 +194,12 @@ function CreatureAnimator.new(model: Model)
 				local p0 = rest[upper.Part0 :: BasePart] or CFrame.identity
 				local hip = (p0 * upper.C0).Position
 				local knee = if lower then (rest[upper.Part1 :: BasePart] * lower.C0).Position else hip
+				-- Tobillo: la base de la caña en reposo. Las patas pueden estar dobladas en reposo (muslo
+				-- adelante, caña atrás) siempre que el tobillo quede debajo de la cadera.
+				local lowerPart = lower and lower.Part1 :: BasePart
+				local ankle = if lowerPart and rest[lowerPart]
+					then (rest[lowerPart] * CFrame.new(0, -lowerPart.Size.Y / 2, 0)).Position
+					else Vector3.new(hip.X, lowest, hip.Z)
 				table.insert(legs, {
 					upper = upper,
 					lower = lower,
@@ -199,12 +207,14 @@ function CreatureAnimator.new(model: Model)
 					left = side == "L",
 					hip = hip,
 					a = (hip - knee).Magnitude,
-					b = knee.Y - lowest,
+					b = (knee - ankle).Magnitude,
+					D0 = (hip - ankle).Magnitude,
 					shorten = newSpring(),
 					swing = 0,
 					plantW = newSpring(),
 					wasStance = true,
 					lastStep = 0,
+					foot = m["Foot" .. side],
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -309,6 +319,22 @@ function CreatureAnimator.new(model: Model)
 	return self
 end
 
+-- Triángulo cadera-rodilla-tobillo con lados a (muslo), b (caña) y d (cadera-tobillo):
+-- ángulo en la rodilla y ángulo en la cadera entre el muslo y la línea al tobillo.
+local function kneeAngle(a: number, b: number, d: number): number
+	return math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
+end
+local function hipAngle(a: number, b: number, d: number): number
+	return math.acos(math.clamp((a * a + d * d - b * b) / (2 * a * d), -1, 1))
+end
+
+-- Cuánto girar cadera y rodilla (respecto del reposo) para que la pata mida d.
+local function legIK(leg: Leg, d: number): (number, number)
+	local a, b = leg.a, leg.b
+	d = math.clamp(d, math.abs(a - b) + 0.05, a + b)
+	return hipAngle(a, b, d) - hipAngle(a, b, leg.D0), kneeAngle(a, b, d) - kneeAngle(a, b, leg.D0)
+end
+
 -- Avisa un momento de la animación (sonidos y partículas los pone el cliente).
 function CreatureAnimator:_emit(name: string, pos: Vector3, extra: { [string]: any }?)
 	local cb = self.onEvent
@@ -383,12 +409,7 @@ function CreatureAnimator:_locomotion(dt: number)
 		local ikHip, ikKnee = 0, 0
 		local e = leg.shorten.x
 		if leg.lower and e > 0.01 then
-			local a, b = leg.a, leg.b
-			local d = math.max(a + b - e, math.abs(a - b) + 0.05)
-			local interior = math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
-			local bend = math.pi - interior
-			ikKnee = -bend
-			ikHip = math.atan2(b * math.sin(bend), a + b * math.cos(bend))
+			ikHip, ikKnee = legIK(leg, leg.D0 - e)
 		end
 		local tilt = self.ground.pitch.x + (if leg.front then self.lastChestPitch or 0 else 0)
 		-- La rodilla dobla hacia atrás en el vuelo; un poco más en las traseras.
@@ -452,13 +473,13 @@ function CreatureAnimator:_locomotion(dt: number)
 		local pw = leg.plantW.x
 		local hipT = CFrame.Angles(hipX, 0, hipZ)
 		if pw > 0.01 and leg.plant and leg.lower then
-			local a, b = leg.a, leg.b
 			local hipCF = (leg.upper.Part0 :: BasePart).CFrame * leg.upper.C0
 			local p = hipCF:PointToObjectSpace(leg.plant :: Vector3)
 			-- Si el cuerpo giró tanto que el pie quedaría muy estirado, lo vuelve a apoyar bajo la cadera.
-			if Vector3.new(p.X, 0, p.Z).Magnitude > 0.45 * (a + b) or p.Y > -0.3 * (a + b) then
-				leg.plant = (hipCF * CFrame.new(0, -(a + b), 0)).Position
-				p = Vector3.new(0, -(a + b), 0)
+			local D0 = leg.D0
+			if Vector3.new(p.X, 0, p.Z).Magnitude > 0.45 * D0 or p.Y > -0.3 * D0 then
+				leg.plant = (hipCF * CFrame.new(0, -D0, 0)).Position
+				p = Vector3.new(0, -D0, 0)
 			end
 			-- Apuntar la pata al pie con una rotación real (pitch y roll por separado fallan con
 			-- ángulos grandes) y doblar la rodilla para que el largo coincida.
@@ -467,15 +488,19 @@ function CreatureAnimator:_locomotion(dt: number)
 			local aim = if axis.Magnitude > 1e-4
 				then CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(-toFoot.Y, -1, 1)))
 				else CFrame.identity
-			local d = math.clamp(p.Magnitude, math.abs(a - b) + 0.05, a + b)
-			local bend = math.pi - math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
-			local plantedCF = aim * CFrame.Angles(math.atan2(b * math.sin(bend), a + b * math.cos(bend)), 0, 0)
+			local plantHip, plantKnee = legIK(leg, p.Magnitude)
+			local plantedCF = aim * CFrame.Angles(plantHip, 0, 0)
 			hipT = hipT:Lerp(plantedCF, pw)
-			kneeA = lerp(kneeA, -bend, pw)
+			kneeA = lerp(kneeA, plantKnee, pw)
 		end
 		leg.upper.Transform = hipT
 		if leg.lower then
 			leg.lower.Transform = CFrame.Angles(kneeA, 0, 0)
+			-- Pie aparte (bípeda): se mantiene plano contra el suelo aunque muslo y caña giren.
+			if leg.foot then
+				local hx = hipT:ToEulerAnglesXYZ()
+				leg.foot.Transform = CFrame.Angles(-(hx + kneeA) * (1 - 0.6 * self.pose.air.x), 0, 0)
+			end
 		end
 		local stance = u < duty
 		-- Pisada: solo avanzando de verdad y con un mínimo entre pisadas de la misma pata (sin esto, el
@@ -600,7 +625,7 @@ function CreatureAnimator:_ground(dt: number)
 		lower = math.max(lower, -resid[i])
 	end
 	for i, leg in legs do
-		step(leg.shorten, math.min(resid[i] + lower, 0.6 * (leg.a + leg.b)) * onGround, 8, 1, dt)
+		step(leg.shorten, math.min(resid[i] + lower, 0.6 * leg.D0) * onGround, 8, 1, dt)
 	end
 	step(self.ground.dy, (gc - nominal - lower) * (1 - air), 8, 1, dt)
 	step(self.ground.pitch, math.clamp(math.atan(slopeF), -0.5, 0.5) * (1 - air), 6, 1, dt)

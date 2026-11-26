@@ -159,3 +159,9 @@ Errores que ya se resolvieron y no hay que reintroducir:
   excava con el hocico (baja el pecho y la cabeza). El pie es una pieza hija de la caña, al ras de su base.
 - Para capturas en Play con la criatura del jugador: la cabeza sigue a la cámara. Sacar el atributo
   `Jugador` del modelo en el cliente para que mire adelante.
+- Patas dobladas en reposo (muslo adelante, caña atrás, como Grieta): se pueden, siempre que el
+  **tobillo quede justo debajo de la cadera** (calcular los ángulos: rodilla adelante = largo_muslo·sen(θ1),
+  y la caña vuelve lo mismo atrás). El animador mide a, b y D0 (cadera-tobillo) y gira respecto del reposo.
+- Pie aparte (pieza `Foot` hija de la caña, al ras del tobillo): el animador lo mantiene plano. Sin eso, el pie
+  gira con la caña y la punta o el talón se hunden en el suelo (pasaba 0.23 studs).
+- Comparar las patas con la planilla de cerca (captura con zoom) antes de dar el modelo por bueno.
