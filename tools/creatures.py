@@ -385,6 +385,10 @@ def grieta():
         P.append(part(base, "Head", (1.45, 1.7, 0.35), (math.sin(r) * 0.4, math.cos(r) * 0.4, -0.3),
                       pivot=(0, -0.85, 0), rot=(0, 0, -a), skin=dict(cracks=0.3), baby=1.7))
         P.append(part(tip, base, (1.15, 1.4, 0.3), (0, 0.85, 0), pivot=(0, -0.7, 0), skin=dict(cracks=0.3), baby=1.7))
+        # Remate en semipunta: dos escalones que se afinan al final del flagelo.
+        P.append(part(f"PetalPoint{i + 1}", tip, (0.75, 0.5, 0.26), (0, 0.7, 0), pivot=(0, -0.25, 0), skin=dict(cracks=0.2), baby=1.7))
+        P.append(part(f"PetalPointTip{i + 1}", f"PetalPoint{i + 1}", (0.38, 0.35, 0.22), (0, 0.25, 0), pivot=(0, -0.17, 0),
+                      skin=dict(cracks=0.1), baby=1.7))
         for j, y in enumerate((-0.45, 0, 0.45)):
             P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.22),
                           ramp="tooth", flat=True, baby=1.7))
