@@ -174,3 +174,19 @@ Errores que ya se resolvieron y no hay que reintroducir:
   cuánto más chica es la cría (Grieta 0.65: poca diferencia entre etapas; Musgo 0.38).
 - El constructor y el animador apoyan la criatura sobre las patas (Leg/Foot/Toe/Claw/Paw) si las tiene:
   una cabeza o boca grande de cría quedaba más baja que los pies y la dejaba flotando.
+
+## 12. Patas de raptor (digitígradas): rodilla "al revés"
+- Lucas rechazó la pata de ave con el pie plano ("parece un pato"). Para un cazador bípedo usar
+  patas de **velociraptor**: muslo grande y ancho hacia adelante, caña larga hacia atrás, **metatarso**
+  hacia adelante con el talón levantado (esa es la articulación que se ve "al revés") y solo los dedos
+  en el piso. Dedos poco abiertos (~18°); un abanico ancho y plano se ve como pata de pato.
+- Piezas: `LegBU` (muslo) → `LegBL` (caña) → `LegBM` (metatarso) → `Foot` (base de los dedos) → `Toe*`.
+  El animador detecta `LegBM` solo.
+- **Pantógrafo**: el metatarso va paralelo al muslo en reposo y el animador lo mantiene así
+  (transform del metatarso = -rodilla). Entonces la pata se resuelve con el mismo IK de dos tramos:
+  a = muslo + metatarso, b = caña. La base del metatarso tiene que quedar **justo debajo de la
+  cadera** (muslo·sen(a1) + metatarso·sen(a1) = caña·sen(a2)).
+- En el paso el tobillo se cierra (talón arriba) y los dedos cuelgan: tres articulaciones visibles.
+- Acostada: muslo a 45° adelante, caña acostada hacia atrás y metatarso plano hacia adelante; los
+  ángulos se calculan a partir del reposo, no van a mano.
+- Cría: patas largas desde chica (babyScale de las patas > 1).

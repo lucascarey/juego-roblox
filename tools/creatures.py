@@ -414,29 +414,30 @@ def grieta():
         for j, y in enumerate((-0.35, 0, 0.35)):
             P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
                           ramp="tooth", flat=True, baby=1.25))
-    # Dos patas (bípeda) medidas sobre el dibujo de Lucas (2026-11-26), con el alto del torso (3.4) como
-    # unidad: muslo enorme metido en el torso (3.3 de fondo x 3.0 de alto) que se afina hacia la rodilla,
-    # rodilla ATRÁS y abajo del cuerpo, caña fina hacia adelante y pie largo y plano.
-    #   cadera a rodilla 3.7, 20.7° hacia atrás -> rodilla 1.31 atrás y 3.46 abajo
-    #   rodilla a tobillo 2.23, 35.9° hacia adelante -> vuelve 1.31: el tobillo queda bajo la cadera
-    mirrored(part("LegBU", "Rear", (1.4, 3.0, 2.9), (1.85, 0.26, -2.0), pivot=(0, 0.38, -0.44), rot=(-20.7, 0, 0),
-                  skin=rock, baby=0.85), P)
-    # Parte de abajo del muslo, más angosta: el muslo se afina hasta la rodilla como en el dibujo.
-    mirrored(part("Corva", "LegBU*", (1.1, 1.7, 1.7), (0, -2.52, -0.25), skin=rock, baby=0.85), P)
-    mirrored(part("LegBL", "LegBU*", (0.8, 2.73, 1.05), (0, -3.32, -0.44), pivot=(0, 0.865, 0), rot=(56.6, 0, 0),
-                  skin=rock, baby=0.85), P)
-    # Planta (vista de arriba, como huella de ave): talón 0.7 detrás del tobillo y tres dedos largos que
-    # salen del mismo punto y se abren en abanico; la punta del dedo del medio queda 3.3 adelante.
-    mirrored(part("Foot", "LegBL*", (0.8, 0.6, 1.32), (0, -1.365, 0), pivot=(0, 0.3, -0.06), rot=(-35.9, 0, 0),
-                  skin=dict(cracks=0.3), baby=0.9), P)
-    for j, (yaw, ln) in enumerate(((35, 1.6), (0, 2.1), (-35, 1.6)), 1):
-        mirrored(part(f"Toe{j}", "Foot*", (0.38, 0.42, ln), (0, -0.07, -0.45), pivot=(0, 0, ln / 2), rot=(0, yaw, 0),
-                      skin=dict(cracks=0.2), baby=0.9), P)
+    # Dos patas de raptor (pedido de Lucas, 2026-11-26: "como las de un velociraptor"), digitígradas:
+    # muslo grande y ancho hacia adelante (rodilla adelante), caña larga hacia atrás, metatarso hacia
+    # adelante (el talón levantado es la articulación que se ve "al revés") y solo los dedos en el piso.
+    # El metatarso va paralelo al muslo (el animador lo mantiene así: pantógrafo) y la base del
+    # metatarso queda justo debajo de la cadera:
+    #   muslo 3.0 a 35° adelante (1.72) + metatarso 1.8 a 35° (1.03) = caña 3.6 a 49.8° atrás (2.75)
+    # La cría ya tiene patas largas (babyScale > 1).
+    mirrored(part("LegBU", "Rear", (1.7, 3.8, 2.6), (1.85, -0.6, -1.5), pivot=(0, 1.3, 0), rot=(35, 0, 0),
+                  skin=rock, baby=1.1), P)
+    mirrored(part("LegBL", "LegBU*", (1.25, 3.9, 1.35), (0, -1.7, 0), pivot=(0, 1.75, 0), rot=(-84.8, 0, 0),
+                  skin=rock, baby=1.15), P)
+    mirrored(part("LegBM", "LegBL*", (0.95, 1.95, 1.0), (0, -1.85, 0), pivot=(0, 0.825, 0), rot=(84.8, 0, 0),
+                  skin=rock, baby=1.15), P)
+    # Pie: base chica de los dedos (lo único que apoya) y tres dedos que se abren poco, como un raptor.
+    mirrored(part("Foot", "LegBM*", (1.0, 0.4, 0.9), (0, -0.975, 0), pivot=(0, 0.2, 0.15), rot=(-35, 0, 0),
+                  skin=dict(cracks=0.3), baby=1.0), P)
+    for j, (yaw, ln) in enumerate(((18, 1.0), (0, 1.3), (-18, 1.0)), 1):
+        mirrored(part(f"Toe{j}", "Foot*", (0.3, 0.34, ln), (0, -0.03, -0.25), pivot=(0, 0, ln / 2), rot=(0, yaw, 0),
+                      skin=dict(cracks=0.2), baby=1.0), P)
         # Punta de cada dedo: una garra que se afina en dos bloques y apunta hacia abajo y adelante.
-        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.26, 0.26, 0.5), (0, 0, -ln / 2), pivot=(0, 0, 0.2), rot=(-6, 0, 0),
-                      ramp="dark", pattern="solid", baby=0.9), P)
-        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.14, 0.14, 0.4), (0, -0.02, -0.25), pivot=(0, 0, 0.17), rot=(-6, 0, 0),
-                      ramp="dark", pattern="solid", baby=0.9), P)
+        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.24, 0.24, 0.45), (0, 0, -ln / 2), pivot=(0, 0, 0.2), rot=(-8, 0, 0),
+                      ramp="dark", pattern="solid", baby=1.0), P)
+        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.13, 0.13, 0.35), (0, -0.02, -0.22), pivot=(0, 0, 0.15), rot=(-8, 0, 0),
+                      ramp="dark", pattern="solid", baby=1.0), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
     prev, plen = "Rear", 3
