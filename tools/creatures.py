@@ -378,13 +378,16 @@ def grieta():
     # Cuerpo: caderas (raíz, sobre las patas) y pecho grande adelante, un poco más alto.
     P.append(part("Rear", "Root", (3, 3.4, 3), (0, 5.3, 0), skin=rock, baby=(1, 1, 0.85)))
     # Columna arqueada hacia abajo: el lomo más alto está en las caderas y el pecho baja hacia adelante.
-    P.append(part("Chest", "Rear", (3.6, 4, 3.6), (0, 0.2, -1.5), pivot=(0, 0, 1.8), rot=(-6, 0, 0), skin=rock, baby=(1, 1, 0.85)))
+    # Arco en bloques escalonados: caderas (lo más alto) -> lomo -10° -> pecho otros -10°, y la cola
+    # baja del otro lado. Cada bloque gira respecto del anterior, así el arco se lee de perfil.
+    P.append(part("Spine", "Rear", (3.3, 3.8, 2.2), (0, 0.1, -1.5), pivot=(0, 0, 1.1), rot=(-10, 0, 0), skin=rock, baby=(1, 1, 0.85)))
+    P.append(part("Chest", "Spine", (3.6, 4, 2.8), (0, 0, -1.1), pivot=(0, 0, 1.4), rot=(-10, 0, 0), skin=rock, baby=(1, 1, 0.85)))
     # Cuello y cabeza: la cabeza ES la estrella. Un núcleo chico (oculto entre los pétalos) y cinco
     # pétalos grandes de dos segmentos que, cerrados, forman el capullo en gota; al abrir muestran la
     # boca. Sin bloque cuadrado a la vista.
-    P.append(part("Neck1", "Chest", (1.8, 1.8, 1.2), (0, 0.3, -1.8), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
-    P.append(part("Neck2", "Neck1", (1.5, 1.5, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), skin=rock, baby=0.9))
-    P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), skin=dict(cracks=0.4), baby=1.5))
+    P.append(part("Neck1", "Chest", (1.8, 1.8, 1.2), (0, 0.3, -1.4), pivot=(0, 0, 0.6), rot=(6, 0, 0), skin=rock, baby=0.9))
+    P.append(part("Neck2", "Neck1", (1.5, 1.5, 1), (0, 0, -0.6), pivot=(0, 0, 0.5), rot=(6, 0, 0), skin=rock, baby=0.9))
+    P.append(part("HeadBack", "Neck2", (1.6, 1.6, 0.8), (0, 0, -0.5), pivot=(0, 0, 0.4), rot=(6, 0, 0), skin=dict(cracks=0.4), baby=1.5))
     P.append(part("Head", "HeadBack", (1.5, 1.5, 0.6), (0, 0, -0.4), pivot=(0, 0, 0.3), skin=dict(cracks=0.3), baby=1.6))
     # Fondo de la boca (oscuro, sin brillo) y anillo de dientes, en el frente del núcleo.
     P.append(part("Maw", "Head", (1.1, 1.1, 0.15), (0, 0, -0.33), ramp="maw", flat=True, baby=1.6))
@@ -435,11 +438,11 @@ def grieta():
     sizes = ((2.2, 2), (1.85, 1.65), (1.5, 1.35), (1.2, 1.1), (0.95, 0.85), (0.7, 0.65))
     for i, (w, h) in enumerate(sizes, 1):
         P.append(part(f"Tail{i}", prev, (w, h, 1.9), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -0.95),
-                      rot=(14 if i == 1 else 6.5, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
+                      rot=(18 if i == 1 else 6.5, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
                       baby=0.6 if i == 1 else 0.4))
         prev, plen = f"Tail{i}", 1.9
     # Púas en el lomo, del pecho a la cola, inclinadas hacia atrás.
-    spikes = (("Chest", -1.1, 2), ("Chest", 0.3, 2), ("Rear", -0.6, 1.7), ("Rear", 0.7, 1.7),
+    spikes = (("Chest", -0.8, 2), ("Chest", 0.6, 2), ("Spine", 0, 1.9), ("Rear", -0.6, 1.7), ("Rear", 0.7, 1.7),
               ("Tail1", 0, 1), ("Tail2", 0, 0.85), ("Tail3", 0, 0.7))
     for i, (parent, z, top) in enumerate(spikes, 1):
         P.append(part(f"Spike{i}", parent, (0.3, 1, 0.3), (0, top, z), pivot=(0, -0.5, 0), rot=(30, 0, 0),
