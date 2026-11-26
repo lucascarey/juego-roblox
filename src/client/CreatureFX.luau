@@ -2,12 +2,10 @@
 -- Sonidos y partículas de las criaturas, en este cliente. El animador avisa los momentos
 -- (pisada, caída, rascada, golpe, etc.) y acá se reproducen en 3D, adaptados al tamaño de la
 -- criatura y al material del suelo. Para cambiar un sonido, cambiar su id en SOUNDS.
--- Audio: grafo nuevo de Roblox (AudioPlayer -> AudioEmitter, el oyente es la cámara).
+-- Audio: grafo nuevo de Roblox (AudioPlayer -> AudioEmitter). El oyente lo crea Roblox en la cámara
+-- (SoundService.DefaultListenerLocation = Camera, que ya viene así); no hace falta configurarlo.
 
 local Debris = game:GetService("Debris")
-local SoundService = game:GetService("SoundService")
-
-SoundService.ListenerLocation = Enum.ListenerLocation.Camera
 
 local CreatureFX = {}
 
@@ -140,7 +138,7 @@ local function dust(pos: Vector3, color: Color3, s: number, count: number, sprea
 		texture = TEX_POLVO,
 		color = color,
 		count = count,
-		size = 1.1 * s,
+		size = 1.6 * s,
 		speed = NumberRange.new(2 * s, 5 * s),
 		spread = spread or 70,
 		life = NumberRange.new(0.5, 0.9),
@@ -154,11 +152,11 @@ local function chunks(pos: Vector3, color: Color3, s: number, count: number, dir
 		texture = TEX_BLOQUE,
 		color = color,
 		count = count,
-		size = 0.3 * s,
-		speed = NumberRange.new(8 * s, 15 * s),
+		size = 0.65 * s,
+		speed = NumberRange.new(6 * s, 11 * s),
 		spread = spread or 35,
-		life = NumberRange.new(0.5, 0.8),
-		gravity = 70,
+		life = NumberRange.new(0.7, 1.1),
+		gravity = 45,
 		direction = dir,
 	})
 end
@@ -179,7 +177,8 @@ function CreatureFX.play(name: string, ev: Event)
 	local ground, material = groundAt(ev.pos)
 	local grass, dirt, dustColor = palette(material)
 	if name == "Pisada" then
-		local fast = math.clamp(((ev.speed or 0) / ev.size - 1.5) / 2, 0, 1)
+		-- 0 caminando, 1 galopando: el polvo solo sale corriendo.
+		local fast = math.clamp(((ev.speed or 0) / ev.size - 2.5) / 2, 0, 1)
 		sound("paso", ground, (0.25 + 0.25 * fast) * (0.5 + 0.5 * s), pitch * 0.8)
 		if fast > 0.3 then
 			dust(ground, dustColor, s * 0.6, 2)
@@ -195,7 +194,7 @@ function CreatureFX.play(name: string, ev: Event)
 		sound("excavar", ground, 0.5 * s, pitch)
 		-- Tierra y terrones que salen despedidos hacia atrás y arriba.
 		local back = (ev.dir or Vector3.zAxis) + Vector3.new(0, 1.2, 0)
-		chunks(ground, dirt, s, 7, back.Unit, 25)
+		chunks(ground, dirt, s, 10, back.Unit, 30)
 		chunks(ground, grass, s, 2, back.Unit, 30)
 		dust(ground, dustColor, s * 0.7, 2)
 	elseif name == "Latigazo" or name == "Embestida" then

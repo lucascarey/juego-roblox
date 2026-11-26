@@ -56,6 +56,7 @@ type Leg = {
 	swing: number, -- ángulo de paso del último cuadro (para buscar el suelo donde está el pie)
 	plant: Vector3?, -- quieta: dónde quedó apoyado el pie (en el mundo)
 	wasStance: boolean,
+	lastStep: number,
 	plantW: Spring,
 }
 
@@ -201,6 +202,7 @@ function CreatureAnimator.new(model: Model)
 					swing = 0,
 					plantW = newSpring(),
 					wasStance = true,
+					lastStep = 0,
 				})
 				hipY = math.max(hipY, hip.Y)
 			end
@@ -439,10 +441,10 @@ function CreatureAnimator:_locomotion(dt: number)
 			end
 			-- Apuntar la pata al pie con una rotación real (pitch y roll por separado fallan con
 			-- ángulos grandes) y doblar la rodilla para que el largo coincida.
-			local dir = p.Unit
-			local axis = Vector3.new(0, -1, 0):Cross(dir)
+			local toFoot = p.Unit
+			local axis = Vector3.new(0, -1, 0):Cross(toFoot)
 			local aim = if axis.Magnitude > 1e-4
-				then CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(-dir.Y, -1, 1)))
+				then CFrame.fromAxisAngle(axis.Unit, math.acos(math.clamp(-toFoot.Y, -1, 1)))
 				else CFrame.identity
 			local d = math.clamp(p.Magnitude, math.abs(a - b) + 0.05, a + b)
 			local bend = math.pi - math.acos(math.clamp((a * a + b * b - d * d) / (2 * a * b), -1, 1))
@@ -455,7 +457,11 @@ function CreatureAnimator:_locomotion(dt: number)
 			leg.lower.Transform = CFrame.Angles(kneeA, 0, 0)
 		end
 		local stance = u < duty
-		if stance and not leg.wasStance and move > 0.4 and self.pose.air.x < 0.3 then
+		-- Pisada: solo avanzando de verdad y con un mínimo entre pisadas de la misma pata (sin esto, el
+		-- límite apoyo/vuelo titilaba y sonaban decenas de pasos por segundo).
+		local stepping = s > 0.3 * L and self.t - leg.lastStep > 0.22
+		if stance and not leg.wasStance and stepping and move > 0.4 and self.pose.air.x < 0.3 then
+			leg.lastStep = self.t
 			local fp = footOf(leg)
 			if fp then
 				self:_emit("Pisada", fp, { speed = s })
@@ -476,10 +482,10 @@ function CreatureAnimator:_locomotion(dt: number)
 	-- Frenada fuerte después de correr: polvo hacia adelante.
 	local decel = (self.prevSpeed - s) / dt
 	self.prevSpeed = s
-	if self.gallop + trot > 0.6 and decel > 3 * L and self.t - self.skidAt > 1.2 then
+	if self.gallop > 0.5 and self.prevSpeed > 2.5 * L and decel > 8 * L and self.t - self.skidAt > 1.5 then
 		self.skidAt = self.t
-		local fwd = (self.vis2 :: CFrame).LookVector
-		self:_emit("Frenada", (self.vis2 :: CFrame).Position + fwd * L * 0.8, { dir = fwd })
+		local ahead = (self.vis2 :: CFrame).LookVector
+		self:_emit("Frenada", (self.vis2 :: CFrame).Position + ahead * L * 0.8, { dir = ahead })
 	end
 	return move, trot
 end

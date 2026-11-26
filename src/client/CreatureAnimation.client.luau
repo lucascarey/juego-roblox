@@ -6,7 +6,11 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local CreatureAnimator = require(ReplicatedStorage.Shared.Creatures.CreatureAnimator)
-local CreatureFX = require(script.Parent:WaitForChild("CreatureFX"))
+-- Si el módulo de efectos falla, las criaturas se animan igual (sin sonido ni partículas).
+local fxOk, CreatureFX = pcall(require, script.Parent:WaitForChild("CreatureFX"))
+if not fxOk then
+	warn("CreatureFX no cargó:", CreatureFX)
+end
 
 local MAX_DIST = 300 -- más lejos no se nota y ahorra CPU
 
@@ -26,7 +30,9 @@ local function add(inst: Instance)
 		return
 	end
 	local anim = CreatureAnimator.new(inst)
-	anim.onEvent = CreatureFX.play -- sonidos y partículas
+	if fxOk then
+		anim.onEvent = (CreatureFX :: any).play -- sonidos y partículas
+	end
 	animators[inst] = anim
 end
 

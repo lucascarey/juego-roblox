@@ -107,3 +107,20 @@ Errores que ya se resolvieron y no hay que reintroducir:
   la gravedad baja al 55% con un VectorForce, para que el arco sea más lento y pesado.
 - Pose en el aire: mezclar subiendo/bajando de forma continua según la velocidad vertical; con un
   if subida/bajada las patas saltaban de golpe en la cima.
+
+## 9. Sonido y partículas
+
+- Los efectos viven en `src/client/CreatureFX.luau` (lista `SOUNDS` con los ids). El animador avisa
+  los momentos (`onEvent`): una especie nueva los recibe sola si respeta los nombres de piezas.
+- Audio con el grafo nuevo (AudioPlayer -> Wire -> AudioEmitter en un Attachment). **No** existe
+  `SoundService.ListenerLocation`: es `DefaultListenerLocation` y ya viene en Camera (Roblox crea el
+  oyente solo). Esa línea rompía el script y dejaba a TODAS las criaturas sin animar: por eso
+  `CreatureFX` se carga con `pcall` en `CreatureAnimation`.
+- Antes de usar un sonido, verificar que carga (`AudioPlayer.IsReady`). ProSoundEffects (Creator
+  Store) es la fuente segura; para pisadas de pasto no tenía, se usaron otras gratuitas.
+- Pisadas: mínimo 0.22 s entre pasos de la misma pata y solo avanzando de verdad; si no, el límite
+  apoyo/vuelo titila y suenan decenas por segundo.
+- Partículas: texturas pixeladas propias (`tools/gen_particles.py`). Si son rápidas y chicas no se ven:
+  terrones de 0.65 studs, vida de 0.7–1.1 s.
+- Estilo de sonido elegido por Lucas: realista y suave. Musgo no tiene boca: su voz es solo
+  respiración y resoplidos (la voz propia se define cuando haya más especies).
