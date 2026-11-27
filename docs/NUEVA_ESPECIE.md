@@ -190,3 +190,17 @@ Errores que ya se resolvieron y no hay que reintroducir:
 - Acostada: muslo a 45° adelante, caña acostada hacia atrás y metatarso plano hacia adelante; los
   ángulos se calculan a partir del reposo, no van a mano.
 - Cría: patas largas desde chica (babyScale de las patas > 1).
+
+## 13. Pulido final de Grieta (lo que aplica a cualquier especie)
+- **Cola = continuación del torso**: el primer bloque casi del grosor de la cadera y centrado con ella;
+  toda la cola con el mismo babyScale de grosor que el cuerpo (en crías solo más corta, ej. (1, 1, 0.7)).
+  Si cada bloque achica distinto, en alguna edad la cola parece una pieza aparte.
+- **Velocidades**: `SpeciesStats.speedScale(age)` (cría 55%) para moverse; `ageScale` solo para vida y
+  daño. El paso/trote/galope sale de las velocidades de la especie y etapa, no del largo de pata.
+- **Sigilo**: `crouch` en stats habilita la C; el servidor pone el atributo `Agazapado` (la visión
+  nocturna futura lo usa para marcarla menos).
+- **Medir, no mirar**: temblor = segunda diferencia de la altura del cuerpo relativa a la Root;
+  cadencia = cambios de signo de la cadera; cola/cabeza contra el piso = esquinas vs rayo al suelo.
+  Probar con copias sin IA movidas por el servidor en línea recta (y excluir la copia del rayo de piso).
+- Studio en segundo plano corre a ~15 fps: el sube y baja normal parece temblor. Mirar la curva.
+- Lucas pidió pocas capturas: verificar con números y mandar una sola al final.
