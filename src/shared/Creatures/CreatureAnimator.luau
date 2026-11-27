@@ -48,6 +48,7 @@ type Chain = {
 	fd: Vector3?, -- entrada filtrada (desplazamiento)
 	fix: { number }?, -- cola acostada: corrección por bloque hasta tocar el suelo
 	phase: number?, -- púas: desfase del tambaleo propio de cada una
+	rest0: { number }, -- caída de reposo de cada articulación (del modelo), para enderezar la cola al correr
 }
 type Leg = {
 	upper: Motor6D,
@@ -126,10 +127,11 @@ local function newChain(motors: { Motor6D }, kind: string, freqs: { number }, da
 		r[i] = dist + len * 0.5
 		dist += len
 	end
-	local a, b, freq = {}, {}, {}
-	for i in motors do
+	local a, b, freq, rest0 = {}, {}, {}, {}
+	for i, m in motors do
 		a[i], b[i] = newSpring(), newSpring()
 		freq[i] = freqs[math.min(i, #freqs)]
+		rest0[i] = (m.C0:ToEulerAnglesXYZ())
 	end
 	return {
 		motors = motors,
@@ -141,6 +143,7 @@ local function newChain(motors: { Motor6D }, kind: string, freqs: { number }, da
 		freq = freq,
 		damp = damp,
 		prev = base.CFrame,
+		rest0 = rest0,
 	}
 end
 
@@ -476,10 +479,11 @@ function CreatureAnimator:_locomotion(dt: number)
 	-- Zancada: trotando y corriendo las patas barren más (más ángulo = pasos más largos y menos
 	-- frecuentes, sin patinar porque el avance por ciclo sale de la misma amplitud).
 	local amp = lerp(lerp(0.28, 0.58, math.max(trot, math.clamp(gaitSpeed / (3 * L), 0, 1))), 0.72, gallop)
-	amp *= 1 - 0.35 * self.pose.crouch.x
+	self.trot = trot
 	-- Cría: pasos cortos y rápidos (es lenta y de patas largas: con la zancada de la adulta movía las
 	-- patas muy despacio). Crece hacia la zancada adulta.
-	amp *= lerp(0.6, 1, math.clamp(model:GetAttribute("Age") :: number? or 1, 0, 1))
+	local ageK = math.clamp(model:GetAttribute("Age") :: number? or 1, 0, 1)
+	amp *= lerp(lerp(0.9, 1, ageK), lerp(0.6, 1, ageK), gallop) -- caminando casi la zancada adulta
 	local duty = lerp(lerp(0.66, 0.5, trot), 0.36, gallop)
 	local stride = 2 * L * math.sin(amp) / duty -- avance del cuerpo por ciclo sin patinar
 	local dir = if self.speed.x < -0.05 then -1 else 1
@@ -512,7 +516,9 @@ function CreatureAnimator:_locomotion(dt: number)
 		-- La rodilla dobla hacia atrás en el vuelo; un poco más en las traseras.
 		local hipA = hip + ikHip
 		-- Bípeda: la pata se recoge bien en el vuelo (rodilla más doblada).
-		local kneeA = knee * (if leg.front then 1 elseif self.biped then 1.5 else 1.2) + ikKnee
+		local kneeA = knee
+				* (if leg.front then 1 elseif self.biped then lerp(1.2, 1.5, math.max(trot, gallop)) else 1.2)
+			+ ikKnee
 		local pose = self.pose
 		-- Acostado: delanteras estiradas hacia adelante, traseras plegadas debajo.
 		local lie = if leg.front then pose.front else pose.back
@@ -894,6 +900,12 @@ function CreatureAnimator:_chains(dt: number)
 			local freq = c.freq[i]
 			local limit = if c.kind == "spike" then 0.3 else 0.8 -- púas: duras, se inclinan poco
 			if c.kind == "back" then
+				-- Corriendo la cola se estira recta hacia atrás y se pone más dura (inercia), pero sigue
+				-- llegando con retraso: el peso se sigue notando.
+				local run = math.max(self.gallop or 0, 0.6 * (self.trot or 0)) * (1 - rest)
+				sag -= (c.rest0[i] + 0.015 * i) * run
+				wave *= 1 - 0.6 * run
+				freq *= 1 + 0.6 * run
 				-- Coletazo: se mueve la base y el resto sigue con retraso (efecto látigo).
 				freq *= 1 + 2.2 * self.whip
 				if i == 1 then

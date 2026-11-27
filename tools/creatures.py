@@ -449,15 +449,18 @@ def grieta():
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.
     prev, plen = "Rear", 3
-    sizes = ((2.2, 2), (1.85, 1.65), (1.5, 1.35), (1.2, 1.1), (0.95, 0.85), (0.7, 0.65))
+    # La cola es la continuación del cuerpo: el primer bloque casi del grosor de la cadera y centrado con
+    # ella, y se afina hacia la punta. Todas crecen igual que el cuerpo (en las crías solo es más corta),
+    # así el paso de torso a cola es el mismo en todas las edades (pedido de Lucas).
+    sizes = ((2.7, 3.0), (2.15, 2.25), (1.65, 1.65), (1.25, 1.2), (0.95, 0.85), (0.7, 0.65))
     for i, (w, h) in enumerate(sizes, 1):
-        P.append(part(f"Tail{i}", prev, (w, h, 1.9), (0, 0.3 if i == 1 else 0, plen / 2), pivot=(0, 0, -0.95),
+        P.append(part(f"Tail{i}", prev, (w, h, 1.9), (0, 0, plen / 2), pivot=(0, 0, -0.95),
                       rot=(18 if i == 1 else 6.5, 16 if i >= 5 else 0, 0), skin=dict(belly=0.25, cracks=0.4),
-                      baby=0.6 if i == 1 else 0.4))
+                      baby=(1, 1, 0.7)))
         prev, plen = f"Tail{i}", 1.9
     # Púas en el lomo, del pecho a la cola, inclinadas hacia atrás.
     spikes = (("Chest", -0.8, 2), ("Chest", 0.6, 2), ("Spine", 0, 1.9), ("Rear", -0.6, 1.7), ("Rear", 0.7, 1.7),
-              ("Tail1", 0, 1), ("Tail2", 0, 0.85), ("Tail3", 0, 0.7))
+              ("Tail1", 0, 1.5), ("Tail2", 0, 1.1), ("Tail3", 0, 0.8))
     # Articuladas en dos tramos (el animador las hace tambalear) y apenas más largas: 0.7 + 0.55.
     for i, (parent, z, top) in enumerate(spikes, 1):
         P.append(part(f"Spike{i}", parent, (0.3, 0.7, 0.3), (0, top, z), pivot=(0, -0.35, 0), rot=(30, 0, 0),
