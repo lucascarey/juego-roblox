@@ -74,8 +74,8 @@ function CreatureCombat.resolve(attacker: Model, kind: string, attackerName: str
 		local dist = flat.Magnitude
 		local hit = false
 		if kind == "Coletazo" then
-			-- Arco detrás y a los costados, hasta el largo del cuerpo + cola.
-			hit = dist < bodyLen * 0.5 + tailLen and rel.Z > -bodyLen * 0.2
+			-- Semicírculo detrás del animal (+Z es atrás), de radio medio cuerpo + cola.
+			hit = dist < bodyLen * 0.5 + tailLen and rel.Z >= 0
 		elseif kind == "Cabezazo" or kind == "Mordisco" then
 			-- Adelante, cerca.
 			hit = rel.Z < 0 and dist < bodyLen * 0.9 and math.abs(rel.X) < bodyLen * 0.5

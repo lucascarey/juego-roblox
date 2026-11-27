@@ -428,15 +428,16 @@ def grieta():
     mirrored(part("LegBM", "LegBL*", (0.95, 1.95, 1.0), (0, -1.85, 0), pivot=(0, 0.825, 0), rot=(84.8, 0, 0),
                   skin=rock, baby=1.15), P)
     # Pie: base chica de los dedos (lo único que apoya) y tres dedos que se abren poco, como un raptor.
-    mirrored(part("Foot", "LegBM*", (1.0, 0.4, 0.9), (0, -0.975, 0), pivot=(0, 0.2, 0.15), rot=(-35, 0, 0),
+    mirrored(part("Foot", "LegBM*", (1.4, 0.55, 1.3), (0, -0.975, 0), pivot=(0, 0.275, 0.2), rot=(-35, 0, 0),
                   skin=dict(cracks=0.3), baby=1.0), P)
-    for j, (yaw, ln) in enumerate(((18, 1.0), (0, 1.3), (-18, 1.0)), 1):
-        mirrored(part(f"Toe{j}", "Foot*", (0.3, 0.34, ln), (0, -0.03, -0.25), pivot=(0, 0, ln / 2), rot=(0, yaw, 0),
+    # Pies grandes respecto de la pata (pedido de Lucas): dedos y garras 1.5 veces más grandes.
+    for j, (yaw, ln) in enumerate(((18, 1.5), (0, 1.95), (-18, 1.5)), 1):
+        mirrored(part(f"Toe{j}", "Foot*", (0.45, 0.5, ln), (0, -0.04, -0.4), pivot=(0, 0, ln / 2), rot=(0, yaw, 0),
                       skin=dict(cracks=0.2), baby=1.0), P)
         # Punta de cada dedo: una garra que se afina en dos bloques y apunta hacia abajo y adelante.
-        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.24, 0.24, 0.45), (0, 0, -ln / 2), pivot=(0, 0, 0.2), rot=(-8, 0, 0),
+        mirrored(part(f"Claw{j}", f"Toe{j}*", (0.36, 0.36, 0.65), (0, 0, -ln / 2), pivot=(0, 0, 0.3), rot=(-8, 0, 0),
                       ramp="dark", pattern="solid", baby=1.0), P)
-        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.13, 0.13, 0.35), (0, -0.02, -0.22), pivot=(0, 0, 0.15), rot=(-8, 0, 0),
+        mirrored(part(f"ClawTip{j}", f"Claw{j}*", (0.2, 0.2, 0.5), (0, -0.03, -0.32), pivot=(0, 0, 0.22), rot=(-8, 0, 0),
                       ramp="dark", pattern="solid", baby=1.0), P)
     # Cola de contrapeso (~1.4 veces el cuerpo, como en la planilla): seis bloques que se afinan, bajan
     # hacia el suelo y se enroscan al final, sin quedar más abajo que los pies.

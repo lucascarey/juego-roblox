@@ -200,9 +200,7 @@ function CreatureFX.play(name: string, ev: Event)
 	elseif name == "Latigazo" or name == "Embestida" then
 		sound("latigo", ev.pos, 0.45 * s, if name == "Latigazo" then pitch * 0.75 else pitch)
 	elseif name == "ColaGolpe" then
-		sound("golpe", ground, 0.35 * s, pitch * 0.8)
-		chunks(ground, grass, s, 10, ev.dir and (ev.dir + Vector3.new(0, 1, 0)).Unit, 40)
-		dust(ground, dustColor, s, 4)
+		sound("golpe", ground, 0.35 * s, pitch * 0.8) -- sin tierra (pedido de Lucas)
 	elseif name == "CabezaGolpe" then
 		sound("golpe", ev.pos, 0.55 * s, pitch)
 		dust(ev.pos, dustColor, s * 0.6, 3)
