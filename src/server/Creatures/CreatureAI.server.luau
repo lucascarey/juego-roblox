@@ -313,7 +313,8 @@ local function think(b: Brain)
 
 	-- Preparar la conducta elegida.
 	local pos = b.root.Position
-	local walk, trot, sprint = b.stats.walk * b.scale, b.stats.walk * 1.4 * b.scale, b.stats.sprint * b.scale
+	local sp = SpeciesStats.speedScale(b.model:GetAttribute("Age") :: number? or 1)
+	local walk, trot, sprint = b.stats.walk * sp, b.stats.walk * 1.4 * sp, b.stats.sprint * sp
 	if best == "Explorar" then
 		if not b.target or flat(b.target - pos).Magnitude < 2 then
 			-- El líder/solitario explora alrededor de su casa; los demás alrededor del líder.
@@ -385,7 +386,7 @@ end
 
 local function updateNeeds(b: Brain, dt: number)
 	local posture = b.model:GetAttribute("Postura")
-	local running = b.cur > b.stats.walk * 1.5 * b.scale
+	local running = b.cur > b.stats.walk * 1.5 * SpeciesStats.speedScale(b.model:GetAttribute("Age") :: number? or 1)
 	b.hunger = math.max(0, b.hunger - dt / (if running then 120 else 240))
 	if b.behavior == "Comer" then
 		b.hunger = math.min(1, b.hunger + dt / 8)

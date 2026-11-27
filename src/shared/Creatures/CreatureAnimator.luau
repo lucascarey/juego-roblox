@@ -464,7 +464,7 @@ function CreatureAnimator:_locomotion(dt: number)
 	local stats = SpeciesStats.get(model:GetAttribute("Species") :: string? or "")
 	local trot, gallop
 	if stats then
-		local k = SpeciesStats.ageScale(model:GetAttribute("Age") :: number? or 1)
+		local k = SpeciesStats.speedScale(model:GetAttribute("Age") :: number? or 1)
 		local walkS, sprintS = stats.walk * k, stats.sprint * k
 		trot = math.clamp((s - 1.1 * walkS) / (0.4 * walkS), 0, 1)
 		gallop = math.clamp((s - lerp(walkS, sprintS, 0.55)) / (0.25 * (sprintS - walkS)), 0, 1)
@@ -479,7 +479,7 @@ function CreatureAnimator:_locomotion(dt: number)
 	amp *= 1 - 0.35 * self.pose.crouch.x
 	-- Cría: pasos cortos y rápidos (es lenta y de patas largas: con la zancada de la adulta movía las
 	-- patas muy despacio). Crece hacia la zancada adulta.
-	amp *= lerp(0.48, 1, math.clamp(model:GetAttribute("Age") :: number? or 1, 0, 1))
+	amp *= lerp(0.6, 1, math.clamp(model:GetAttribute("Age") :: number? or 1, 0, 1))
 	local duty = lerp(lerp(0.66, 0.5, trot), 0.36, gallop)
 	local stride = 2 * L * math.sin(amp) / duty -- avance del cuerpo por ciclo sin patinar
 	local dir = if self.speed.x < -0.05 then -1 else 1

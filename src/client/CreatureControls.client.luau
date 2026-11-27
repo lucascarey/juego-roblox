@@ -335,7 +335,8 @@ RunService.RenderStepped:Connect(function(dt)
 	end
 	hum.WalkSpeed = if locked
 		then 0
-		else (if sprinting then stats.sprint elseif s.crouch then stats.crouch or stats.walk else stats.walk) * s.scale
+		else (if sprinting then stats.sprint elseif s.crouch then stats.crouch or stats.walk else stats.walk)
+			* SpeciesStats.speedScale(s.model:GetAttribute("Age") :: number? or 1)
 	-- Despegue del salto: arriba y hacia adelante (empuje de las traseras).
 	if s.jumpAt and os.clock() >= s.jumpAt then
 		s.jumpAt = nil

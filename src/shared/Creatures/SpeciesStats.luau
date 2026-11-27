@@ -79,9 +79,16 @@ local function ageScale(age: number): number
 	return 0.4 + 0.6 * age
 end
 
+-- Velocidad por edad: la cría al 55% de la adulta (pedido de Lucas). Aparte de ageScale para no
+-- cambiar vida ni daño de las crías.
+local function speedScale(age: number): number
+	return 0.55 + 0.45 * age
+end
+
 return {
 	get = function(species: string): Stats?
 		return SpeciesStats[species]
 	end,
 	ageScale = ageScale,
+	speedScale = speedScale,
 }
