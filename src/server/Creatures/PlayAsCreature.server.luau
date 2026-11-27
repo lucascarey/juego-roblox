@@ -118,6 +118,11 @@ input.OnServerEvent:Connect(function(player: Player, kind: unknown, value: unkno
 	elseif kind == "Mirar" and typeof(value) == "Vector2" then
 		-- Hacia dónde mira la cabeza (para que los demás jugadores lo vean), dentro de lo posible.
 		model:SetAttribute("Mirar", Vector2.new(math.clamp(value.X, -1.3, 1.3), math.clamp(value.Y, -0.6, 0.5)))
+	elseif kind == "Agazapado" and typeof(value) == "boolean" then
+		-- Solo las especies que pueden (stats.crouch); queda como atributo para la animación y para la
+		-- visión nocturna futura.
+		local stats = SpeciesStats.get(model:GetAttribute("Species") :: string? or "")
+		model:SetAttribute("Agazapado", if value and stats and stats.crouch then true else nil)
 	elseif kind == "Postura" then
 		-- Solo valores conocidos; dormir solo desde acostada.
 		local current = model:GetAttribute("Postura")

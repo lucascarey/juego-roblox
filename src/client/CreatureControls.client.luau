@@ -94,6 +94,7 @@ local GUIDE = {
 	{ "Clic izq", "Coletazo" },
 	{ "Clic der", "Cabezazo (clic corto)" },
 	{ "E", "Excavar" },
+	{ "C", "Agazaparse (sigiloso, lento)" },
 	{ "Z", "Acostarse (regenera vida)" },
 	{ "Z otra vez", "Dormir (regenera más)" },
 	{ "Moverse", "Levantarse" },
@@ -187,6 +188,7 @@ type State = {
 	rightPos: Vector2?,
 	lookSent: Vector2,
 	lookAt: number,
+	crouch: boolean,
 }
 local state: State? = nil
 
@@ -209,11 +211,13 @@ local function onCharacter(ch: Model)
 		lockedUntil = 0,
 		lookSent = Vector2.zero,
 		lookAt = 0,
+		crouch = false,
 	}
 	gui.Enabled = true
 	-- Cada especie tiene sus ataques: la guía muestra los de esta.
 	guideDesc[4].Text = stats.primary
 	guideDesc[5].Text = stats.secondary .. " (clic corto)"
+	guideDesc[7].Text = if stats.crouch then "Agazaparse (sigiloso, lento)" else "—"
 	-- El salto de Roblox es instantáneo: se apaga y se hace a mano (carga con las traseras, despegue).
 	hum.JumpPower = 0
 	-- En el aire, menos gravedad: el arco dura más y se siente pesado (la gravedad de Roblox es ~5 veces
@@ -264,6 +268,9 @@ UserInputService.InputBegan:Connect(function(io, processed)
 		standUp(s)
 	elseif busy then
 		return
+	elseif io.KeyCode == Enum.KeyCode.C and s.stats.crouch then
+		s.crouch = not s.crouch
+		input:FireServer("Agazapado", s.crouch)
 	elseif io.KeyCode == Enum.KeyCode.Space then
 		-- Salto pesado: primero carga sobre las patas de atrás y recién después despega.
 		-- Por estado del Humanoid: FloorMaterial sigue viendo el piso en saltos bajos (patas largas).
@@ -315,13 +322,20 @@ RunService.RenderStepped:Connect(function(dt)
 	end
 	local locked = posture ~= nil or os.clock() < s.lockedUntil
 	local sprinting = not locked and moving and s.stamina > 0 and UserInputService:IsKeyDown(Enum.KeyCode.LeftShift)
+	-- Correr o acostarse saca de agazapada.
+	if s.crouch and (sprinting or posture) then
+		s.crouch = false
+		input:FireServer("Agazapado", false)
+	end
 	if sprinting then
 		s.stamina = math.max(0, s.stamina - stats.sprintCost * dt)
 	else
 		local regen = stats.staminaRegen * (if posture then 2 else 1)
 		s.stamina = math.min(stats.stamina, s.stamina + regen * dt)
 	end
-	hum.WalkSpeed = if locked then 0 else (if sprinting then stats.sprint else stats.walk) * s.scale
+	hum.WalkSpeed = if locked
+		then 0
+		else (if sprinting then stats.sprint elseif s.crouch then stats.crouch or stats.walk else stats.walk) * s.scale
 	-- Despegue del salto: arriba y hacia adelante (empuje de las traseras).
 	if s.jumpAt and os.clock() >= s.jumpAt then
 		s.jumpAt = nil

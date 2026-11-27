@@ -372,6 +372,7 @@ function CreatureAnimator.new(model: Model)
 		rest = newSpring(),
 		sleep = newSpring(),
 		dig = newSpring(),
+		crouch = newSpring(), -- agazapada (tecla C): cuerpo bajo, patas dobladas, pasos cortos
 		air = newSpring(),
 		front = 0,
 		back = 0,
@@ -474,7 +475,8 @@ function CreatureAnimator:_locomotion(dt: number)
 	self.gallop = gallop
 	-- Zancada: trotando y corriendo las patas barren más (más ángulo = pasos más largos y menos
 	-- frecuentes, sin patinar porque el avance por ciclo sale de la misma amplitud).
-	local amp = lerp(lerp(0.28, 0.6, math.max(trot, math.clamp(gaitSpeed / (3 * L), 0, 1))), 0.82, gallop)
+	local amp = lerp(lerp(0.28, 0.58, math.max(trot, math.clamp(gaitSpeed / (3 * L), 0, 1))), 0.72, gallop)
+	amp *= 1 - 0.35 * self.pose.crouch.x
 	local duty = lerp(lerp(0.66, 0.5, trot), 0.36, gallop)
 	local stride = 2 * L * math.sin(amp) / duty -- avance del cuerpo por ciclo sin patinar
 	local dir = if self.speed.x < -0.05 then -1 else 1
@@ -499,7 +501,7 @@ function CreatureAnimator:_locomotion(dt: number)
 		-- IK: acortar la pata doblando la rodilla y girar la cadera para que el pie quede bajo ella;
 		-- además se descuenta la inclinación del cuerpo para que la pata quede vertical.
 		local ikHip, ikKnee = 0, 0
-		local e = leg.shorten.x
+		local e = leg.shorten.x + 0.28 * L * self.pose.crouch.x -- agazapada: patas dobladas
 		if leg.lower and e > 0.01 then
 			ikHip, ikKnee = legIK(leg, leg.D0 - e)
 		end
@@ -628,7 +630,7 @@ function CreatureAnimator:_locomotion(dt: number)
 	self.dropKeep = self.dropKeep or { front = 0, back = 0 }
 	local function dropOf(key: string, v: number): number
 		if v ~= 1 then
-			self.dropKeep[key] = v * L * (1 - 0.6 * gallop)
+			self.dropKeep[key] = v * L * (1 - 0.8 * gallop)
 		elseif move < 0.05 then
 			self.dropKeep[key] = 0
 		end
@@ -662,6 +664,7 @@ function CreatureAnimator:_posture(dt: number)
 	p.front = smooth(math.clamp(r / 0.6, 0, 1))
 	p.back = smooth(math.clamp((r - 0.4) / 0.6, 0, 1))
 	step(p.dig, if model:GetAttribute("Accion") == "Excavar" then 1 else 0, 2, 1, dt)
+	step(p.crouch, if model:GetAttribute("Agazapado") and not model:GetAttribute("Postura") then 1 else 0, 1.6, 1, dt)
 end
 
 -- Ajuste al terreno: altura del suelo bajo cada cadera, plano del cuerpo y cuánto acortar cada pata.
@@ -1056,7 +1059,9 @@ function CreatureAnimator:update(dt: number)
 	-- (unos 0.25 s de retraso) y el cuerpo se dibuja en la posición suavizada.
 	local root = self.root :: BasePart
 	local k = 1 - math.exp(-dt * 8)
-	if (root.Position - (self.vis2 :: CFrame).Position).Magnitude > self.legLen * 2 then
+	-- Umbral alto: corriendo rápido (30 studs/s) el suavizado va ~7 studs atrás y con 2 largos de pata
+	-- saltaba sin inercia a cada rato (temblor de las IA al esprintar).
+	if (root.Position - (self.vis2 :: CFrame).Position).Magnitude > math.max(self.legLen * 2, 20) then
 		-- Teletransporte o streaming: saltar sin inercia.
 		self.vis1, self.vis2, self.prevCF = root.CFrame, root.CFrame, root.CFrame
 		for _, c in self.chains :: { Chain } do
@@ -1109,17 +1114,19 @@ function CreatureAnimator:update(dt: number)
 	local jc = self.jumpCrouch
 	self.vy = if root.Anchored then 0 else root.AssemblyLinearVelocity.Y
 	local air = pose.air.x
-	local backDrop = self.drop.back.x + pose.back * self.lieDrop + 0.25 * L * jc + 0.06 * L * dig
+	local crouchDrop = 0.28 * L * pose.crouch.x
+	local backDrop = self.drop.back.x + pose.back * self.lieDrop + 0.25 * L * jc + 0.06 * L * dig + crouchDrop
 	local frontDrop = self.drop.front.x
 		+ pose.front * self.lieDrop
 		+ 0.06 * L * jc
 		+ (if self.biped then 0.45 else 0.12) * L * dig -- bípeda: baja el pecho para llegar al suelo con el hocico
+		+ crouchDrop
 	local stepRoll = math.sin(self.phase * TAU) * 0.035 * move * (1 - trot)
 	local shift = math.sin(t * 0.37) * 0.025 * still
 	local gp = math.sin(self.phase * TAU) -- ciclo del galope
 	local bodyY = -backDrop
 		+ breath * (0.012 + 0.01 * rest) * L * still
-		+ gp * 0.05 * L * gallop
+		+ gp * 0.025 * L * gallop
 		- (if self.biped then 0 else 0.1) * L * sleep
 	-- Se inclina un poco hacia adelante al trotar; al galopar se mece adelante-atrás.
 	local bodyPitch = -0.04 * trot * move + gp * 0.06 * gallop
@@ -1180,6 +1187,7 @@ function CreatureAnimator:update(dt: number)
 		local pitch = self.look.pitch.x * calm + nod - (bodyPitch + chestPitch) - self.ground.pitch.x * 0.5
 		-- Acostada baja un poco la cabeza; dormida la apoya en el suelo. Excavando mira el pozo.
 		pitch += breath * 0.02 * sleep + act.neckPitch + (self.headLift or 0)
+		pitch -= 0.22 * pose.crouch.x -- agazapada: cabeza baja y adelante, al ras del cuerpo
 		if self.biped then
 			-- Bípeda: excava con el hocico, hunde la cabeza y la mueve hozando adelante-atrás.
 			pitch += dig * (-1.75 + 0.22 * math.sin(dg + 0.6))

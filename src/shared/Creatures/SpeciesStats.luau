@@ -4,6 +4,8 @@
 export type Stats = {
 	walk: number, -- studs/s
 	sprint: number,
+	crouch: number?, -- velocidad agazapada (tecla C); solo las especies sigilosas. El atributo
+	-- "Agazapado" queda en el modelo: la visión nocturna (futura) las marca mucho menos así.
 	jumpPower: number, -- más bajo = salta menos (pesada)
 	jumpGravity: number, -- fracción de la gravedad en el aire: < 1 = arco más lento y pesado
 	jumpForward: number, -- empuje hacia adelante al saltar (studs/s, adulta)
@@ -49,7 +51,8 @@ local SpeciesStats: { [string]: Stats } = {
 	-- Especie 2: cazadora liviana y atlética; su arma es la boca en estrella.
 	Grieta = {
 		walk = 8,
-		sprint = 22,
+		sprint = 30, -- la carroñera rápida de este mundo
+		crouch = 4.5,
 		jumpPower = 34, -- más liviana que Musgo: salta más alto y más lejos hacia adelante
 		jumpGravity = 0.6,
 		jumpForward = 16,
