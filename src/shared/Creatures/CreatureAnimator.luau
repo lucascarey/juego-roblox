@@ -477,6 +477,9 @@ function CreatureAnimator:_locomotion(dt: number)
 	-- frecuentes, sin patinar porque el avance por ciclo sale de la misma amplitud).
 	local amp = lerp(lerp(0.28, 0.58, math.max(trot, math.clamp(gaitSpeed / (3 * L), 0, 1))), 0.72, gallop)
 	amp *= 1 - 0.35 * self.pose.crouch.x
+	-- Cría: pasos cortos y rápidos (es lenta y de patas largas: con la zancada de la adulta movía las
+	-- patas muy despacio). Crece hacia la zancada adulta.
+	amp *= lerp(0.48, 1, math.clamp(model:GetAttribute("Age") :: number? or 1, 0, 1))
 	local duty = lerp(lerp(0.66, 0.5, trot), 0.36, gallop)
 	local stride = 2 * L * math.sin(amp) / duty -- avance del cuerpo por ciclo sin patinar
 	local dir = if self.speed.x < -0.05 then -1 else 1
