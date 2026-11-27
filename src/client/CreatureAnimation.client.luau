@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local CreatureAnimator = require(ReplicatedStorage.Shared.Creatures.CreatureAnimator)
+local CrabAnimator = require(ReplicatedStorage.Shared.Creatures.CrabAnimator)
 -- Si el módulo de efectos falla, las criaturas se animan igual (sin sonido ni partículas).
 local fxOk, CreatureFX = pcall(require, script.Parent:WaitForChild("CreatureFX"))
 if not fxOk then
@@ -29,7 +30,8 @@ local function add(inst: Instance)
 		end)
 		return
 	end
-	local anim = CreatureAnimator.new(inst)
+	-- Patas de cangrejo (Hermitaño) usan su propio animador.
+	local anim = if CrabAnimator.is(inst) then CrabAnimator.new(inst) else CreatureAnimator.new(inst)
 	if fxOk then
 		anim.onEvent = (CreatureFX :: any).play -- sonidos y partículas
 	end

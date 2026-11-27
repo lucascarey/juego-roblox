@@ -35,7 +35,7 @@ local function becomeCreature(player: Player, speciesName: string, age: number, 
 	if hit then
 		spawnAt = spawnAt.Rotation + Vector3.new(spawnAt.X, hit.Position.Y + 0.1, spawnAt.Z)
 	end
-	local model = CreatureBuilder.build(def, spawnAt, { age = age })
+	local model = CreatureBuilder.build(def, spawnAt, { age = age, size = SpeciesStats.randomSize(speciesName) })
 	model.Name = player.Name
 	local root = model.PrimaryPart :: BasePart
 	local rear = model:FindFirstChild("Rear") :: BasePart
@@ -133,6 +133,13 @@ input.OnServerEvent:Connect(function(player: Player, kind: unknown, value: unkno
 			model:SetAttribute("Accion", nil)
 		elseif value == "Durmiendo" and current == "Acostado" then
 			model:SetAttribute("Postura", "Durmiendo")
+		elseif value == "Enterrado" and current == nil then
+			-- Solo las especies que se entierran (su único descanso).
+			local stats = SpeciesStats.get(model:GetAttribute("Species") :: string? or "")
+			if stats and stats.burrow then
+				model:SetAttribute("Postura", "Enterrado")
+				model:SetAttribute("Accion", nil)
+			end
 		end
 	elseif kind == "Accion" and type(value) == "string" then
 		if model:GetAttribute("Postura") or os.clock() < (busyUntil[player] or 0) then

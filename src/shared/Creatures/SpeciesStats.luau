@@ -24,6 +24,10 @@ export type Stats = {
 	primary: string, -- ataque del clic izquierdo
 	secondary: string, -- ataque del clic derecho (clic corto)
 	frontAttack: string, -- el que usa la IA cuando el enemigo está adelante
+	damage: { [string]: number }?, -- daño de ataques propios de la especie (Pinzazo, Empujon)
+	burrow: boolean?, -- Z entierra en vez de acostarse/dormir; enterrada no recibe daño
+	armor: number?, -- fracción del daño que recibe (caparazón: < 1)
+	sizeRange: { number }?, -- tamaño individual al azar (cada adulto distinto)
 }
 
 local SpeciesStats: { [string]: Stats } = {
@@ -72,6 +76,32 @@ local SpeciesStats: { [string]: Stats } = {
 		secondary = "Coletazo",
 		frontAttack = "Mordisco",
 	},
+	-- Especie 3: acorazada, lenta y resistente; se entierra y queda intocable.
+	Hermitano = {
+		walk = 5,
+		sprint = 9,
+		jumpPower = 14,
+		jumpGravity = 0.8,
+		jumpForward = 3,
+		maxHealth = 200,
+		stamina = 80,
+		sprintCost = 18,
+		jumpCost = 30,
+		staminaRegen = 10,
+		regenRest = 5, -- enterrado
+		regenSleep = 5,
+		standUpRest = 3.4, -- desenterrarse: saca las patas una por una
+		standUpSleep = 3.4,
+		damageTail = 0,
+		damageHead = 12,
+		damage = { Pinzazo = 20, Empujon = 14 },
+		primary = "Pinzazo",
+		secondary = "Empujon",
+		frontAttack = "Pinzazo",
+		burrow = true,
+		armor = 0.6, -- el caparazón aguanta rasguños y golpes
+		sizeRange = { 0.5, 1.8 }, -- adultos de ~7 a ~25 studs (2 a 7 m)
+	},
 }
 
 -- Las crías son más lentas y más débiles.
@@ -85,7 +115,18 @@ local function speedScale(age: number): number
 	return 0.55 + 0.45 * age
 end
 
+-- Tamaño individual: al azar dentro del rango de la especie (1 si no tiene).
+local function randomSize(species: string, rng: Random?): number
+	local s = SpeciesStats[species]
+	local r = s and s.sizeRange
+	if not r then
+		return 1
+	end
+	return (rng or Random.new()):NextNumber(r[1], r[2])
+end
+
 return {
+	randomSize = randomSize,
 	get = function(species: string): Stats?
 		return SpeciesStats[species]
 	end,

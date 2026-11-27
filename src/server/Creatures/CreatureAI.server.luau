@@ -228,7 +228,7 @@ local function startBehavior(b: Brain, name: string)
 	then
 		b.model:SetAttribute("Accion", nil)
 	end
-	if name ~= "Descansar" and name ~= "Dormir" then
+	if name ~= "Descansar" and name ~= "Dormir" and not (name == "Huir" and b.stats.burrow) then
 		setPosture(b, nil)
 	end
 end
@@ -345,10 +345,15 @@ local function think(b: Brain)
 		end
 		b.speed = 0
 	elseif best == "Descansar" then
-		setPosture(b, "Acostado")
+		setPosture(b, if b.stats.burrow then "Enterrado" else "Acostado")
 		b.speed = 0
 	elseif best == "Dormir" then
-		setPosture(b, "Durmiendo")
+		setPosture(b, if b.stats.burrow then "Enterrado" else "Durmiendo")
+		b.speed = 0
+	elseif best == "Huir" and threat and b.stats.burrow then
+		-- Lenta para escapar: se entierra y queda intocable hasta que pase el peligro.
+		setPosture(b, "Enterrado")
+		b.target = nil
 		b.speed = 0
 	elseif best == "Huir" and threat then
 		local tp = (threat.PrimaryPart :: BasePart).Position
@@ -371,7 +376,7 @@ local function think(b: Brain)
 		if now >= b.nextAttack and b.model:GetAttribute("Postura") == nil then
 			if rel.Z < 0 and dist < b.bodyLen * 0.9 and math.abs(rel.X) < b.bodyLen * 0.5 then
 				b.nextAttack = now + (CreatureCombat.attack(b.model, b.stats.frontAttack, "IA") or 1) + 0.6
-			elseif rel.Z > -b.bodyLen * 0.2 and dist < tailReach then
+			elseif rel.Z > -b.bodyLen * 0.2 and dist < tailReach and not b.stats.burrow then
 				b.nextAttack = now + (CreatureCombat.attack(b.model, "Coletazo", "IA") or 1.5) + 0.8
 			end
 		end
@@ -395,7 +400,7 @@ local function updateNeeds(b: Brain, dt: number)
 	end
 	if posture == "Durmiendo" then
 		b.energy = math.min(1, b.energy + dt / 25)
-	elseif posture == "Acostado" then
+	elseif posture == "Acostado" or posture == "Enterrado" then
 		b.energy = math.min(1, b.energy + dt / 45)
 	else
 		b.energy = math.max(0, b.energy - dt / (if running then 90 else 300))

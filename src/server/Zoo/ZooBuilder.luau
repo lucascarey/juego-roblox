@@ -8,6 +8,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local CreatureBuilder = require(ReplicatedStorage.Shared.Creatures.CreatureBuilder)
 local Species = require(ReplicatedStorage.Shared.Creatures.Species)
+local SpeciesStats = require(ReplicatedStorage.Shared.Creatures.SpeciesStats)
 
 local ZooBuilder = {}
 
@@ -40,6 +41,14 @@ local PENS: { Pen } = {
 		group = "Familia2",
 		padColors = { Color3.fromRGB(226, 150, 140), Color3.fromRGB(196, 100, 92), Color3.fromRGB(156, 62, 58) },
 		seed = 4.7,
+	},
+	{
+		species = "Hermitano",
+		egg = "HuevoHermitano",
+		center = V(380, 0, 80),
+		group = "Familia3",
+		padColors = { Color3.fromRGB(170, 200, 120), Color3.fromRGB(120, 160, 70), Color3.fromRGB(76, 112, 40) },
+		seed = 8.1,
 	},
 }
 local EDGE = 12 -- franja junto al cerco que queda plana
@@ -178,7 +187,12 @@ local function creatures(parent: Instance, pen: Pen)
 		local def, off, yaw, age, role = s[1], s[2], s[3], s[4], s[5]
 		local x, z = c.X + off.X, c.Z + off.Z
 		local cf = CFrame.new(x, groundAt(x, z), z) * CFrame.Angles(0, math.rad(yaw), 0)
-		local model = CreatureBuilder.build(def, cf, { age = age })
+		-- Cada individuo con su tamaño (las especies con sizeRange varían mucho de adultas).
+		local model = CreatureBuilder.build(
+			def,
+			cf,
+			{ age = age, size = if role then SpeciesStats.randomSize(pen.species) else 1 }
+		)
 		if role then
 			model:SetAttribute("IA", true)
 			model:SetAttribute("Grupo", pen.group)

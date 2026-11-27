@@ -15,6 +15,8 @@ CreatureCombat.TIMING = {
 	Coletazo = { hit = 0.55, total = 1.5 },
 	Cabezazo = { hit = 0.4, total = 1 },
 	Mordisco = { hit = 0.45, total = 1.1 },
+	Pinzazo = { hit = 0.42, total = 1.0 },
+	Empujon = { hit = 0.4, total = 1.1 },
 }
 
 local function sizeOf(model: Model): (number, number)
@@ -76,9 +78,13 @@ function CreatureCombat.resolve(attacker: Model, kind: string, attackerName: str
 		if kind == "Coletazo" then
 			-- Semicírculo detrás del animal (+Z es atrás), de radio medio cuerpo + cola.
 			hit = dist < bodyLen * 0.5 + tailLen and rel.Z >= 0
-		elseif kind == "Cabezazo" or kind == "Mordisco" then
+		elseif kind == "Cabezazo" or kind == "Mordisco" or kind == "Pinzazo" or kind == "Empujon" then
 			-- Adelante, cerca.
 			hit = rel.Z < 0 and dist < bodyLen * 0.9 and math.abs(rel.X) < bodyLen * 0.5
+		end
+		-- Enterrado (Hermitaño): intocable.
+		if hit and t:GetAttribute("Postura") == "Enterrado" then
+			hit = false
 		end
 		if hit then
 			table.insert(hits, t)
@@ -87,8 +93,12 @@ function CreatureCombat.resolve(attacker: Model, kind: string, attackerName: str
 				then (if kind == "Coletazo"
 					then stats.damageTail
 					elseif kind == "Mordisco" then stats.damageBite or stats.damageHead
+					elseif stats.damage and stats.damage[kind] then stats.damage[kind]
 					else stats.damageHead) * scale
 				else 10
+			-- Caparazón: el que recibe el golpe puede tener armadura.
+			local tStats = SpeciesStats.get(t:GetAttribute("Species") :: string? or "")
+			dmg *= if tStats and tStats.armor then tStats.armor else 1
 			if hum then
 				hum:TakeDamage(dmg)
 			end

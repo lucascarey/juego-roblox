@@ -11,6 +11,8 @@ return {
 		HuevoMusgo = "rbxassetid://86779088667442",
 		Grieta = "rbxassetid://108632216192330",
 		HuevoGrieta = "rbxassetid://105701807455976",
+		Hermitano = "rbxassetid://118988782181359",
+		HuevoHermitano = "rbxassetid://75417647028365",
 	},
 	-- 16 px por tile; 4 studs por tile = 4 px por stud, la misma escala en todas las piezas.
 	STUDS_PER_TILE = 4,

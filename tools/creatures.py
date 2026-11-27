@@ -492,9 +492,214 @@ def huevo_grieta():
     return {"name": "HuevoGrieta", "seed": 22, "scale": 0.7, "ramps": GRIETA_RAMPS, "parts": P}
 
 
+HERMITANO_RAMPS = {
+    # Con la luz de Roblox el verde sube ~1.65x y el azul ~2x (medido contra la planilla): rampas
+    # oscuras y tirando a oliva para que se vean como el musgo de la referencia.
+    "body": [(28, 36, 14), (36, 46, 18), (46, 56, 24), (56, 68, 30), (68, 80, 36)],
+    "moss": [(40, 48, 20), (50, 58, 24), (60, 68, 30), (72, 82, 36), (86, 96, 44)],
+    "belly": [(18, 24, 10), (24, 30, 12), (30, 38, 16), (38, 46, 20), (46, 56, 24)],
+    "dark": [(10, 14, 6), (14, 20, 8), (20, 26, 12), (26, 34, 16), (34, 42, 20)],
+    "stone": [(36, 35, 28), (44, 43, 34), (54, 52, 42), (64, 62, 50), (76, 74, 60)],
+}
+
+
+def _mat_y(a):
+    c, s = math.cos(a), math.sin(a)
+    return [[c, 0, s], [0, 1, 0], [-s, 0, c]]
+
+
+def _mat_z(a):
+    c, s = math.cos(a), math.sin(a)
+    return [[c, -s, 0], [s, c, 0], [0, 0, 1]]
+
+
+def _mul(a, b):
+    return [[sum(a[i][k] * b[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+
+
+def _T(a):
+    return [[a[j][i] for j in range(3)] for i in range(3)]
+
+
+def _rot_to(d):
+    """Giro que lleva el eje -Y de una pieza a la dirección d (primero abre en Z, después gira en Y)."""
+    x, y, z = d
+    n = math.sqrt(x * x + y * y + z * z)
+    x, y, z = x / n, y / n, z / n
+    th = math.acos(max(-1, min(1, -y)))
+    ph = math.atan2(-z, x) if abs(x) + abs(z) > 1e-6 else 0
+    return _mul(_mat_y(ph), _mat_z(th))
+
+
+def _euler(m):
+    """Ángulos (grados) tales que CFrame.Angles(x, y, z) = Rx*Ry*Rz = m."""
+    ry = math.asin(max(-1, min(1, m[0][2])))
+    rx = math.atan2(-m[1][2], m[2][2])
+    rz = math.atan2(-m[0][1], m[0][0])
+    return (round(math.degrees(rx), 2), round(math.degrees(ry), 2), round(math.degrees(rz), 2))
+
+
+def limb(P, parent, joint, segs, **kw):
+    """Cadena de piezas del lado derecho (+X) que cuelgan de su articulación (pivote arriba, eje -Y);
+    mirrored() arma el lado izquierdo. segs: (nombre, (ancho, largo, prof), dirección, extra).
+    La dirección es en el espacio del cuerpo; cada pieza gira respecto de la anterior."""
+    R = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    par, j = parent, joint
+    for name, (w, ln, dp), d, extra in segs:
+        Rw = _rot_to(d)
+        opts = dict(kw)
+        opts.update(extra or {})
+        mirrored(part(name, par, (w, ln, dp), j, pivot=(0, ln / 2, 0), rot=_euler(_mul(_T(R), Rw)), **opts), P)
+        R, par, j = Rw, name + "*", (0, -ln / 2, 0)
+    return R
+
+
+def hermitano():
+    """Especie 3 (planilla de Lucas, 2026-11-27): omnívoro acorazado, cruza de cangrejo ermitaño y mulita.
+    Lectura de la planilla (frente, perfil, arriba y 3/4): caparazón grande como una losa redonda de
+    musgo, con laterales verticales hondos que chorrean y el techo en domo bajo; piedras grises,
+    florcitas blancas y mechones de pasto arriba. Debajo, un cuerpo oscuro con 2 barras de la boca y
+    2 flagelos. 6 patas cortas y gruesas de cangrejo (3 por lado, en abanico: adelante, al costado y
+    atrás), cada una con 3 falanges: la primera sale de abajo del caparazón hacia afuera hasta la
+    rodilla, la segunda baja casi vertical y la tercera termina en punta. 2 pinzas adelante con 3
+    falanges (brazo con piedras, muñeca y mano grande) más el dedo móvil. Sin cola ni ojos. Nada brilla.
+    Entre cría y adulto solo cambia el tamaño (babyScale 1 en todo)."""
+    P = []
+    # Cuerpo bajo el caparazón (Rear, de 1.6 a 3.6 del piso) y frente con la boca (Chest).
+    BODY_Y, BODY_H = 2.6, 2.0
+    P.append(part("Rear", "Root", (5.0, BODY_H, 5.25), (0, BODY_Y, 0.35), ramp="belly", skin=dict(moss=0.15)))
+    P.append(part("Chest", "Rear", (3.75, 1.75, 1.25), (0, -0.1, -2.6), pivot=(0, 0, 0.625), ramp="belly", skin=dict(moss=0.1)))
+    # Boca (frente de la planilla: cuatro barras): las dos del centro fijas y las dos de afuera son los
+    # flagelos, de tres tramos, que se mueven siempre.
+    mirrored(part("Mouth", "Chest", (0.5, 1.0, 0.35), (0.35, -0.6, -0.55), pivot=(0, 0.5, 0), rot=(8, 0, 0), ramp="dark", pattern="solid"), P)
+    mirrored(part("Flag1", "Chest", (0.45, 0.6, 0.4), (1.0, -0.6, -0.55), pivot=(0, 0.3, 0), rot=(10, 0, 4), ramp="body", pattern="solid"), P)
+    mirrored(part("Flag2", "Flag1*", (0.4, 0.5, 0.35), (0, -0.3, 0), pivot=(0, 0.25, 0), rot=(6, 0, 0), ramp="body", pattern="solid"), P)
+    mirrored(part("Flag3", "Flag2*", (0.3, 0.45, 0.3), (0, -0.25, 0), pivot=(0, 0.225, 0), rot=(6, 0, 0), ramp="dark", pattern="solid"), P)
+
+    # Caparazón: falda de laterales verticales (de 3.0 a 5.6 del piso) y domo bajo de techo ancho
+    # (hasta ~7.6), en capas en cruz para que de arriba se vea redondo.
+    W, SKIRT_BOT, SKIRT_TOP, DOME = 9.5, 3.3, 5.0, 2.75
+    side = dict(belly=0.4, moss=0.6, mossTop=True)
+    cap = dict(moss=0.85, mossTop=True)
+    sk_h = SKIRT_TOP - SKIRT_BOT
+    layers = [(W, sk_h, (SKIRT_BOT + sk_h / 2) - BODY_Y - (BODY_H / 2 + sk_h / 2), side)]
+    for t in (0.25, 0.75, 1.25, 1.75, 2.25):
+        w = round(W * max(0.0, 1 - (t / DOME) ** 2) ** 0.5 * 4) / 4
+        layers.append((w, 0.5, 0, cap))
+    prev, prev_top = "Rear", BODY_H / 2
+    for i, (w, h, dy, skin) in enumerate(layers, 1):
+        name = f"Shell{i}"
+        P.append(part(name, prev, (w, h, w * 0.76), (0, prev_top + h / 2 + dy, 0), ramp="body" if i == 1 else "moss", skin=skin))
+        P.append(part(f"ShellX{i}", name, (w * 0.76, h, w), (0, 0, 0), ramp="body" if i == 1 else "moss", skin=skin))
+        prev, prev_top = name, h / 2
+    # Lóbulo de atrás que baja (el abdomen del ermitaño, como en el perfil).
+    P.append(part("ShellBack", "Shell1", (6.5, 1.75, 2.75), (0, -sk_h / 2 - 0.4, 2.6), ramp="body", skin=dict(belly=0.5, moss=0.45, mossTop=True)))
+
+    # Lo que va arriba del domo se ubica por (x, z) sobre la capa más alta que lo cubre.
+    def on_dome(x, z, lift):
+        z -= 0.35  # el caparazón está centrado en el cuerpo, que está corrido 0.35 atrás
+        for i in range(len(layers), 0, -1):
+            w, h = layers[i - 1][0], layers[i - 1][1]
+            if (abs(x) <= w / 2 and abs(z) <= w * 0.38) or (abs(x) <= w * 0.38 and abs(z) <= w / 2):
+                return f"Shell{i}", (x, h / 2 + lift, z)
+        return "Shell1", (x, layers[0][1] / 2 + lift, z)
+
+    # Piedras (gris oscuro) encastradas en el domo, giradas a mano para que no queden alineadas.
+    stones = ((-1.6, -1.2, 1.0, 25), (1.3, -1.0, 1.3, -15), (2.6, 0.9, 0.9, 40), (-0.6, 1.5, 1.1, 10), (-3.2, 1.4, 1.0, -30),
+              (0.5, 0.2, 0.8, 50), (3.2, -1.8, 0.85, 20), (-2.3, 2.6, 0.75, -40), (-3.4, -1.4, 0.7, 15), (1.8, 2.9, 0.8, 5),
+              (-1.0, -3.2, 0.7, 30))
+    for i, (x, z, s, yaw) in enumerate(stones, 1):
+        par, pos = on_dome(x, z, s * 0.15)
+        P.append(part(f"Stone{i}", par, (s, s * 0.7, s), pos, rot=(8, yaw, -6), ramp="stone"))
+    # Florcitas blancas con centro amarillo, apoyadas sobre el musgo.
+    flowers = ((-1.8, 0.2), (2.0, -0.6), (-0.6, -0.5), (3.1, 2.2), (0.4, 2.6), (0.6, -1.8), (-3.0, 0.9))
+    for i, (x, z) in enumerate(flowers, 1):
+        par, pos = on_dome(x, z, 0.03)
+        # Cruz de pétalos blancos (como en la planilla) con el centro amarillo.
+        P.append(part(f"Flower{i}", par, (0.6, 0.06, 0.2), pos, rot=(0, 45 * (i % 2), 0), ramp="flower", flat=True))
+        P.append(part(f"FlowerX{i}", f"Flower{i}", (0.2, 0.06, 0.6), (0, 0, 0), ramp="flower", flat=True))
+        P.append(part(f"FlowerC{i}", f"Flower{i}", (0.2, 0.08, 0.2), (0, 0.01, 0), ramp="pollen", flat=True))
+    # Mechones de pasto: dos o tres tramos finos que se mecen (el animador los mueve como antenas).
+    tufts = ((-0.9, -0.6, 3), (-0.3, -0.9, 3), (-2.2, -0.9, 2), (1.9, -1.2, 2), (-2.9, -1.6, 2), (0.9, 0.5, 2), (-1.4, -2.4, 2))
+    for i, (x, z, n) in enumerate(tufts, 1):
+        prev, plen = None, None
+        for k in range(1, n + 1):
+            ln = 0.6 if k == 1 else 0.5
+            if k == 1:
+                prev, j = on_dome(x, z, -0.1)
+            else:
+                j = (0, plen / 2, 0)
+            lean = (i * 37 % 30) - 15
+            P.append(part(f"Grass{i}_{k}", prev, (0.25, ln, 0.25), j, pivot=(0, -ln / 2, 0),
+                          rot=(lean if k == 1 else 12, 0, (i * 23 % 24) - 12), ramp="moss", pattern="solid"))
+            prev, plen = f"Grass{i}_{k}", ln
+
+    # Patas: 3 por lado, en abanico (adelante 28°, costado, atrás 28°). Salen de abajo de la falda:
+    # falange 1 hacia afuera y un poco arriba hasta la rodilla (justo afuera del caparazón), falange 2
+    # baja casi vertical, falange 3 en punta.
+    hip_y = -0.2  # en el espacio del cuerpo (2.4 del piso)
+    knee = (5.6, 3.4)  # (distancia al centro, alto): justo debajo del borde de la falda
+    ankle = (6.6, 1.1)
+    hip_r = 2.3
+    for n, (z, yaw) in enumerate(((-1.6, 28), (0.1, 0), (1.7, -28)), 1):
+        a = math.radians(yaw)
+
+        def out(h, v, a=a):
+            return (h * math.cos(a), v, -h * math.sin(a))
+
+        hy = BODY_Y + hip_y
+        f_len = math.hypot(knee[0] - hip_r, knee[1] - hy)
+        t_len = math.hypot(ankle[0] - knee[0], ankle[1] - knee[1])
+        limb(P, "Rear", (hip_r, hip_y, z), (
+            (f"Leg{n}A", (1.6, round(f_len * 4) / 4, 1.6), out(knee[0] - hip_r, knee[1] - hy), dict(skin=dict(moss=0.6, mossTop=True))),
+            (f"Leg{n}B", (1.5, round(t_len * 4) / 4, 1.5), out(ankle[0] - knee[0], ankle[1] - knee[1]), dict(skin=dict(moss=0.35, belly=0.35))),
+            (f"Leg{n}C", (1.0, 1.25, 1.0), out(0.1, -1.1), dict(ramp="dark", skin=dict(belly=0.4))),
+        ))
+    # Pinzas: brazo (con piedras arriba) hacia adelante, afuera y arriba, muñeca que baja y mano grande
+    # inclinada hacia adentro que llega al piso; el dedo móvil va del lado de adentro de la mano.
+    limb(P, "Chest", (1.6, 0.1, -0.2), (
+        ("ClawA", (1.6, 2.5, 1.6), (0.8, 0.9, -2.0), dict(skin=dict(moss=0.6, mossTop=True))),
+        ("ClawB", (1.5, 1.5, 1.5), (0.4, -0.8, -0.9), dict(skin=dict(moss=0.45))),
+        ("ClawHand", (2.0, 3.0, 1.6), (-0.7, -2.6, 0.2), dict(skin=dict(moss=0.35, belly=0.3))),
+    ))
+    mirrored(part("ClawFinger", "ClawHand*", (0.7, 1.6, 1.0), (-1.0, -0.6, -0.1), pivot=(0, 0.8, 0), rot=(0, 0, -10),
+                  ramp="dark", skin=dict(belly=0.3)), P)
+    for k, (pos, s) in enumerate((((0.15, 0.4, 0.85), 0.9), ((0.25, 0.8, -0.35), 0.75), ((0.0, 0.0, -1.05), 0.65)), 1):
+        mirrored(part(f"ClawStone{k}", "ClawA*", (s, s * 0.7, s), pos, rot=(10, 20 * k, 0), ramp="stone"), P)
+    # Piedras sobre el nacimiento de las patas delanteras (frente de la planilla).
+    mirrored(part("LegStone1", "Leg1A*", (0.85, 0.6, 0.85), (0.85, 0.4, 0), rot=(0, 15, 0), ramp="stone"), P)
+    return {
+        "name": "Hermitano",
+        "seed": 31,
+        "babySize": 0.3,  # solo cambia el tamaño: la cría es un adulto chico
+        "ramps": HERMITANO_RAMPS,
+        "solids": {"flower": (238, 236, 222), "pollen": (230, 178, 64)},
+        "parts": P,
+    }
+
+
+def huevo_hermitano():
+    """Huevo de piedra con musgo arriba y alguna piedrita (sin planilla de Lucas: armado a ojo)."""
+    P = []
+    prev, prev_h = "Root", 0
+    layers = ((2.5, 0.75, 0, 0.6), (3.25, 1.5, 0.2, 0.3), (3, 1.25, 0.5, 0), (2.5, 0.75, 0.7, 0), (1.75, 0.5, 1, 0))
+    for i, (w, h, moss, belly) in enumerate(layers, 1):
+        skin = dict(belly=belly, moss=moss, mossTop=i >= 3)
+        joint = (0, h / 2, 0) if prev == "Root" else (0, (prev_h + h) / 2, 0)
+        P.append(part(f"Capa{i}", prev, (w, h, w - 0.75), joint, ramp="stone", skin=skin))
+        P.append(part(f"Cruz{i}", f"Capa{i}", (w - 0.75, h, w), (0, 0, 0), ramp="stone", skin=skin))
+        prev, prev_h = f"Capa{i}", h
+    P.append(part("Piedra1", "Capa3", (0.6, 0.45, 0.6), (0.9, 0.6, 0.3), rot=(0, 30, 0), ramp="dark"))
+    P.append(part("Piedra2", "Capa4", (0.45, 0.35, 0.45), (-0.6, 0.35, -0.5), rot=(0, -20, 0), ramp="dark"))
+    ramps = dict(HERMITANO_RAMPS, belly=HERMITANO_RAMPS["dark"])
+    return {"name": "HuevoHermitano", "seed": 32, "scale": 0.8, "ramps": ramps, "parts": P}
+
+
 if __name__ == "__main__":
     export(cuadrupedo())
     export(musgo())
     export(huevo_musgo())
     export(grieta())
     export(huevo_grieta())
+    export(hermitano())
+    export(huevo_hermitano())

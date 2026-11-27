@@ -265,6 +265,8 @@ return {
 	HuevoMusgo = fromData(require(script.Parent.Data.HuevoMusgo) :: any, Textures.Atlas.HuevoMusgo),
 	Grieta = fromData(require(script.Parent.Data.Grieta) :: any, Textures.Atlas.Grieta),
 	HuevoGrieta = fromData(require(script.Parent.Data.HuevoGrieta) :: any, Textures.Atlas.HuevoGrieta),
+	Hermitano = fromData(require(script.Parent.Data.Hermitano) :: any, Textures.Atlas.Hermitano),
+	HuevoHermitano = fromData(require(script.Parent.Data.HuevoHermitano) :: any, Textures.Atlas.HuevoHermitano),
 	Bipedo = bipedo(),
 	Serpentino = serpentino(),
 }

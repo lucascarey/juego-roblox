@@ -1,0 +1,6276 @@
+{
+ "name": "Hermitano",
+ "atlasStuds": [
+  32.0,
+  128.0
+ ],
+ "babySize": 0.3,
+ "palette": {
+  "body": [
+   46,
+   56,
+   24
+  ],
+  "moss": [
+   60,
+   68,
+   30
+  ],
+  "belly": [
+   30,
+   38,
+   16
+  ],
+  "dark": [
+   20,
+   26,
+   12
+  ],
+  "stone": [
+   54,
+   52,
+   42
+  ],
+  "flower": [
+   238,
+   236,
+   222
+  ],
+  "pollen": [
+   230,
+   178,
+   64
+  ]
+ },
+ "parts": [
+  {
+   "name": "Rear",
+   "parent": "Root",
+   "size": [
+    5.0,
+    2.0,
+    5.25
+   ],
+   "joint": [
+    0,
+    2.6,
+    0.35
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "belly",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.15
+   },
+   "faces": {
+    "Top": [
+     24.0,
+     41.5,
+     5.0,
+     5.25
+    ],
+    "Bottom": [
+     0.0,
+     47.25,
+     5.0,
+     5.25
+    ],
+    "Front": [
+     21.0,
+     62.5,
+     5.0,
+     2.0
+    ],
+    "Back": [
+     26.25,
+     62.5,
+     5.0,
+     2.0
+    ],
+    "Left": [
+     0.0,
+     65.25,
+     5.25,
+     2.0
+    ],
+    "Right": [
+     5.5,
+     65.25,
+     5.25,
+     2.0
+    ]
+   }
+  },
+  {
+   "name": "Chest",
+   "parent": "Rear",
+   "size": [
+    3.75,
+    1.75,
+    1.25
+   ],
+   "joint": [
+    0,
+    -0.1,
+    -2.6
+   ],
+   "pivot": [
+    0,
+    0,
+    0.625
+   ],
+   "rot": null,
+   "tilt": null,
+   "ramp": "belly",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.1
+   },
+   "faces": {
+    "Front": [
+     11.0,
+     65.25,
+     3.75,
+     1.75
+    ],
+    "Back": [
+     15.0,
+     65.25,
+     3.75,
+     1.75
+    ],
+    "Left": [
+     19.0,
+     65.25,
+     1.25,
+     1.75
+    ],
+    "Right": [
+     20.5,
+     65.25,
+     1.25,
+     1.75
+    ],
+    "Top": [
+     23.25,
+     77.0,
+     3.75,
+     1.25
+    ],
+    "Bottom": [
+     27.25,
+     77.0,
+     3.75,
+     1.25
+    ]
+   }
+  },
+  {
+   "name": "MouthL",
+   "parent": "Chest",
+   "size": [
+    0.5,
+    1.0,
+    0.35
+   ],
+   "joint": [
+    -0.35,
+    -0.6,
+    -0.55
+   ],
+   "pivot": [
+    0,
+    0.5,
+    0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     1.25,
+     80.25,
+     0.5,
+     1.0
+    ],
+    "Back": [
+     2.0,
+     80.25,
+     0.5,
+     1.0
+    ],
+    "Left": [
+     2.75,
+     80.25,
+     0.25,
+     1.0
+    ],
+    "Right": [
+     3.25,
+     80.25,
+     0.25,
+     1.0
+    ],
+    "Top": [
+     28.0,
+     94.0,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     28.75,
+     94.0,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "MouthR",
+   "parent": "Chest",
+   "size": [
+    0.5,
+    1.0,
+    0.35
+   ],
+   "joint": [
+    0.35,
+    -0.6,
+    -0.55
+   ],
+   "pivot": [
+    0,
+    0.5,
+    0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     3.75,
+     80.25,
+     0.5,
+     1.0
+    ],
+    "Back": [
+     4.5,
+     80.25,
+     0.5,
+     1.0
+    ],
+    "Left": [
+     5.25,
+     80.25,
+     0.25,
+     1.0
+    ],
+    "Right": [
+     5.75,
+     80.25,
+     0.25,
+     1.0
+    ],
+    "Top": [
+     29.5,
+     94.0,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     30.25,
+     94.0,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Flag1L",
+   "parent": "Chest",
+   "size": [
+    0.45,
+    0.6,
+    0.4
+   ],
+   "joint": [
+    -1.0,
+    -0.6,
+    -0.55
+   ],
+   "pivot": [
+    0,
+    0.3,
+    0
+   ],
+   "rot": [
+    10,
+    0,
+    -4
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     6.0,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     6.75,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     7.5,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Right": [
+     8.25,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Top": [
+     9.0,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Bottom": [
+     9.75,
+     84.0,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Flag1R",
+   "parent": "Chest",
+   "size": [
+    0.45,
+    0.6,
+    0.4
+   ],
+   "joint": [
+    1.0,
+    -0.6,
+    -0.55
+   ],
+   "pivot": [
+    0,
+    0.3,
+    0
+   ],
+   "rot": [
+    10,
+    0,
+    4
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     10.5,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     11.25,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     12.0,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Right": [
+     12.75,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Top": [
+     13.5,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Bottom": [
+     14.25,
+     84.0,
+     0.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Flag2L",
+   "parent": "Flag1L",
+   "size": [
+    0.4,
+    0.5,
+    0.35
+   ],
+   "joint": [
+    0,
+    -0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    0.25,
+    0
+   ],
+   "rot": [
+    6,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     15.0,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     15.75,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     16.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     17.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     31.0,
+     94.0,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     0.0,
+     94.75,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Flag2R",
+   "parent": "Flag1R",
+   "size": [
+    0.4,
+    0.5,
+    0.35
+   ],
+   "joint": [
+    0,
+    -0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    0.25,
+    0
+   ],
+   "rot": [
+    6,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     17.5,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Back": [
+     18.25,
+     84.0,
+     0.5,
+     0.5
+    ],
+    "Left": [
+     19.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     19.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     0.75,
+     94.75,
+     0.5,
+     0.25
+    ],
+    "Bottom": [
+     1.5,
+     94.75,
+     0.5,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Flag3L",
+   "parent": "Flag2L",
+   "size": [
+    0.3,
+    0.45,
+    0.3
+   ],
+   "joint": [
+    0,
+    -0.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.225,
+    0
+   ],
+   "rot": [
+    6,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     20.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     20.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     21.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     21.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     2.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     2.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Flag3R",
+   "parent": "Flag2R",
+   "size": [
+    0.3,
+    0.45,
+    0.3
+   ],
+   "joint": [
+    0,
+    -0.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.225,
+    0
+   ],
+   "rot": [
+    6,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     22.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     22.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     23.0,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     23.5,
+     84.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     3.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     3.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Shell1",
+   "parent": "Rear",
+   "size": [
+    9.5,
+    1.7000000000000002,
+    7.22
+   ],
+   "joint": [
+    0,
+    1.5500000000000003,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4,
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     19.25,
+     9.5,
+     7.25
+    ],
+    "Bottom": [
+     9.75,
+     19.25,
+     9.5,
+     7.25
+    ],
+    "Front": [
+     22.0,
+     65.25,
+     9.5,
+     1.75
+    ],
+    "Back": [
+     0.0,
+     67.5,
+     9.5,
+     1.75
+    ],
+    "Left": [
+     9.75,
+     67.5,
+     7.25,
+     1.75
+    ],
+    "Right": [
+     17.25,
+     67.5,
+     7.25,
+     1.75
+    ]
+   }
+  },
+  {
+   "name": "ShellX1",
+   "parent": "Shell1",
+   "size": [
+    7.22,
+    1.7000000000000002,
+    9.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4,
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     0.0,
+     7.25,
+     9.5
+    ],
+    "Bottom": [
+     7.5,
+     0.0,
+     7.25,
+     9.5
+    ],
+    "Front": [
+     0.0,
+     69.5,
+     7.25,
+     1.75
+    ],
+    "Back": [
+     7.5,
+     69.5,
+     7.25,
+     1.75
+    ],
+    "Left": [
+     15.0,
+     69.5,
+     9.5,
+     1.75
+    ],
+    "Right": [
+     0.0,
+     71.5,
+     9.5,
+     1.75
+    ]
+   }
+  },
+  {
+   "name": "Shell2",
+   "parent": "Shell1",
+   "size": [
+    9.5,
+    0.5,
+    7.22
+   ],
+   "joint": [
+    0,
+    1.1,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     19.5,
+     19.25,
+     9.5,
+     7.25
+    ],
+    "Bottom": [
+     0.0,
+     26.75,
+     9.5,
+     7.25
+    ],
+    "Front": [
+     0.0,
+     85.0,
+     9.5,
+     0.5
+    ],
+    "Back": [
+     9.75,
+     85.0,
+     9.5,
+     0.5
+    ],
+    "Left": [
+     19.5,
+     85.0,
+     7.25,
+     0.5
+    ],
+    "Right": [
+     0.0,
+     85.75,
+     7.25,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellX2",
+   "parent": "Shell2",
+   "size": [
+    7.22,
+    0.5,
+    9.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     15.0,
+     0.0,
+     7.25,
+     9.5
+    ],
+    "Bottom": [
+     22.5,
+     0.0,
+     7.25,
+     9.5
+    ],
+    "Front": [
+     7.5,
+     85.75,
+     7.25,
+     0.5
+    ],
+    "Back": [
+     15.0,
+     85.75,
+     7.25,
+     0.5
+    ],
+    "Left": [
+     0.0,
+     86.5,
+     9.5,
+     0.5
+    ],
+    "Right": [
+     9.75,
+     86.5,
+     9.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Shell3",
+   "parent": "Shell2",
+   "size": [
+    9.25,
+    0.5,
+    7.03
+   ],
+   "joint": [
+    0,
+    0.5,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     21.25,
+     26.75,
+     9.25,
+     7.0
+    ],
+    "Bottom": [
+     0.0,
+     34.25,
+     9.25,
+     7.0
+    ],
+    "Front": [
+     19.5,
+     86.5,
+     9.25,
+     0.5
+    ],
+    "Back": [
+     0.0,
+     87.25,
+     9.25,
+     0.5
+    ],
+    "Left": [
+     9.5,
+     87.25,
+     7.0,
+     0.5
+    ],
+    "Right": [
+     16.75,
+     87.25,
+     7.0,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellX3",
+   "parent": "Shell3",
+   "size": [
+    7.03,
+    0.5,
+    9.25
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     9.75,
+     7.0,
+     9.25
+    ],
+    "Bottom": [
+     7.25,
+     9.75,
+     7.0,
+     9.25
+    ],
+    "Front": [
+     24.0,
+     87.25,
+     7.0,
+     0.5
+    ],
+    "Back": [
+     0.0,
+     88.0,
+     7.0,
+     0.5
+    ],
+    "Left": [
+     7.25,
+     88.0,
+     9.25,
+     0.5
+    ],
+    "Right": [
+     16.75,
+     88.0,
+     9.25,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Shell4",
+   "parent": "Shell3",
+   "size": [
+    8.5,
+    0.5,
+    6.46
+   ],
+   "joint": [
+    0,
+    0.5,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     9.5,
+     34.25,
+     8.5,
+     6.5
+    ],
+    "Bottom": [
+     18.25,
+     34.25,
+     8.5,
+     6.5
+    ],
+    "Front": [
+     0.0,
+     88.75,
+     8.5,
+     0.5
+    ],
+    "Back": [
+     8.75,
+     88.75,
+     8.5,
+     0.5
+    ],
+    "Left": [
+     17.5,
+     88.75,
+     6.5,
+     0.5
+    ],
+    "Right": [
+     24.25,
+     88.75,
+     6.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellX4",
+   "parent": "Shell4",
+   "size": [
+    6.46,
+    0.5,
+    8.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     14.5,
+     9.75,
+     6.5,
+     8.5
+    ],
+    "Bottom": [
+     21.25,
+     9.75,
+     6.5,
+     8.5
+    ],
+    "Front": [
+     0.0,
+     89.5,
+     6.5,
+     0.5
+    ],
+    "Back": [
+     6.75,
+     89.5,
+     6.5,
+     0.5
+    ],
+    "Left": [
+     13.5,
+     89.5,
+     8.5,
+     0.5
+    ],
+    "Right": [
+     22.25,
+     89.5,
+     8.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Shell5",
+   "parent": "Shell4",
+   "size": [
+    7.25,
+    0.5,
+    5.51
+   ],
+   "joint": [
+    0,
+    0.5,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     0.0,
+     41.5,
+     7.25,
+     5.5
+    ],
+    "Bottom": [
+     7.5,
+     41.5,
+     7.25,
+     5.5
+    ],
+    "Front": [
+     0.0,
+     90.25,
+     7.25,
+     0.5
+    ],
+    "Back": [
+     7.5,
+     90.25,
+     7.25,
+     0.5
+    ],
+    "Left": [
+     15.0,
+     90.25,
+     5.5,
+     0.5
+    ],
+    "Right": [
+     20.75,
+     90.25,
+     5.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellX5",
+   "parent": "Shell5",
+   "size": [
+    5.51,
+    0.5,
+    7.25
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     9.75,
+     26.75,
+     5.5,
+     7.25
+    ],
+    "Bottom": [
+     15.5,
+     26.75,
+     5.5,
+     7.25
+    ],
+    "Front": [
+     0.0,
+     91.0,
+     5.5,
+     0.5
+    ],
+    "Back": [
+     5.75,
+     91.0,
+     5.5,
+     0.5
+    ],
+    "Left": [
+     11.5,
+     91.0,
+     7.25,
+     0.5
+    ],
+    "Right": [
+     19.0,
+     91.0,
+     7.25,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Shell6",
+   "parent": "Shell5",
+   "size": [
+    5.5,
+    0.5,
+    4.18
+   ],
+   "joint": [
+    0,
+    0.5,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     5.25,
+     47.25,
+     5.5,
+     4.25
+    ],
+    "Bottom": [
+     11.0,
+     47.25,
+     5.5,
+     4.25
+    ],
+    "Front": [
+     0.0,
+     91.75,
+     5.5,
+     0.5
+    ],
+    "Back": [
+     5.75,
+     91.75,
+     5.5,
+     0.5
+    ],
+    "Left": [
+     11.5,
+     91.75,
+     4.25,
+     0.5
+    ],
+    "Right": [
+     16.0,
+     91.75,
+     4.25,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellX6",
+   "parent": "Shell6",
+   "size": [
+    4.18,
+    0.5,
+    5.5
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.85,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     15.0,
+     41.5,
+     4.25,
+     5.5
+    ],
+    "Bottom": [
+     19.5,
+     41.5,
+     4.25,
+     5.5
+    ],
+    "Front": [
+     20.5,
+     91.75,
+     4.25,
+     0.5
+    ],
+    "Back": [
+     25.0,
+     91.75,
+     4.25,
+     0.5
+    ],
+    "Left": [
+     0.0,
+     92.5,
+     5.5,
+     0.5
+    ],
+    "Right": [
+     5.75,
+     92.5,
+     5.5,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ShellBack",
+   "parent": "Shell1",
+   "size": [
+    6.5,
+    1.75,
+    2.75
+   ],
+   "joint": [
+    0,
+    -1.25,
+    2.6
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.5,
+    "moss": 0.45,
+    "mossTop": true
+   },
+   "faces": {
+    "Top": [
+     13.75,
+     56.5,
+     6.5,
+     2.75
+    ],
+    "Bottom": [
+     20.5,
+     56.5,
+     6.5,
+     2.75
+    ],
+    "Front": [
+     9.75,
+     71.5,
+     6.5,
+     1.75
+    ],
+    "Back": [
+     16.5,
+     71.5,
+     6.5,
+     1.75
+    ],
+    "Left": [
+     23.25,
+     71.5,
+     2.75,
+     1.75
+    ],
+    "Right": [
+     26.25,
+     71.5,
+     2.75,
+     1.75
+    ]
+   }
+  },
+  {
+   "name": "Stone1",
+   "parent": "Shell6",
+   "size": [
+    1.0,
+    0.7,
+    1.0
+   ],
+   "joint": [
+    -1.6,
+    0.4,
+    -1.5499999999999998
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    25,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     6.25,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     7.5,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     15.25,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     16.5,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     17.75,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     19.0,
+     81.75,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Stone2",
+   "parent": "Shell6",
+   "size": [
+    1.3,
+    0.9099999999999999,
+    1.3
+   ],
+   "joint": [
+    1.3,
+    0.445,
+    -1.35
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    -15,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     0.0,
+     78.75,
+     1.25,
+     1.25
+    ],
+    "Bottom": [
+     1.5,
+     78.75,
+     1.25,
+     1.25
+    ],
+    "Front": [
+     8.75,
+     80.25,
+     1.25,
+     1.0
+    ],
+    "Back": [
+     10.25,
+     80.25,
+     1.25,
+     1.0
+    ],
+    "Left": [
+     11.75,
+     80.25,
+     1.25,
+     1.0
+    ],
+    "Right": [
+     13.25,
+     80.25,
+     1.25,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Stone3",
+   "parent": "Shell6",
+   "size": [
+    0.9,
+    0.63,
+    0.9
+   ],
+   "joint": [
+    2.6,
+    0.385,
+    0.55
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    40,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     14.75,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     16.0,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     20.25,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     21.5,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     22.75,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     24.0,
+     81.75,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Stone4",
+   "parent": "Shell6",
+   "size": [
+    1.1,
+    0.77,
+    1.1
+   ],
+   "joint": [
+    -0.6,
+    0.41500000000000004,
+    1.15
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    10,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     17.25,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     18.5,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     25.25,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     26.5,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     27.75,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     29.0,
+     81.75,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Stone5",
+   "parent": "Shell5",
+   "size": [
+    1.0,
+    0.7,
+    1.0
+   ],
+   "joint": [
+    -3.2,
+    0.4,
+    1.0499999999999998
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    -30,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     19.75,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     21.0,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     30.25,
+     81.75,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     0.0,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     1.25,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     2.5,
+     83.0,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "Stone6",
+   "parent": "Shell6",
+   "size": [
+    0.8,
+    0.5599999999999999,
+    0.8
+   ],
+   "joint": [
+    0.5,
+    0.37,
+    -0.14999999999999997
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    50,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     3.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     4.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     11.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     12.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     13.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     14.5,
+     92.5,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Stone7",
+   "parent": "Shell5",
+   "size": [
+    0.85,
+    0.595,
+    0.85
+   ],
+   "joint": [
+    3.2,
+    0.3775,
+    -2.15
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    20,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     5.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     6.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     15.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     16.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     17.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     18.5,
+     92.5,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Stone8",
+   "parent": "Shell5",
+   "size": [
+    0.75,
+    0.5249999999999999,
+    0.75
+   ],
+   "joint": [
+    -2.3,
+    0.3625,
+    2.25
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    -40,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     7.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     8.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     19.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     20.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     21.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     22.5,
+     92.5,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Stone9",
+   "parent": "Shell5",
+   "size": [
+    0.7,
+    0.48999999999999994,
+    0.7
+   ],
+   "joint": [
+    -3.4,
+    0.355,
+    -1.75
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    15,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     9.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     10.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     23.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     24.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     25.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     26.5,
+     92.5,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Stone10",
+   "parent": "Shell6",
+   "size": [
+    0.8,
+    0.5599999999999999,
+    0.8
+   ],
+   "joint": [
+    1.8,
+    0.37,
+    2.55
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    5,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     11.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     12.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     27.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     28.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     29.5,
+     92.5,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     30.5,
+     92.5,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Stone11",
+   "parent": "Shell5",
+   "size": [
+    0.7,
+    0.48999999999999994,
+    0.7
+   ],
+   "joint": [
+    -1.0,
+    0.355,
+    -3.5500000000000003
+   ],
+   "pivot": null,
+   "rot": [
+    8,
+    30,
+    -6
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     13.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     14.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     0.0,
+     93.25,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     1.0,
+     93.25,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     2.0,
+     93.25,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     3.0,
+     93.25,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "Flower1",
+   "parent": "Shell6",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    -1.8,
+    0.28,
+    -0.14999999999999997
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    45,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX1",
+   "parent": "Flower1",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC1",
+   "parent": "Flower1",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower2",
+   "parent": "Shell6",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    2.0,
+    0.28,
+    -0.95
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX2",
+   "parent": "Flower2",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC2",
+   "parent": "Flower2",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower3",
+   "parent": "Shell6",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    -0.6,
+    0.28,
+    -0.85
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    45,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX3",
+   "parent": "Flower3",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC3",
+   "parent": "Flower3",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower4",
+   "parent": "Shell5",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    3.1,
+    0.28,
+    1.85
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX4",
+   "parent": "Flower4",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC4",
+   "parent": "Flower4",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower5",
+   "parent": "Shell6",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    0.4,
+    0.28,
+    2.25
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    45,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX5",
+   "parent": "Flower5",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC5",
+   "parent": "Flower5",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower6",
+   "parent": "Shell6",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    0.6,
+    0.28,
+    -2.15
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX6",
+   "parent": "Flower6",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC6",
+   "parent": "Flower6",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Flower7",
+   "parent": "Shell5",
+   "size": [
+    0.6,
+    0.06,
+    0.2
+   ],
+   "joint": [
+    -3.0,
+    0.28,
+    0.55
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    45,
+    0
+   ],
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerX7",
+   "parent": "Flower7",
+   "size": [
+    0.2,
+    0.06,
+    0.6
+   ],
+   "joint": [
+    0,
+    0,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "flower",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "FlowerC7",
+   "parent": "Flower7",
+   "size": [
+    0.2,
+    0.08,
+    0.2
+   ],
+   "joint": [
+    0,
+    0.01,
+    0
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "pollen",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null
+  },
+  {
+   "name": "Grass1_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    -0.9,
+    0.15,
+    -0.95
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    -8,
+    0,
+    11
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     4.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     4.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     5.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     5.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     4.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     4.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass1_2",
+   "parent": "Grass1_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    11
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     6.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     6.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     7.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     7.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     5.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     5.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass1_3",
+   "parent": "Grass1_2",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.25,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    11
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     8.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     8.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     9.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     9.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     6.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     6.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass2_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    -0.3,
+    0.15,
+    -1.25
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    -1,
+    0,
+    10
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     10.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     10.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     11.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     11.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     7.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     7.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass2_2",
+   "parent": "Grass2_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    10
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     12.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     12.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     13.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     13.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     8.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     8.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass2_3",
+   "parent": "Grass2_2",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.25,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    10
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     14.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     14.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     15.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     15.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     9.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     9.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass3_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    -2.2,
+    0.15,
+    -1.25
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    6,
+    0,
+    9
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     16.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     16.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     17.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     17.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     10.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     10.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass3_2",
+   "parent": "Grass3_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    9
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     18.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     18.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     19.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     19.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     11.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     11.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass4_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    1.9,
+    0.15,
+    -1.5499999999999998
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    13,
+    0,
+    8
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     20.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     20.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     21.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     21.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     12.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     12.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass4_2",
+   "parent": "Grass4_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    8
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     22.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     22.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     23.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     23.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     13.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     13.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass5_1",
+   "parent": "Shell5",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    -2.9,
+    0.15,
+    -1.9500000000000002
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    -10,
+    0,
+    7
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     24.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     24.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     25.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     25.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     14.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     14.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass5_2",
+   "parent": "Grass5_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    7
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     26.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     26.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     27.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     27.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     15.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     15.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass6_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    0.9,
+    0.15,
+    0.15000000000000002
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    -3,
+    0,
+    6
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     28.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     28.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     29.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     29.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     16.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     16.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass6_2",
+   "parent": "Grass6_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    6
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     30.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     30.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     31.0,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     31.5,
+     93.25,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     17.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     17.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass7_1",
+   "parent": "Shell6",
+   "size": [
+    0.25,
+    0.6,
+    0.25
+   ],
+   "joint": [
+    -1.4,
+    0.15,
+    -2.75
+   ],
+   "pivot": [
+    0,
+    -0.3,
+    0
+   ],
+   "rot": [
+    4,
+    0,
+    5
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     0.0,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     0.5,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     1.0,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     1.5,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     18.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     18.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Grass7_2",
+   "parent": "Grass7_1",
+   "size": [
+    0.25,
+    0.5,
+    0.25
+   ],
+   "joint": [
+    0,
+    0.3,
+    0
+   ],
+   "pivot": [
+    0,
+    -0.25,
+    0
+   ],
+   "rot": [
+    12,
+    0,
+    5
+   ],
+   "tilt": null,
+   "ramp": "moss",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Front": [
+     2.0,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Back": [
+     2.5,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Left": [
+     3.0,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Right": [
+     3.5,
+     94.0,
+     0.25,
+     0.5
+    ],
+    "Top": [
+     19.25,
+     94.75,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     19.75,
+     94.75,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "Leg1AL",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    -2.3,
+    -0.2,
+    -1.6
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -28.0,
+    -106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     16.75,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     18.5,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     20.25,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     22.0,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     29.25,
+     71.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     0.0,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg1AR",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    2.3,
+    -0.2,
+    -1.6
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    28.0,
+    106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     23.75,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     25.5,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     27.25,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     29.0,
+     47.25,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     1.75,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     3.5,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg1BL",
+   "parent": "Leg1AL",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     27.25,
+     56.5,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     29.0,
+     56.5,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     0.0,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     1.75,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     5.25,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     7.0,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg1BR",
+   "parent": "Leg1AR",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    -83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     3.5,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     5.25,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     7.0,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     8.75,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     8.75,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     10.5,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg1CL",
+   "parent": "Leg1BL",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     3.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     4.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     5.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     6.75,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     22.25,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     23.5,
+     80.25,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Leg1CR",
+   "parent": "Leg1BR",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    -18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     8.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     9.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     10.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     11.75,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     24.75,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     26.0,
+     80.25,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Leg2AL",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    -2.3,
+    -0.2,
+    0.1
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    -106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     0.0,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     1.75,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     3.5,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     5.25,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     12.25,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     14.0,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg2AR",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    2.3,
+    -0.2,
+    0.1
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     7.0,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     8.75,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     10.5,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     12.25,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     15.75,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     17.5,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg2BL",
+   "parent": "Leg2AL",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     10.5,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     12.25,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     14.0,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     15.75,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     19.25,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     21.0,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg2BR",
+   "parent": "Leg2AR",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    -83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     17.5,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     19.25,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     21.0,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     22.75,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     22.75,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     24.5,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg2CL",
+   "parent": "Leg2BL",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     13.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     14.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     15.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     16.75,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     27.25,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     28.5,
+     80.25,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Leg2CR",
+   "parent": "Leg2BR",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    -18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     18.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     19.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     20.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     21.75,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     29.75,
+     80.25,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     0.0,
+     81.75,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Leg3AL",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    -2.3,
+    -0.2,
+    1.7
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    28.0,
+    -106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     14.0,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     15.75,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     17.5,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     19.25,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     26.25,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     28.0,
+     73.5,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg3AR",
+   "parent": "Rear",
+   "size": [
+    1.6,
+    3.5,
+    1.6
+   ],
+   "joint": [
+    2.3,
+    -0.2,
+    1.7
+   ],
+   "pivot": [
+    0,
+    1.75,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -28.0,
+    106.86
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     21.0,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Back": [
+     22.75,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Left": [
+     24.5,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Right": [
+     26.25,
+     52.75,
+     1.5,
+     3.5
+    ],
+    "Top": [
+     29.75,
+     73.5,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     0.0,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg3BL",
+   "parent": "Leg3AL",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     24.5,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     26.25,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     28.0,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     29.75,
+     59.75,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     1.75,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     3.5,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg3BR",
+   "parent": "Leg3AR",
+   "size": [
+    1.5,
+    2.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    -83.36
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.35
+   },
+   "faces": {
+    "Front": [
+     0.0,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     1.75,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     3.5,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     5.25,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     5.25,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     7.0,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "Leg3CL",
+   "parent": "Leg3BL",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -0.0,
+    18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     23.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     24.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     25.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     26.75,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     1.25,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     2.5,
+     81.75,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "Leg3CR",
+   "parent": "Leg3BR",
+   "size": [
+    1.0,
+    1.25,
+    1.0
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.625,
+    0
+   ],
+   "rot": [
+    -0.0,
+    0.0,
+    -18.3
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.4
+   },
+   "faces": {
+    "Front": [
+     28.0,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Back": [
+     29.25,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Left": [
+     30.5,
+     78.75,
+     1.0,
+     1.25
+    ],
+    "Right": [
+     0.0,
+     80.25,
+     1.0,
+     1.25
+    ],
+    "Top": [
+     3.75,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     5.0,
+     81.75,
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "ClawAL",
+   "parent": "Chest",
+   "size": [
+    1.6,
+    2.5,
+    1.6
+   ],
+   "joint": [
+    -1.6,
+    0.1,
+    -0.2
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    -68.2,
+    -112.68
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     7.0,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     8.75,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     10.5,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     12.25,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     8.75,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     10.5,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawAR",
+   "parent": "Chest",
+   "size": [
+    1.6,
+    2.5,
+    1.6
+   ],
+   "joint": [
+    1.6,
+    0.1,
+    -0.2
+   ],
+   "pivot": [
+    0,
+    1.25,
+    0
+   ],
+   "rot": [
+    -0.0,
+    68.2,
+    112.68
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.6,
+    "mossTop": true
+   },
+   "faces": {
+    "Front": [
+     14.0,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Back": [
+     15.75,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Left": [
+     17.5,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Right": [
+     19.25,
+     62.5,
+     1.5,
+     2.5
+    ],
+    "Top": [
+     12.25,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     14.0,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawBL",
+   "parent": "ClawAL",
+   "size": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.75,
+    0
+   ],
+   "rot": [
+    -1.99,
+    -0.83,
+    61.75
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.45
+   },
+   "faces": {
+    "Front": [
+     15.75,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Back": [
+     17.5,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Left": [
+     19.25,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Right": [
+     21.0,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Top": [
+     22.75,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     24.5,
+     75.25,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawBR",
+   "parent": "ClawAR",
+   "size": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "joint": [
+    0,
+    -1.25,
+    0
+   ],
+   "pivot": [
+    0,
+    0.75,
+    0
+   ],
+   "rot": [
+    -1.99,
+    0.83,
+    -61.75
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.45
+   },
+   "faces": {
+    "Front": [
+     26.25,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Back": [
+     28.0,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Left": [
+     29.75,
+     75.25,
+     1.5,
+     1.5
+    ],
+    "Right": [
+     0.0,
+     77.0,
+     1.5,
+     1.5
+    ],
+    "Top": [
+     1.75,
+     77.0,
+     1.5,
+     1.5
+    ],
+    "Bottom": [
+     3.5,
+     77.0,
+     1.5,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawHandL",
+   "parent": "ClawBL",
+   "size": [
+    2.0,
+    3.0,
+    1.6
+   ],
+   "joint": [
+    0,
+    -0.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.5,
+    0
+   ],
+   "rot": [
+    137.14,
+    -28.92,
+    101.88
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.3
+   },
+   "faces": {
+    "Front": [
+     28.0,
+     52.75,
+     2.0,
+     3.0
+    ],
+    "Back": [
+     0.0,
+     56.5,
+     2.0,
+     3.0
+    ],
+    "Left": [
+     2.25,
+     56.5,
+     1.5,
+     3.0
+    ],
+    "Right": [
+     4.0,
+     56.5,
+     1.5,
+     3.0
+    ],
+    "Top": [
+     5.25,
+     77.0,
+     2.0,
+     1.5
+    ],
+    "Bottom": [
+     7.5,
+     77.0,
+     2.0,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawHandR",
+   "parent": "ClawBR",
+   "size": [
+    2.0,
+    3.0,
+    1.6
+   ],
+   "joint": [
+    0,
+    -0.75,
+    0
+   ],
+   "pivot": [
+    0,
+    1.5,
+    0
+   ],
+   "rot": [
+    137.14,
+    28.92,
+    -101.88
+   ],
+   "tilt": null,
+   "ramp": "body",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "moss": 0.35,
+    "belly": 0.3
+   },
+   "faces": {
+    "Front": [
+     5.75,
+     56.5,
+     2.0,
+     3.0
+    ],
+    "Back": [
+     8.0,
+     56.5,
+     2.0,
+     3.0
+    ],
+    "Left": [
+     10.25,
+     56.5,
+     1.5,
+     3.0
+    ],
+    "Right": [
+     12.0,
+     56.5,
+     1.5,
+     3.0
+    ],
+    "Top": [
+     9.75,
+     77.0,
+     2.0,
+     1.5
+    ],
+    "Bottom": [
+     12.0,
+     77.0,
+     2.0,
+     1.5
+    ]
+   }
+  },
+  {
+   "name": "ClawFingerL",
+   "parent": "ClawHandL",
+   "size": [
+    0.7,
+    1.6,
+    1.0
+   ],
+   "joint": [
+    1.0,
+    -0.6,
+    -0.1
+   ],
+   "pivot": [
+    0,
+    0.8,
+    0
+   ],
+   "rot": [
+    0,
+    0,
+    10
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.3
+   },
+   "faces": {
+    "Front": [
+     14.25,
+     77.0,
+     0.75,
+     1.5
+    ],
+    "Back": [
+     15.25,
+     77.0,
+     0.75,
+     1.5
+    ],
+    "Left": [
+     16.25,
+     77.0,
+     1.0,
+     1.5
+    ],
+    "Right": [
+     17.5,
+     77.0,
+     1.0,
+     1.5
+    ],
+    "Top": [
+     6.25,
+     81.75,
+     0.75,
+     1.0
+    ],
+    "Bottom": [
+     7.25,
+     81.75,
+     0.75,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "ClawFingerR",
+   "parent": "ClawHandR",
+   "size": [
+    0.7,
+    1.6,
+    1.0
+   ],
+   "joint": [
+    -1.0,
+    -0.6,
+    -0.1
+   ],
+   "pivot": [
+    0,
+    0.8,
+    0
+   ],
+   "rot": [
+    0,
+    0,
+    -10
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": {
+    "belly": 0.3
+   },
+   "faces": {
+    "Front": [
+     18.75,
+     77.0,
+     0.75,
+     1.5
+    ],
+    "Back": [
+     19.75,
+     77.0,
+     0.75,
+     1.5
+    ],
+    "Left": [
+     20.75,
+     77.0,
+     1.0,
+     1.5
+    ],
+    "Right": [
+     22.0,
+     77.0,
+     1.0,
+     1.5
+    ],
+    "Top": [
+     8.25,
+     81.75,
+     0.75,
+     1.0
+    ],
+    "Bottom": [
+     9.25,
+     81.75,
+     0.75,
+     1.0
+    ]
+   }
+  },
+  {
+   "name": "ClawStone1L",
+   "parent": "ClawAL",
+   "size": [
+    0.9,
+    0.63,
+    0.9
+   ],
+   "joint": [
+    -0.15,
+    0.4,
+    0.85
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    -20,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     10.25,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     11.5,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     15.75,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     17.0,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     18.25,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     19.5,
+     83.0,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "ClawStone1R",
+   "parent": "ClawAR",
+   "size": [
+    0.9,
+    0.63,
+    0.9
+   ],
+   "joint": [
+    0.15,
+    0.4,
+    0.85
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    20,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     12.75,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Bottom": [
+     14.0,
+     81.75,
+     1.0,
+     1.0
+    ],
+    "Front": [
+     20.75,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Back": [
+     22.0,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Left": [
+     23.25,
+     83.0,
+     1.0,
+     0.75
+    ],
+    "Right": [
+     24.5,
+     83.0,
+     1.0,
+     0.75
+    ]
+   }
+  },
+  {
+   "name": "ClawStone2L",
+   "parent": "ClawAL",
+   "size": [
+    0.75,
+    0.5249999999999999,
+    0.75
+   ],
+   "joint": [
+    -0.25,
+    0.8,
+    -0.35
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    -40,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     25.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     26.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     4.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     5.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     6.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     7.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ClawStone2R",
+   "parent": "ClawAR",
+   "size": [
+    0.75,
+    0.5249999999999999,
+    0.75
+   ],
+   "joint": [
+    0.25,
+    0.8,
+    -0.35
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    40,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     27.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     28.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     8.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     9.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     10.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     11.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ClawStone3L",
+   "parent": "ClawAL",
+   "size": [
+    0.65,
+    0.45499999999999996,
+    0.65
+   ],
+   "joint": [
+    -0.0,
+    0.0,
+    -1.05
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    -60,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     29.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     30.75,
+     83.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     12.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     13.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     14.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     15.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "ClawStone3R",
+   "parent": "ClawAR",
+   "size": [
+    0.65,
+    0.45499999999999996,
+    0.65
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -1.05
+   ],
+   "pivot": null,
+   "rot": [
+    10,
+    60,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     0.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     1.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     16.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     17.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     18.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     19.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "LegStone1L",
+   "parent": "Leg1AL",
+   "size": [
+    0.85,
+    0.6,
+    0.85
+   ],
+   "joint": [
+    -0.85,
+    0.4,
+    0
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    -15,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     2.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     3.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     20.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     21.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     22.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     23.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  },
+  {
+   "name": "LegStone1R",
+   "parent": "Leg1AR",
+   "size": [
+    0.85,
+    0.6,
+    0.85
+   ],
+   "joint": [
+    0.85,
+    0.4,
+    0
+   ],
+   "pivot": null,
+   "rot": [
+    0,
+    15,
+    0
+   ],
+   "tilt": null,
+   "ramp": "stone",
+   "neon": false,
+   "flat": false,
+   "pattern": "mottled",
+   "babyScale": 1.0,
+   "skin": null,
+   "faces": {
+    "Top": [
+     4.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Bottom": [
+     5.0,
+     84.0,
+     0.75,
+     0.75
+    ],
+    "Front": [
+     24.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Back": [
+     25.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Left": [
+     26.0,
+     94.0,
+     0.75,
+     0.5
+    ],
+    "Right": [
+     27.0,
+     94.0,
+     0.75,
+     0.5
+    ]
+   }
+  }
+ ]
+}

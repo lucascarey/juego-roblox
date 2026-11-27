@@ -218,6 +218,9 @@ local function onCharacter(ch: Model)
 	guideDesc[4].Text = stats.primary
 	guideDesc[5].Text = stats.secondary .. " (clic corto)"
 	guideDesc[7].Text = if stats.crouch then "Agazaparse (sigiloso, lento)" else "—"
+	-- Las que se entierran: Z es su único descanso.
+	guideDesc[8].Text = if stats.burrow then "Enterrarse (intocable, regenera)" else "Acostarse (regenera vida)"
+	guideDesc[9].Text = if stats.burrow then "—" else "Dormir (regenera más)"
 	-- El salto de Roblox es instantáneo: se apaga y se hace a mano (carga con las traseras, despegue).
 	hum.JumpPower = 0
 	-- En el aire, menos gravedad: el arco dura más y se siente pesado (la gravedad de Roblox es ~5 veces
@@ -260,7 +263,7 @@ UserInputService.InputBegan:Connect(function(io, processed)
 	local busy = posture ~= nil or os.clock() < s.lockedUntil
 	if io.KeyCode == Enum.KeyCode.Z then
 		if posture == nil and os.clock() >= s.lockedUntil then
-			input:FireServer("Postura", "Acostado")
+			input:FireServer("Postura", if s.stats.burrow then "Enterrado" else "Acostado")
 		elseif posture == "Acostado" then
 			input:FireServer("Postura", "Durmiendo")
 		end
