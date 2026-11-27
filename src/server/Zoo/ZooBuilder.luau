@@ -183,6 +183,17 @@ local function creatures(parent: Instance, pen: Pen)
 			model:SetAttribute("IA", true)
 			model:SetAttribute("Grupo", pen.group)
 			model:SetAttribute("Rol", role)
+		else
+			-- Huevo: un bloque invisible y fijo que choca, así el jugador no lo atraviesa (no cuesta
+			-- rendimiento: es estático). Las criaturas IA lo esquivan por separación (CreatureAI).
+			local bcf, size = model:GetBoundingBox()
+			local col = Instance.new("Part")
+			col.Name = "Colision"
+			col.Anchored = true
+			col.Transparency = 1
+			col.CanQuery = false -- que no lo tomen los rayos de suelo de la animación
+			col.CFrame, col.Size = bcf, size * Vector3.new(0.85, 1, 0.85)
+			col.Parent = model
 		end
 		model.Parent = parent
 	end

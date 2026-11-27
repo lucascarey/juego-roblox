@@ -512,8 +512,11 @@ function CreatureAnimator:_locomotion(dt: number)
 				hipA += 0.1 * dig
 				kneeA -= 0.25 * dig
 			else
-				hipA += 0.25 * dig
-				kneeA -= 0.45 * dig
+				-- Traseras: se doblan solo lo que baja el cuerpo (backDrop), así los pies siguen en el piso
+				-- (doblarlas un ángulo fijo las acortaba más y los pies quedaban en el aire).
+				local dh, dk = legIK(leg, leg.D0 - 0.06 * L * dig)
+				hipA += dh
+				kneeA += dk
 			end
 		end
 		-- Salto, carga: las traseras se flexionan para empujar.
@@ -697,10 +700,18 @@ function CreatureAnimator:_ground(dt: number)
 	F, B, Lf, R = F / nF, B / nB, Lf / nL, R / nR
 	zF, zB, xL, xR = zF / nF, zB / nB, xL / nL, xR / nR
 	local slopeF = (F - B) / math.max(0.5, zB - zF) -- sube hacia adelante (-Z)
-	local slopeL = (Lf - R) / math.max(0.5, xR - xL) -- sube hacia la izquierda (-X)
 	-- Bípeda: el cuerpo se apoya donde están las patas (atrás del rayo de adelante).
 	local gc = if biped then B else (F + B) / 2
 	local zc, xc = if biped then zB else (zF + zB) / 2, (xL + xR) / 2
+	-- Inclinación de costado con dos rayos a la misma altura del cuerpo (izq/der). Medirla en los pies
+	-- mezclaba la pendiente de adelante-atrás (un pie adelante y otro atrás) y en las subidas el
+	-- cuerpo se mecía de lado a lado en cada paso.
+	local function groundAt(x: number): number
+		local hit =
+			workspace:Raycast(cf:PointToWorldSpace(Vector3.new(x, L, zc)), Vector3.new(0, -3 * L, 0), groundParams)
+		return if hit then hit.Position.Y else nominal
+	end
+	local slopeL = (groundAt(xL) - groundAt(xR)) / math.max(0.5, xR - xL) -- sube hacia la izquierda (-X)
 	-- Lo que el plano no explica lo absorben las patas: el cuerpo baja hasta que la pata con el
 	-- suelo más bajo llegue estirada, y las demás doblan la rodilla.
 	local lower = 0
@@ -736,8 +747,11 @@ function CreatureAnimator:_lookAround(dt: number, move: number)
 				yawT, pitchT = m.X, m.Y
 			end
 		end
-		look.tyaw = math.clamp(yawT, -1.3, 1.3)
-		look.tpitch = math.clamp(pitchT, -0.6, 0.5)
+		-- Excavando, acostada o atacando no sigue la cámara: la cabeza va derecha al frente del cuerpo
+		-- (si no, excavaba mirando hacia cualquier lado).
+		local busy = self.pose.dig.x > 0.01 or self.pose.rest.x > 0.05 or self.action.name ~= nil
+		look.tyaw = if busy then 0 else math.clamp(yawT, -1.3, 1.3)
+		look.tpitch = if busy then 0 else math.clamp(pitchT, -0.6, 0.5)
 		step(look.yaw, look.tyaw, 2, 1, dt)
 		step(look.pitch, look.tpitch, 2, 1, dt)
 		return
@@ -794,6 +808,7 @@ function CreatureAnimator:_chains(dt: number)
 			local pose = self.pose
 			local wave = if c.kind == "back" then math.sin(self.t * 1.3 - i * 0.7) * 0.05 * i * (1 - 0.8 * rest) else 0
 			local sag = if c.kind == "back" then 0.015 * i else 0
+			local groundCap: number? = nil -- cola acostándose: el bloque no puede bajar más que el suelo
 			if c.kind == "back" then
 				-- Acostada, cada bloque de la cola se apoya en el suelo que tiene abajo (sigue el terreno);
 				-- dormida además se enrosca hacia un costado.
@@ -806,20 +821,32 @@ function CreatureAnimator:_chains(dt: number)
 						local lieOnGround = math.asin(math.clamp(h / seg.Size.Z, -0.6, 1))
 						-- Corrección medida: si la punta del bloque igual queda en el aire (cola enroscada y
 						-- cuerpo de costado), se va bajando hasta tocar.
-						local tip = (seg.CFrame * CFrame.new(0, -seg.Size.Y / 2, seg.Size.Z / 2)).Position
-						local under =
-							workspace:Raycast(tip + Vector3.new(0, 2, 0), Vector3.new(0, -30, 0), groundParams)
+						-- Las dos esquinas de abajo de la punta (con la cola enroscada una queda más baja).
+						local gap: number? = nil
+						for _, sx in { -0.5, 0.5 } do
+							local corner = (seg.CFrame * CFrame.new(sx * seg.Size.X, -seg.Size.Y / 2, seg.Size.Z / 2)).Position
+							local under =
+								workspace:Raycast(corner + Vector3.new(0, 2, 0), Vector3.new(0, -30, 0), groundParams)
+							if under then
+								gap = math.min(gap or math.huge, corner.Y - under.Position.Y)
+							end
+						end
 						c.fix = c.fix or {}
 						local fix = c.fix[i] or 0
-						if under then
-							fix = math.clamp(
-								fix + math.clamp(tip.Y - under.Position.Y - 0.25, -1, 1) * dt * 1.2,
-								-0.6,
-								0.8
-							)
+						if gap then
+							if gap < 0 then
+								-- Bajo el piso: se levanta ya (corregir despacio dejaba la cola adentro
+								-- durante la transición).
+								fix = math.max(-0.6, fix + (gap - 0.05) / seg.Size.Z)
+							else
+								fix = math.clamp(fix + math.clamp(gap - 0.25, -1, 1) * dt * 1.2, -0.6, 0.8)
+							end
 						end
 						c.fix[i] = fix
 						sag = lerp(sag, lieOnGround - prevA + fix, rest)
+						-- Tope duro: mientras el cuerpo baja, el resorte de la cola llegaba tarde y la cola
+						-- atravesaba el piso en la transición.
+						groundCap = lieOnGround + fix + 0.03
 					end
 				elseif c.fix then
 					c.fix[i] = 0 -- de pie: sin corrección
@@ -849,6 +876,9 @@ function CreatureAnimator:_chains(dt: number)
 			step(b, prevB + wave, freq, damp, dt)
 			a.x = math.clamp(a.x, prevA - limit, prevA + limit)
 			b.x = math.clamp(b.x, prevB - limit, prevB + limit)
+			if groundCap then
+				a.x = math.min(a.x, groundCap)
+			end
 			local la, lb = a.x - prevA, b.x - prevB
 			-- Cola: primero gira hacia el costado y después inclina sobre su propio eje (con la cola enroscada,
 			-- inclinar sobre el eje del bloque anterior no la bajaba al suelo).
@@ -1064,7 +1094,10 @@ function CreatureAnimator:update(dt: number)
 	local stepRoll = math.sin(self.phase * TAU) * 0.035 * move * (1 - trot)
 	local shift = math.sin(t * 0.37) * 0.025 * still
 	local gp = math.sin(self.phase * TAU) -- ciclo del galope
-	local bodyY = -backDrop + breath * (0.012 + 0.01 * rest) * L * still + gp * 0.05 * L * gallop - 0.1 * L * sleep
+	local bodyY = -backDrop
+		+ breath * (0.012 + 0.01 * rest) * L * still
+		+ gp * 0.05 * L * gallop
+		- (if self.biped then 0 else 0.1) * L * sleep
 	-- Se inclina un poco hacia adelante al trotar; al galopar se mece adelante-atrás.
 	local bodyPitch = -0.04 * trot * move + gp * 0.06 * gallop
 	-- En el aire la nariz sigue la trayectoria: arriba al subir, abajo al caer.
@@ -1123,7 +1156,7 @@ function CreatureAnimator:update(dt: number)
 		local yaw = self.look.yaw.x * calm + yawRate * 0.22 + act.neckYaw - 1.6 * sleep - 0.15 * dig
 		local pitch = self.look.pitch.x * calm + nod - (bodyPitch + chestPitch) - self.ground.pitch.x * 0.5
 		-- Acostada baja un poco la cabeza; dormida la apoya en el suelo. Excavando mira el pozo.
-		pitch += breath * 0.02 * sleep + act.neckPitch
+		pitch += breath * 0.02 * sleep + act.neckPitch + (self.headLift or 0)
 		if self.biped then
 			-- Bípeda: excava con el hocico, hunde la cabeza y la mueve hozando adelante-atrás.
 			pitch += dig * (-1.75 + 0.22 * math.sin(dg + 0.6))
@@ -1143,6 +1176,49 @@ function CreatureAnimator:update(dt: number)
 			local w = weights[i] or 0
 			motor.Transform = CFrame.Angles(pitch * w + (fold[i] or 0), yaw * w, 0)
 		end
+		-- Acostándose o durmiendo, la cabeza bajaba antes que el cuerpo y atravesaba el piso en la
+		-- transición: si la cabeza (o los pétalos) quedan bajo el suelo, el cuello la levanta lo justo.
+		local headM = self.m.Head
+		local lift = self.headLift or 0
+		if headM and (rest > 0.01 or lift > 0) and dig < 0.01 then -- sigue hasta soltar del todo al levantarse
+			local head = headM.Part1 :: BasePart
+			local lowest = math.huge
+			local parts = { head }
+			for _, nm in self.neck do
+				table.insert(parts, nm.Part1 :: BasePart) -- cuello y nuca también (la nuca quedaba abajo)
+			end
+			for i, tipM in self.petalTips or {} do
+				table.insert(parts, tipM.Part1 :: BasePart)
+				local point = self.m["PetalPointTip" .. i] -- la semipunta, lo más lejos de la cabeza
+				if point then
+					table.insert(parts, point.Part1 :: BasePart)
+				end
+			end
+			for _, p in parts do
+				local cf, half = p.CFrame, p.Size / 2
+				for _, sx in { -1, 1 } do
+					for _, sy in { -1, 1 } do
+						for _, sz in { -1, 1 } do
+							lowest = math.min(lowest, cf:PointToWorldSpace(half * Vector3.new(sx, sy, sz)).Y)
+						end
+					end
+				end
+			end
+			local hit = workspace:Raycast(head.Position + Vector3.new(0, 3, 0), Vector3.new(0, -20, 0), groundParams)
+			if hit then
+				local base = ((self.neck[1].Part0 :: BasePart).CFrame * self.neck[1].C0).Position
+				local reach = math.max(0.5, (head.Position - base).Magnitude)
+				local pen = hit.Position.Y + 0.05 - lowest
+				if pen > 0 then
+					lift += pen / reach
+				elseif pen < -0.2 then
+					lift -= 0.4 * dt -- vuelve a bajar despacio cuando el cuerpo ya se acomodó
+				end
+			end
+		else
+			lift -= dt
+		end
+		self.headLift = math.clamp(lift, 0, 1.2)
 	end
 
 	-- Pétalos: entreabiertos respirando, mastican al comer, cerrados al dormir; el mordisco manda.

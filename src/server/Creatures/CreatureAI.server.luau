@@ -414,6 +414,35 @@ end
 
 local TURN_RATE = 1.8 -- rad/s caminando; corriendo gira más abierto
 
+-- Radio de las criaturas sin IA (huevos y las de los jugadores), medido una vez.
+local radiusOf: { [Model]: number } = setmetatable({}, { __mode = "k" }) :: any
+
+-- Separación por posición: si otra criatura, un huevo o la criatura de un jugador se metió en su lugar,
+-- se corre de a poco hacia afuera. Sin física (las criaturas son ancladas): barato y sin temblores.
+local function separate(b: Brain, pos: Vector3, dt: number): Vector3
+	local push = Vector3.zero
+	local r = b.bodyLen * 0.45
+	for _, other in CollectionService:GetTagged("Creature") do
+		if other == b.model or not other:IsA("Model") or not other.PrimaryPart then
+			continue
+		end
+		local ob = brains[other]
+		local ro = if ob then ob.bodyLen * 0.45 else radiusOf[other]
+		if not ro then
+			local size = other:GetExtentsSize()
+			ro = math.max(size.X, size.Z) * (if other:GetAttribute("Jugador") then 0.3 else 0.5)
+			radiusOf[other] = ro
+		end
+		local off = flat(pos - other.PrimaryPart.Position)
+		local d = off.Magnitude
+		local minD = r + ro
+		if d > 0.01 and d < minD then
+			push += off.Unit * (minD - d)
+		end
+	end
+	return push * math.min(1, 6 * dt)
+end
+
 local function move(b: Brain, dt: number)
 	local cf = b.root.CFrame
 	local pos = cf.Position
@@ -463,6 +492,9 @@ local function move(b: Brain, dt: number)
 	b.cur += math.clamp(want - b.cur, -8 * dt, 5 * dt)
 	cf = cf * CFrame.Angles(0, yaw, 0)
 	cf += cf.LookVector * b.cur * dt
+	if b.model:GetAttribute("Postura") == nil then -- acostada o dormida no se desliza
+		cf += separate(b, cf.Position, dt)
+	end
 	local gy = groundAt(cf.Position)
 	if gy then
 		local y = cf.Y + (gy + b.hover - cf.Y) * math.min(1, 10 * dt)
