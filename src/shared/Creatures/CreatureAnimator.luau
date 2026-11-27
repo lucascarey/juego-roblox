@@ -19,6 +19,7 @@
 -- Funciona con cualquier especie que use los nombres de piezas de tools/creatures.py.
 
 local Players = game:GetService("Players")
+local SpeciesStats = require(script.Parent.SpeciesStats)
 local RunService = game:GetService("RunService")
 
 local CreatureAnimator = {}
@@ -456,11 +457,24 @@ function CreatureAnimator:_locomotion(dt: number)
 	local gaitSpeed = s + turn
 	step(self.move, if gaitSpeed > 0.15 * L then 1 else 0, 1.6, 1, dt)
 
-	-- Paso -> trote -> galope (sprint) según la velocidad relativa al largo de pata.
-	local trot = math.clamp((s / L - 1.1) / 0.9, 0, 1)
-	local gallop = math.clamp((s / L - 3.6) / 0.9, 0, 1)
+	-- Paso -> trote -> galope (sprint) según la velocidad de caminar y de correr de su especie y etapa:
+	-- con el largo de pata solo, la cría (lenta y de patas largas) nunca llegaba a correr.
+	local model = self.model :: Model
+	local stats = SpeciesStats.get(model:GetAttribute("Species") :: string? or "")
+	local trot, gallop
+	if stats then
+		local k = SpeciesStats.ageScale(model:GetAttribute("Age") :: number? or 1)
+		local walkS, sprintS = stats.walk * k, stats.sprint * k
+		trot = math.clamp((s - 1.1 * walkS) / (0.4 * walkS), 0, 1)
+		gallop = math.clamp((s - lerp(walkS, sprintS, 0.55)) / (0.25 * (sprintS - walkS)), 0, 1)
+	else
+		trot = math.clamp((s / L - 1.1) / 0.9, 0, 1)
+		gallop = math.clamp((s / L - 3.6) / 0.9, 0, 1)
+	end
 	self.gallop = gallop
-	local amp = lerp(lerp(0.26, 0.5, math.clamp(gaitSpeed / (3 * L), 0, 1)), 0.62, gallop)
+	-- Zancada: trotando y corriendo las patas barren más (más ángulo = pasos más largos y menos
+	-- frecuentes, sin patinar porque el avance por ciclo sale de la misma amplitud).
+	local amp = lerp(lerp(0.28, 0.6, math.max(trot, math.clamp(gaitSpeed / (3 * L), 0, 1))), 0.82, gallop)
 	local duty = lerp(lerp(0.66, 0.5, trot), 0.36, gallop)
 	local stride = 2 * L * math.sin(amp) / duty -- avance del cuerpo por ciclo sin patinar
 	local dir = if self.speed.x < -0.05 then -1 else 1
@@ -608,11 +622,20 @@ function CreatureAnimator:_locomotion(dt: number)
 			drops[key] = math.min(drops[key], 1 - math.cos(hip))
 		end
 	end
-	local function dropOf(v: number): number
-		return if v == 1 then 0 else v * L
+	-- Sin ninguna pata apoyada (vuelo del galope) se mantiene el último valor: volver a 0 de golpe
+	-- hacía saltar el cuerpo arriba y abajo en cada zancada (el temblor al correr). Corriendo además
+	-- baja menos: con zancadas largas el coseno de la pata exageraba el sube y baja.
+	self.dropKeep = self.dropKeep or { front = 0, back = 0 }
+	local function dropOf(key: string, v: number): number
+		if v ~= 1 then
+			self.dropKeep[key] = v * L * (1 - 0.6 * gallop)
+		elseif move < 0.05 then
+			self.dropKeep[key] = 0
+		end
+		return self.dropKeep[key]
 	end
-	step(self.drop.front, dropOf(drops.front), 6, 0.8, dt)
-	step(self.drop.back, dropOf(drops.back), 6, 0.8, dt)
+	step(self.drop.front, dropOf("front", drops.front), 6, 0.8, dt)
+	step(self.drop.back, dropOf("back", drops.back), 6, 0.8, dt)
 	-- Frenada fuerte después de correr: polvo hacia adelante.
 	local decel = (self.prevSpeed - s) / dt
 	self.prevSpeed = s
