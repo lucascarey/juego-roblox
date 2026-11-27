@@ -511,7 +511,8 @@ function CreatureAnimator:_locomotion(dt: number)
 		local tilt = self.ground.pitch.x + (if leg.front then self.lastChestPitch or 0 else 0)
 		-- La rodilla dobla hacia atrás en el vuelo; un poco más en las traseras.
 		local hipA = hip + ikHip
-		local kneeA = knee * (if leg.front then 1 else 1.2) + ikKnee
+		-- Bípeda: la pata se recoge bien en el vuelo (rodilla más doblada).
+		local kneeA = knee * (if leg.front then 1 elseif self.biped then 1.5 else 1.2) + ikKnee
 		local pose = self.pose
 		-- Acostado: delanteras estiradas hacia adelante, traseras plegadas debajo.
 		local lie = if leg.front then pose.front else pose.back
@@ -599,13 +600,13 @@ function CreatureAnimator:_locomotion(dt: number)
 			-- (el talón sube y el pie se recoge) y los dedos cuelgan: así se ven las tres articulaciones.
 			local metaA = 0
 			if leg.meta then
-				metaA = lerp(-kneeA - 0.7 * swingK, leg.lieMeta, lie)
+				metaA = lerp(-kneeA - 1.0 * swingK, leg.lieMeta, lie)
 				leg.meta.Transform = CFrame.Angles(metaA, 0, 0)
 			end
 			-- Pie aparte (bípeda): se mantiene plano contra el suelo aunque el resto de la pata gire.
 			if leg.foot then
 				local hx = hipT:ToEulerAnglesXYZ()
-				local curl = if leg.meta then -0.9 * swingK * (1 - lie) else 0
+				local curl = if leg.meta then -1.3 * swingK * (1 - lie) else 0
 				leg.foot.Transform = CFrame.Angles(-(hx + kneeA + metaA) * (1 - 0.6 * self.pose.air.x) + curl, 0, 0)
 			end
 		end
