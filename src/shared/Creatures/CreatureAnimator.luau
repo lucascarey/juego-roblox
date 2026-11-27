@@ -46,6 +46,7 @@ type Chain = {
 	fr: Vector3?, -- entrada filtrada (giro)
 	fd: Vector3?, -- entrada filtrada (desplazamiento)
 	fix: { number }?, -- cola acostada: corrección por bloque hasta tocar el suelo
+	phase: number?, -- púas: desfase del tambaleo propio de cada una
 }
 type Leg = {
 	upper: Motor6D,
@@ -322,6 +323,32 @@ function CreatureAnimator.new(model: Model)
 		if c then
 			table.insert(self.chains, c)
 		end
+	end
+	-- Púas articuladas del lomo: tambalean como las antenas pero más duras (más frecuencia y freno).
+	for i = 1, 12 do
+		local c = m["Spike" .. i] and newChain({ m["Spike" .. i], m["SpikeTip" .. i] } :: any, "spike", { 6, 7 }, 0.5)
+		if c then
+			c.phase = i * 1.7
+			table.insert(self.chains, c)
+		end
+	end
+	-- Estela del coletazo: una cinta blanca transparente entre la mitad y la punta de la cola.
+	if #tail >= 3 then
+		local mid, last = tail[math.ceil(#tail / 2)].Part1 :: BasePart, tail[#tail].Part1 :: BasePart
+		local a0, a1 = Instance.new("Attachment"), Instance.new("Attachment")
+		a0.Parent = mid
+		a1.Position = Vector3.new(0, 0, last.Size.Z / 2)
+		a1.Parent = last
+		local trail = Instance.new("Trail")
+		trail.Attachment0, trail.Attachment1 = a0, a1
+		trail.Color = ColorSequence.new(Color3.new(1, 1, 1))
+		trail.Transparency = NumberSequence.new(0.45, 1)
+		trail.LightEmission = 0.3
+		trail.Lifetime = 0.22
+		trail.MinLength = 0.05
+		trail.Enabled = false
+		trail.Parent = last
+		self.whipTrail = trail
 	end
 
 	-- Estado del movimiento. vis1/vis2: posición suavizada de la Root (el servidor la manda a saltos).
@@ -751,6 +778,11 @@ function CreatureAnimator:_chains(dt: number)
 			if c.kind == "up" then
 				a.x += -d.Z / r - rx
 				b.x += d.X / r - rz
+			elseif c.kind == "spike" then
+				-- Púas cortas y duras: la misma inercia que las antenas pero mucho menos (con el r chico,
+				-- caminando se inclinaban 25-45°).
+				a.x += (-d.Z / r - rx) * 0.15
+				b.x += (d.X / r - rz) * 0.15
 			elseif c.kind == "down" then
 				a.x += d.Z / r - rx
 				b.x += -d.X / r - rz
@@ -795,9 +827,15 @@ function CreatureAnimator:_chains(dt: number)
 				wave += 0.75 * pose.sleep.x -- se enrosca al costado del cuerpo, hasta la cabeza
 			elseif c.kind == "up" then
 				sag += 0.5 * pose.sleep.x -- antenas caídas al dormir
+			elseif c.kind == "spike" then
+				-- Tambaleo propio, chico y lento; dormida casi quietas.
+				local ph = (c.phase or 0) + i * 0.6
+				local amp = 1 - 0.7 * pose.sleep.x
+				sag += math.sin(self.t * 1.9 + ph) * 0.07 * amp
+				wave += math.sin(self.t * 2.3 + ph * 1.3) * 0.06 * amp
 			end
 			local freq = c.freq[i]
-			local limit = 0.8
+			local limit = if c.kind == "spike" then 0.3 else 0.8 -- púas: duras, se inclinan poco
 			if c.kind == "back" then
 				-- Coletazo: se mueve la base y el resto sigue con retraso (efecto látigo).
 				freq *= 1 + 2.2 * self.whip
@@ -876,6 +914,9 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 
 	local out: ActionOut = { bodyYaw = 0, neckYaw = 0, neckPitch = 0, lunge = 0 }
 	self.tailYaw, self.tailPitch, self.whip = 0, 0, 0
+	if self.whipTrail and name ~= "Coletazo" then
+		self.whipTrail.Enabled = false
+	end
 	if name == "Coletazo" then
 		-- Carga hacia un lado, látigo hacia el otro y vuelta. El lado alterna en cada golpe.
 		local side = if (id or 0) % 2 == 0 then 1 else -1
@@ -895,6 +936,9 @@ function CreatureAnimator:_action(dt: number): (number, ActionOut)
 		end
 		self.tailYaw, self.tailPitch = tail * side, lift
 		self.whip = if k < 1.5 then 1 else 0
+		if self.whipTrail then
+			self.whipTrail.Enabled = k > 0.4 and k < 0.85 -- solo el latigazo
+		end
 		out.bodyYaw, out.neckYaw = body * side, neck * side
 	elseif name == "Cabezazo" then
 		-- Echa la cabeza atrás, embiste hacia adelante y abajo, y vuelve.

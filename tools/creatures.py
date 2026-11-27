@@ -408,12 +408,19 @@ def grieta():
         P.append(part(f"PetalPoint{i + 1}", tip, (0.75, 0.5, 0.26), (0, 0.7, 0), pivot=(0, -0.25, 0), skin=dict(cracks=0.2), baby=1.25))
         P.append(part(f"PetalPointTip{i + 1}", f"PetalPoint{i + 1}", (0.38, 0.35, 0.22), (0, 0.25, 0), pivot=(0, -0.17, 0),
                       skin=dict(cracks=0.1), baby=1.25))
-        for j, y in enumerate((-0.45, 0, 0.45)):
-            P.append(part(f"PetalTooth{i + 1}{j + 1}", base, (0.16, 0.18, 0.12), (0, y, -0.22),
-                          ramp="tooth", flat=True, baby=1.25))
-        for j, y in enumerate((-0.35, 0, 0.35)):
-            P.append(part(f"PetalTipTooth{i + 1}{j + 1}", tip, (0.14, 0.16, 0.1), (0, y, -0.19),
-                          ramp="tooth", flat=True, baby=1.25))
+        # Tres filas de dientes por segmento (centro y dos a los costados, pedido de Lucas).
+        k = 0
+        for x in (-0.45, 0, 0.45):
+            for y in (-0.45, 0, 0.45):
+                k += 1
+                P.append(part(f"PetalTooth{i + 1}{k}", base, (0.16, 0.18, 0.12), (x, y, -0.22),
+                              ramp="tooth", flat=True, baby=1.25))
+        k = 0
+        for x in (-0.35, 0, 0.35):
+            for y in (-0.35, 0, 0.35):
+                k += 1
+                P.append(part(f"PetalTipTooth{i + 1}{k}", tip, (0.14, 0.16, 0.1), (x, y, -0.19),
+                              ramp="tooth", flat=True, baby=1.25))
     # Dos patas de raptor (pedido de Lucas, 2026-11-26: "como las de un velociraptor"), digitígradas:
     # muslo grande y ancho hacia adelante (rodilla adelante), caña larga hacia atrás, metatarso hacia
     # adelante (el talón levantado es la articulación que se ve "al revés") y solo los dedos en el piso.
@@ -451,9 +458,12 @@ def grieta():
     # Púas en el lomo, del pecho a la cola, inclinadas hacia atrás.
     spikes = (("Chest", -0.8, 2), ("Chest", 0.6, 2), ("Spine", 0, 1.9), ("Rear", -0.6, 1.7), ("Rear", 0.7, 1.7),
               ("Tail1", 0, 1), ("Tail2", 0, 0.85), ("Tail3", 0, 0.7))
+    # Articuladas en dos tramos (el animador las hace tambalear) y apenas más largas: 0.7 + 0.55.
     for i, (parent, z, top) in enumerate(spikes, 1):
-        P.append(part(f"Spike{i}", parent, (0.3, 1, 0.3), (0, top, z), pivot=(0, -0.5, 0), rot=(30, 0, 0),
+        P.append(part(f"Spike{i}", parent, (0.3, 0.7, 0.3), (0, top, z), pivot=(0, -0.35, 0), rot=(30, 0, 0),
                       ramp="dark", pattern="solid", baby=0.5))
+        P.append(part(f"SpikeTip{i}", f"Spike{i}", (0.2, 0.55, 0.2), (0, 0.35, 0), pivot=(0, -0.275, 0),
+                      rot=(8, 0, 0), ramp="dark", pattern="solid", baby=0.5))
     return {
         "name": "Grieta",
         "seed": 21,

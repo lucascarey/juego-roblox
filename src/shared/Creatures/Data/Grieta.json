@@ -1181,7 +1181,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     -0.27,
     -0.132
    ],
@@ -1204,7 +1204,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     0.0,
     -0.132
    ],
@@ -1227,7 +1227,145 @@
     0.072
    ],
    "joint": [
+    -0.27,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth14",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
     0.0,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth15",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth16",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth17",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth18",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth19",
+   "parent": "Petal1",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
     0.27,
     -0.132
    ],
@@ -1250,7 +1388,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     -0.21,
     -0.11399999999999999
    ],
@@ -1273,7 +1411,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     0.0,
     -0.11399999999999999
    ],
@@ -1296,7 +1434,145 @@
     0.06
    ],
    "joint": [
+    -0.21,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth14",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
     0.0,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth15",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth16",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth17",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth18",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth19",
+   "parent": "PetalTip1",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
     0.21,
     -0.11399999999999999
    ],
@@ -1599,7 +1875,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     -0.27,
     -0.132
    ],
@@ -1622,7 +1898,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     0.0,
     -0.132
    ],
@@ -1645,7 +1921,145 @@
     0.072
    ],
    "joint": [
+    -0.27,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth24",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
     0.0,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth25",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth26",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth27",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth28",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth29",
+   "parent": "Petal2",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
     0.27,
     -0.132
    ],
@@ -1668,7 +2082,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     -0.21,
     -0.11399999999999999
    ],
@@ -1691,7 +2105,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     0.0,
     -0.11399999999999999
    ],
@@ -1714,7 +2128,145 @@
     0.06
    ],
    "joint": [
+    -0.21,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth24",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
     0.0,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth25",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth26",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth27",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth28",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth29",
+   "parent": "PetalTip2",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
     0.21,
     -0.11399999999999999
    ],
@@ -2017,7 +2569,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     -0.27,
     -0.132
    ],
@@ -2040,7 +2592,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     0.0,
     -0.132
    ],
@@ -2063,7 +2615,145 @@
     0.072
    ],
    "joint": [
+    -0.27,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth34",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
     0.0,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth35",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth36",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth37",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth38",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth39",
+   "parent": "Petal3",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
     0.27,
     -0.132
    ],
@@ -2086,7 +2776,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     -0.21,
     -0.11399999999999999
    ],
@@ -2109,7 +2799,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     0.0,
     -0.11399999999999999
    ],
@@ -2132,7 +2822,145 @@
     0.06
    ],
    "joint": [
+    -0.21,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth34",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
     0.0,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth35",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth36",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth37",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth38",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth39",
+   "parent": "PetalTip3",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
     0.21,
     -0.11399999999999999
    ],
@@ -2435,7 +3263,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     -0.27,
     -0.132
    ],
@@ -2458,7 +3286,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     0.0,
     -0.132
    ],
@@ -2481,7 +3309,145 @@
     0.072
    ],
    "joint": [
+    -0.27,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth44",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
     0.0,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth45",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth46",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth47",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth48",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth49",
+   "parent": "Petal4",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
     0.27,
     -0.132
    ],
@@ -2504,7 +3470,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     -0.21,
     -0.11399999999999999
    ],
@@ -2527,7 +3493,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     0.0,
     -0.11399999999999999
    ],
@@ -2550,7 +3516,145 @@
     0.06
    ],
    "joint": [
+    -0.21,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth44",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
     0.0,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth45",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth46",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth47",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth48",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth49",
+   "parent": "PetalTip4",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
     0.21,
     -0.11399999999999999
    ],
@@ -2853,7 +3957,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     -0.27,
     -0.132
    ],
@@ -2876,7 +3980,7 @@
     0.072
    ],
    "joint": [
-    0.0,
+    -0.27,
     0.0,
     -0.132
    ],
@@ -2899,7 +4003,145 @@
     0.072
    ],
    "joint": [
+    -0.27,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth54",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
     0.0,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth55",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth56",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.0,
+    0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth57",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    -0.27,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth58",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
+    0.0,
+    -0.132
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTooth59",
+   "parent": "Petal5",
+   "size": [
+    0.096,
+    0.108,
+    0.072
+   ],
+   "joint": [
+    0.27,
     0.27,
     -0.132
    ],
@@ -2922,7 +4164,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     -0.21,
     -0.11399999999999999
    ],
@@ -2945,7 +4187,7 @@
     0.06
    ],
    "joint": [
-    0.0,
+    -0.21,
     0.0,
     -0.11399999999999999
    ],
@@ -2968,7 +4210,145 @@
     0.06
    ],
    "joint": [
+    -0.21,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth54",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
     0.0,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth55",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth56",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth57",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    -0.21,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth58",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
+    0.0,
+    -0.11399999999999999
+   ],
+   "pivot": null,
+   "rot": null,
+   "tilt": null,
+   "ramp": "tooth",
+   "neon": false,
+   "flat": true,
+   "pattern": "mottled",
+   "babyScale": 1.25,
+   "skin": null
+  },
+  {
+   "name": "PetalTipTooth59",
+   "parent": "PetalTip5",
+   "size": [
+    0.084,
+    0.096,
+    0.06
+   ],
+   "joint": [
+    0.21,
     0.21,
     -0.11399999999999999
    ],
@@ -5247,7 +6627,7 @@
    "parent": "Chest",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5257,7 +6637,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5312,11 +6692,80 @@
    }
   },
   {
+   "name": "SpikeTip1",
+   "parent": "Spike1",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     11.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     11.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     12.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     12.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     13.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     13.5,
+     12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
    "name": "Spike2",
    "parent": "Chest",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5326,7 +6775,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5367,13 +6816,82 @@
      0.5
     ],
     "Top": [
-     11.0,
+     14.0,
      12.5,
      0.25,
      0.25
     ],
     "Bottom": [
-     11.5,
+     14.5,
+     12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip2",
+   "parent": "Spike2",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     15.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     15.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     16.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     16.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     17.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     17.5,
      12.5,
      0.25,
      0.25
@@ -5385,7 +6903,7 @@
    "parent": "Spine",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5395,7 +6913,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5436,13 +6954,82 @@
      0.5
     ],
     "Top": [
-     12.0,
+     18.0,
      12.5,
      0.25,
      0.25
     ],
     "Bottom": [
+     18.5,
      12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip3",
+   "parent": "Spike3",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     19.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     19.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     20.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     20.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     21.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     21.5,
      12.5,
      0.25,
      0.25
@@ -5454,7 +7041,7 @@
    "parent": "Rear",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5464,7 +7051,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5505,13 +7092,82 @@
      0.5
     ],
     "Top": [
-     13.0,
+     22.0,
      12.5,
      0.25,
      0.25
     ],
     "Bottom": [
-     13.5,
+     22.5,
+     12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip4",
+   "parent": "Spike4",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     23.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     23.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     24.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     24.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     25.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     25.5,
      12.5,
      0.25,
      0.25
@@ -5523,7 +7179,7 @@
    "parent": "Rear",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5533,7 +7189,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5574,13 +7230,82 @@
      0.5
     ],
     "Top": [
-     14.0,
+     26.0,
      12.5,
      0.25,
      0.25
     ],
     "Bottom": [
-     14.5,
+     26.5,
+     12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip5",
+   "parent": "Spike5",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     27.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     27.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     28.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     28.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     29.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     29.5,
      12.5,
      0.25,
      0.25
@@ -5592,7 +7317,7 @@
    "parent": "Tail1",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5602,7 +7327,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5643,14 +7368,83 @@
      0.5
     ],
     "Top": [
-     15.0,
+     30.0,
      12.5,
      0.25,
      0.25
     ],
     "Bottom": [
-     15.5,
+     30.5,
      12.5,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip6",
+   "parent": "Spike6",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     31.0,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     31.5,
+     12.5,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     0.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     0.5,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     1.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     1.5,
+     13.0,
      0.25,
      0.25
     ]
@@ -5661,7 +7455,7 @@
    "parent": "Tail2",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5671,7 +7465,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5712,14 +7506,83 @@
      0.5
     ],
     "Top": [
-     16.0,
-     12.5,
+     2.0,
+     13.0,
      0.25,
      0.25
     ],
     "Bottom": [
-     16.5,
-     12.5,
+     2.5,
+     13.0,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip7",
+   "parent": "Spike7",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     3.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     3.5,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     4.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     4.5,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     5.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     5.5,
+     13.0,
      0.25,
      0.25
     ]
@@ -5730,7 +7593,7 @@
    "parent": "Tail3",
    "size": [
     0.18,
-    0.6,
+    0.42,
     0.18
    ],
    "joint": [
@@ -5740,7 +7603,7 @@
    ],
    "pivot": [
     0.0,
-    -0.3,
+    -0.21,
     0.0
    ],
    "rot": [
@@ -5781,14 +7644,83 @@
      0.5
     ],
     "Top": [
-     17.0,
-     12.5,
+     6.0,
+     13.0,
      0.25,
      0.25
     ],
     "Bottom": [
-     17.5,
-     12.5,
+     6.5,
+     13.0,
+     0.25,
+     0.25
+    ]
+   }
+  },
+  {
+   "name": "SpikeTip8",
+   "parent": "Spike8",
+   "size": [
+    0.12,
+    0.33,
+    0.12
+   ],
+   "joint": [
+    0.0,
+    0.21,
+    0.0
+   ],
+   "pivot": [
+    0.0,
+    -0.165,
+    0.0
+   ],
+   "rot": [
+    8,
+    0,
+    0
+   ],
+   "tilt": null,
+   "ramp": "dark",
+   "neon": false,
+   "flat": false,
+   "pattern": "solid",
+   "babyScale": 0.5,
+   "skin": null,
+   "faces": {
+    "Front": [
+     7.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Back": [
+     7.5,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Left": [
+     8.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Right": [
+     8.5,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Top": [
+     9.0,
+     13.0,
+     0.25,
+     0.25
+    ],
+    "Bottom": [
+     9.5,
+     13.0,
      0.25,
      0.25
     ]
