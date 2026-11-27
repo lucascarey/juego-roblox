@@ -578,19 +578,25 @@ def hermitano():
 
     # Caparazón: falda de laterales verticales (de 3.0 a 5.6 del piso) y domo bajo de techo ancho
     # (hasta ~7.6), en capas en cruz para que de arriba se vea redondo.
-    W, SKIRT_BOT, SKIRT_TOP, DOME = 9.5, 3.3, 5.0, 2.75
+    W, SKIRT_BOT, SKIRT_TOP, DOME = 9.5, 3.1, 4.5, 2.9
     side = dict(belly=0.4, moss=0.6, mossTop=True)
     cap = dict(moss=0.85, mossTop=True)
     sk_h = SKIRT_TOP - SKIRT_BOT
     layers = [(W, sk_h, (SKIRT_BOT + sk_h / 2) - BODY_Y - (BODY_H / 2 + sk_h / 2), side)]
-    for t in (0.25, 0.75, 1.25, 1.75, 2.25):
+    for t in (0.25, 0.75, 1.25, 1.75, 2.25, 2.65):
         w = round(W * max(0.0, 1 - (t / DOME) ** 2) ** 0.5 * 4) / 4
         layers.append((w, 0.5, 0, cap))
     prev, prev_top = "Rear", BODY_H / 2
     for i, (w, h, dy, skin) in enumerate(layers, 1):
         name = f"Shell{i}"
-        P.append(part(name, prev, (w, h, w * 0.76), (0, prev_top + h / 2 + dy, 0), ramp="body" if i == 1 else "moss", skin=skin))
-        P.append(part(f"ShellX{i}", name, (w * 0.76, h, w), (0, 0, 0), ramp="body" if i == 1 else "moss", skin=skin))
+        ramp = "body" if i == 1 else "moss"
+        # Cuatro cajas en cruz por capa: de arriba se ve redondo (con dos se veía cuadrado).
+        # La falda va inclinada 6°: adelante más alto y atrás más bajo, como el perfil de la planilla.
+        P.append(part(name, prev, (round(w * 0.9 * 4) / 4, h, round(w * 0.72 * 4) / 4), (0, prev_top + h / 2 + dy, 0),
+                      rot=(6, 0, 0) if i == 1 else None, ramp=ramp, skin=skin))
+        P.append(part(f"ShellX{i}", name, (round(w * 0.72 * 4) / 4, h, round(w * 0.9 * 4) / 4), (0, 0, 0), ramp=ramp, skin=skin))
+        P.append(part(f"ShellY{i}", name, (w, h, round(w * 0.42 * 4) / 4), (0, 0, 0), ramp=ramp, skin=skin))
+        P.append(part(f"ShellZ{i}", name, (round(w * 0.42 * 4) / 4, h, w), (0, 0, 0), ramp=ramp, skin=skin))
         prev, prev_top = name, h / 2
     # Lóbulo de atrás que baja (el abdomen del ermitaño, como en el perfil).
     P.append(part("ShellBack", "Shell1", (6.5, 1.75, 2.75), (0, -sk_h / 2 - 0.4, 2.6), ramp="body", skin=dict(belly=0.5, moss=0.45, mossTop=True)))
@@ -600,7 +606,7 @@ def hermitano():
         z -= 0.35  # el caparazón está centrado en el cuerpo, que está corrido 0.35 atrás
         for i in range(len(layers), 0, -1):
             w, h = layers[i - 1][0], layers[i - 1][1]
-            if (abs(x) <= w / 2 and abs(z) <= w * 0.38) or (abs(x) <= w * 0.38 and abs(z) <= w / 2):
+            if math.hypot(x, z) <= w * 0.46:
                 return f"Shell{i}", (x, h / 2 + lift, z)
         return "Shell1", (x, layers[0][1] / 2 + lift, z)
 
@@ -638,7 +644,7 @@ def hermitano():
     # falange 1 hacia afuera y un poco arriba hasta la rodilla (justo afuera del caparazón), falange 2
     # baja casi vertical, falange 3 en punta.
     hip_y = -0.2  # en el espacio del cuerpo (2.4 del piso)
-    knee = (5.6, 3.4)  # (distancia al centro, alto): justo debajo del borde de la falda
+    knee = (5.6, 3.2)  # (distancia al centro, alto): justo debajo del borde de la falda
     ankle = (6.6, 1.1)
     hip_r = 2.3
     for n, (z, yaw) in enumerate(((-1.6, 28), (0.1, 0), (1.7, -28)), 1):

@@ -204,3 +204,26 @@ Errores que ya se resolvieron y no hay que reintroducir:
   Probar con copias sin IA movidas por el servidor en línea recta (y excluir la copia del rayo de piso).
 - Studio en segundo plano corre a ~15 fps: el sube y baja normal parece temblor. Mirar la curva.
 - Lucas pidió pocas capturas: verificar con números y mandar una sola al final.
+
+## 14. Aprendido con la especie 3 (Hermitaño, patas de cangrejo)
+- Patas de cangrejo (`Leg<n>A/B/C` + `L/R`, 3 falanges) y pinzas (`ClawA/ClawB/ClawHand/ClawFinger`) usan
+  `CrabAnimator.luau`, no el animador de cuadrúpedos: `CreatureAnimation` elige por la pieza `Leg1AL`.
+- Marcha en trípodes alternados (L1-R2-L3 / R1-L2-R3): cada pie queda clavado en el mundo y su trípode da
+  el paso cuando se aleja del lugar de reposo; el paso cae adelantado según la velocidad. Umbral y
+  duración crecen con el tamaño: los grandes dan pasos más largos y lentos.
+- En `tools/creatures.py`, `limb()` arma una cadena de falanges a partir de direcciones (más fácil que
+  adivinar ángulos Euler); `mirrored()` espeja bien cualquier giro XYZ invirtiendo Y y Z.
+- **Bug**: si el Transform del cuerpo ya lleva el desfase Root→posición suavizada, el CFrame del cuerpo
+  es `root.CFrame * C0 * Transform * C1⁻¹`, NO `vis2 * ...` (se aplicaba dos veces: los pies patinaban 1 stud).
+- **Bug**: los rayos al suelo tienen que excluir también al propio modelo aunque no tenga el tag (copias
+  de prueba): pisaban sobre su propio caparazón.
+- **Bug**: el desenterrarse se reiniciaba solo si se cortaba por tiempo; termina cuando el cuerpo llegó arriba.
+- Enterrarse = `Postura "Enterrado"` (Z, `stats.burrow`): reemplaza acostarse/dormir, no recibe daño
+  (`CreatureCombat`), `stats.armor` reduce el daño recibido, y la IA se entierra en vez de huir.
+- `stats.sizeRange`: cada individuo nace con un tamaño al azar (`SpeciesStats.randomSize`).
+- Verdes con la luz de Roblox: el verde sube ~1.65x y el azul ~2x. Rampas oscuras tirando a oliva.
+- Caparazón redondo visto de arriba: 4 cajas en cruz por capa (con 2 se ve cuadrado).
+- Si `screen_capture` de Studio no responde (pantalla bloqueada), `tools/render_species.py` renderiza el
+  modelo exportado (geometría y atlas reales, sin la luz de Roblox) en frente, perfil, arriba y 3/4.
+- En modo edición los Motor6D no aplican `Transform`: las pruebas de animación van en Play, con una copia
+  sin el tag `Creature` movida desde el cliente.

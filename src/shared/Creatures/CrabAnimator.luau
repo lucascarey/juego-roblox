@@ -24,8 +24,18 @@ local UP = Vector3.yAxis
 
 local rayParams = RaycastParams.new()
 rayParams.FilterType = Enum.RaycastFilterType.Exclude
+local animated: { Instance } = {} -- también las que no tienen el tag (pruebas)
 local function refreshFilter()
-	rayParams.FilterDescendantsInstances = CollectionService:GetTagged("Creature")
+	local list = CollectionService:GetTagged("Creature")
+	for i = #animated, 1, -1 do
+		local m = animated[i]
+		if not m.Parent then
+			table.remove(animated, i)
+		elseif not table.find(list, m) then
+			table.insert(list, m)
+		end
+	end
+	rayParams.FilterDescendantsInstances = list
 end
 CollectionService:GetInstanceAddedSignal("Creature"):Connect(refreshFilter)
 
@@ -97,6 +107,7 @@ function CrabAnimator.is(model: Model): boolean
 end
 
 function CrabAnimator.new(model: Model)
+	table.insert(animated, model)
 	refreshFilter()
 	local root = model.PrimaryPart :: BasePart
 	local m = motorsByName(model)
@@ -238,7 +249,7 @@ function CrabAnimator.new(model: Model)
 	-- Hasta dónde se hunde al enterrarse: el borde de abajo de la falda del caparazón queda bajo tierra.
 	local shell = m.Shell1 and m.Shell1.Part1
 	local skirtBottom = if shell then (rest[shell] * CFrame.new(0, -shell.Size.Y / 2, 0)).Position.Y else 0
-	self.sinkDepth = (skirtBottom - lowest) + 0.5 * self.scaleK
+	self.sinkDepth = (skirtBottom - lowest) + 0.2 * self.scaleK
 
 	self.vis1, self.vis2, self.prevCF = root.CFrame, root.CFrame, root.CFrame
 	self.vel = Vector3.zero
@@ -321,8 +332,9 @@ function CrabAnimator:_burrow(dt: number)
 			-- El cuerpo sube cuando ya salió la mayoría de las patas.
 			local outT = (#limbs - 2) * per
 			step(self.sink, if T > outT then 0 else self.sinkDepth, 0.6, 1, dt)
-			if T > outT + 1.2 then
+			if T > outT and self.sink.x < 0.03 * self.sinkDepth then
 				self.unburyT = nil
+				self.sink.x, self.sink.v = 0, 0
 			end
 		else
 			for _, l in limbs do
